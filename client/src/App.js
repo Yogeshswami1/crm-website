@@ -83,7 +83,7 @@ import Userdashboard from "./pages/Userdash/Userdashboard";
 import Services from "./pages/Services";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
-import SignIn from "./pages/SignIn";
+import SignIn from "./pages/Signin/SignIn";
 import Main from "./components/layout/Main";
 import Support from "./pages/Support";
 import Learnings from "./pages/Learnings";

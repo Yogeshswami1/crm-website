@@ -1,6 +1,6 @@
 import { Menu } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
-import logo from "../../assets/logo.jpeg";
+import logo from "../../assets/logo.png";
 
 const Sidenav = ({ color, role }) => {
   const { pathname } = useLocation();
@@ -20,11 +20,6 @@ const Sidenav = ({ color, role }) => {
             <Menu.Item key="home">
               <NavLink to="/home">
                 <span className="label">Admin Dashboard</span>
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="services">
-              <NavLink to="/services">
-                <span className="label">Services</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="contact" >
@@ -47,53 +42,15 @@ const Sidenav = ({ color, role }) => {
                 <span className="label">Accountant Tab</span>
               </NavLink>
             </Menu.Item>
-            <Menu.Item key="supervisortab">
-              <NavLink to="/supervisortab">
-                <span className="label">Supervisor Tab</span>
-              </NavLink>
-            </Menu.Item>
             <Menu.Item key="telesalestab">
               <NavLink to="/telesalestab">
                 <span className="label">Telesales Tab</span>
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="rmdtab">
-              <NavLink to="/rmdtab">
-                <span className="label">RMD Tab</span>
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="socialtab">
-              <NavLink to="/socialtab">
-                <span className="label">Social Media Manager Tab</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="useridpass">
               <NavLink to="/useridpass">
                 <span className="label">User ID & Pass</span>
               </NavLink>
-            </Menu.Item>
-            <Menu.Item key="admintodo">
-              <NavLink to="/admintodo">
-                <span className="label">Admin TO DO List</span>
-              </NavLink>
-            </Menu.Item>
-
-            <Menu.Item key="dashwithfilters">
-            <NavLink to="/dashwithfilters">
-              <span className="label">Dash With Filters</span>
-            </NavLink>
-          </Menu.Item>
-            
-          
-            <Menu.Item key="lms">
-             <a href="https://lms.saumiccraft.com/" target="_blank" >
-             <span className="label">LMS</span>
-             </a>
-            </Menu.Item>
-            <Menu.Item key="lms">
-             <a href="https://support.saumiccraft.com/" target="_blank" >
-             <span className="label">Support Portal</span>
-             </a>
             </Menu.Item>
            
           </>
@@ -194,27 +151,7 @@ const Sidenav = ({ color, role }) => {
 
           </>
         )}
-        {role === "rmd" && (
-          <>
-          <Menu.Item key="rmddashboard">
-            <NavLink to="/rmddashboard">
-              <span className="label">Dashboard</span>
-            </NavLink>
-          </Menu.Item>
-
-          </>
-        )}
-
-{role === "social" && (
-          <>
-          <Menu.Item key="socialdashboard">
-            <NavLink to="/socialdashboard">
-              <span className="label">Dashboard</span>
-            </NavLink>
-          </Menu.Item>
-
-          </>
-        )}
+        
         
       </Menu>
     </div>

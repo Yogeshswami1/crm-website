@@ -1,0 +1,35 @@
+.header-custom {
+    background: linear-gradient(135deg, #0033cc, #66aaff); /* Blue gradient */
+    color: #ffffff; /* White text */
+    padding: 15px 30px; /* Adequate padding */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Ensure it's above other content */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    display: flex; /* Flexbox for layout */
+    align-items: center; /* Center items vertically */
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  .header-logo .logo {
+    height: 40px; /* Logo size */
+    margin-right: 15px; /* Space between logo and text */
+  }
+  
+  .header-brand h1 {
+    margin: 0;
+    font-size: 1.5em; /* Adjust font size */
+    font-family: 'Arial', sans-serif; /* Font family */
+    font-weight: bold; /* Font weight */
+  }
+  

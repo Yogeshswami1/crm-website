@@ -1,0 +1,88 @@
+/* Ensures the layout occupies the full height and uses flexbox for vertical alignment */
+.layout-signin {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styling for the header, including background color and text alignment */
+.header-custom {
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  z-index: 2;
+}
+
+/* Styling for the header brand */
+.header-brand h5 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
+/* Main content styling with flexible height and alignment */
+.signin {
+  flex: 1; /* Allows the content area to grow and fill the available space */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+/* Video background styling to cover the entire viewport */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  filter: blur(8px); /* Blurs the video for a soft background effect */
+  transform: scale(1.1); /* Slightly scales up the video for a better fit */
+}
+
+/* Ensures the video covers the entire container */
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the container without distortion */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Styles for the content container to ensure proper placement above the video */
+.signin-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2; /* Places content above the video background */
+}
+
+/* Container for the form with a semi-transparent background and some padding */
+.signin-form-container {
+  background: rgba(255, 255, 255, 0.8); /* More transparent white background */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+/* Ensures proper spacing between form items */
+.signin-form-container .ant-form-item {
+  margin-bottom: 15px;
+}
+
+/* Footer styling to match the header's transparency and color scheme */
+.footer-custom {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  z-index: 2;
+}
