@@ -233,25 +233,14 @@
 // }
 
 // export default Header;
-
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Row,
-  Col,
-  Breadcrumb,
-  Button,
-  Drawer,
-  Typography,
-  message,
-  Avatar,
-} from "antd";
+import { Row, Col, Breadcrumb, Button, Drawer } from "antd";
 import { NavLink } from "react-router-dom";
-import avtar from "../../assets/images/team-2.jpg";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 
-const Header = ({ name, subName, onPress }) => {
-  const { Title } = Typography;
+const Header = ({ name, subName }) => {
   const [visible, setVisible] = useState(false);
   const history = useHistory();
 
@@ -261,31 +250,49 @@ const Header = ({ name, subName, onPress }) => {
   const logout = () => {
     localStorage.clear();
     history.push("/");
-    message.success("Successfully logged out!");
+    toast.success("Successfully logged out!"); // Show toast notification
   };
 
   const gradientButtonStyle = {
-    background: 'linear-gradient(90deg, #fc6076, #ff9a44, #ef9d43, #e75516)',
+    background: 'linear-gradient(90deg, #4a90e2, #0033cc)', // Blue chrome gradient
     border: 'none',
     color: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+    borderRadius: '4px',
+    transition: 'background 0.3s, box-shadow 0.3s',
+  };
+
+  const hoverEffect = {
+    background: 'linear-gradient(90deg, #0033cc, #1a1a1a)',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.5)',
   };
 
   return (
     <>
-      <Row gutter={[24, 0]} justify="space-between" align="middle">
+      <Row
+        gutter={[24, 0]}
+        justify="space-between"
+        align="middle"
+        style={{
+          background: 'linear-gradient(145deg, #4a90e2, #0033cc)',
+          padding: '10px 20px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+          borderRadius: '4px',
+        }}
+      >
         <Col xs={12} sm={6} md={6}>
-          <Breadcrumb>
+          <Breadcrumb style={{ color: '#fff' }}>
             <Breadcrumb.Item>
-              <NavLink to="/">Pages</NavLink>
+              <NavLink to="/" style={{ color: '#fff' }}>Pages</NavLink>
             </Breadcrumb.Item>
-            <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
+            <Breadcrumb.Item style={{ textTransform: "capitalize", color: '#fff' }}>
               {name.replace("/", "")}
             </Breadcrumb.Item>
           </Breadcrumb>
           <div className="ant-page-header-heading">
             <span
               className="ant-page-header-heading-title"
-              style={{ textTransform: "capitalize" }}
+              style={{ textTransform: "capitalize", color: '#fff' }}
             >
               {subName.replace("/", "")}
             </span>
@@ -296,17 +303,24 @@ const Header = ({ name, subName, onPress }) => {
             type="link"
             className="sidebar-toggler"
             onClick={showDrawer}
+            style={{
+              color: '#fff',
+              fontSize: '16px',
+              border: 'none',
+              background: 'transparent',
+            }}
           >
-            
+            {/* Icon for sidebar toggler */}
           </Button>
-          
+
           <Button
             type="primary"
             size="large"
             onClick={logout}
             style={gradientButtonStyle}
+            onMouseOver={(e) => e.currentTarget.style.background = hoverEffect.background}
+            onMouseOut={(e) => e.currentTarget.style.background = gradientButtonStyle.background}
           >
-            
             <span>Logout</span>
           </Button>
         </Col>
@@ -317,9 +331,14 @@ const Header = ({ name, subName, onPress }) => {
         closable={false}
         onClose={hideDrawer}
         visible={visible}
+        style={{
+          background: '#0033cc',
+          color: '#fff',
+        }}
       >
         {/* Add your sidenav items here */}
       </Drawer>
+     
     </>
   );
 };

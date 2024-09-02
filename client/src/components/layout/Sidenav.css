@@ -1,51 +1,103 @@
-/* Sidenav.css */
-
+/* General Styles */
 .sidenav {
-  padding: 1.5rem; /* Add padding around the Sidenav */
-  background-color: #f8f9fa; /* Light background for a clean look */
-  border-right: 1px solid #e0e0e0; /* Subtle border on the right */
-  height: 100vh; /* Full height for the Sidenav */
+  width: auto; /* Adjust as needed */
+  background: linear-gradient(145deg, #ffffff, #206ff7); /* Blue chrome gradient */
+  color: #fff; /* Default text color */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* Enhanced shadow for floating effect */
+  transition: all 0.3s; /* Smooth transition */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align items */
+  position: relative; /* To position pseudo-element */
+  z-index: 10; /* Ensure it floats above other elements */
 }
 
-.sidenav .brand {
+/* Adjust size when collapsed */
+.sidenav.collapsed {
+  width: 80px; /* Adjust as needed */
+  border-radius: 16px; /* Ensure rounded corners when collapsed */
+}
+
+/* Brand Section */
+.brand {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  justify-content: center;
+  padding: 16px;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light border for separation */
+  background: rgba(0, 0, 0, 0.2); /* Slightly darker background for brand section */
 }
 
-.sidenav .brand img {
-  border-radius: 8px; /* Rounded corners for the logo */
-  width: 40px; /* Set logo size */
-  height: 40px;
-  margin-right: 15px;
+.brand-logo {
+  width: 40px; /* Adjust size as needed */
+  border-radius: 50%;
+  margin-right: 8px; /* Space between logo and brand name */
 }
 
-.sidenav .brand span {
-  font-weight: 600;
-  font-size: 20px;
-  color: #333; /* Darker text color for the brand name */
-}
-
-.sidenav-menu .sidenav-item {
-  margin-bottom: 12px; /* Space between menu items */
-  padding: 10px 15px; /* Increase padding for a more spacious feel */
+.brand-name {
   font-size: 16px;
-  border-radius: 6px; /* Subtle rounding of the corners */
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: bold;
+  color: #fff; /* Ensure brand name text color is white */
 }
 
-.sidenav-menu .sidenav-item:hover {
-  background-color: #e6f7ff; /* Soft blue background on hover */
-  color: #1890ff; /* Primary blue color for text on hover */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+/* Menu */
+.sidenav-menu {
+  flex: 1;
+  width: 100%;
+  background: transparent; /* Transparent background to show gradient */
+  margin-top: 16px; /* Space from brand section */
+  border-bottom-left-radius: 16px; /* Rounded bottom-left corner */
+  border-bottom-right-radius: 16px; /* Rounded bottom-right corner */
 }
 
-.sidenav-menu .sidenav-item .label {
-  display: inline-block;
+.sidenav-menu .ant-menu {
+  border: none; /* Remove border for a cleaner look */
+}
+
+.sidenav-menu .ant-menu-item {
+  background: transparent; /* Transparent background for items */
+  color: #fff !important; /* Ensure menu item text color is white */
   font-weight: 500;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s; /* Smooth transitions for background, transform, and box-shadow */
+  border-radius: 12px; /* Rounded corners for menu items */
+  margin: 4px 0; /* Space between items */
 }
 
-.sidenav-menu .sidenav-item .anticon {
-  font-size: 18px; /* Larger icon size for better visibility */
-  margin-right: 10px;
+/* Hover Effect */
+.sidenav-menu .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1); /* Light hover effect */
+  transform: scale(1.05); /* Slightly enlarge the item on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow on hover */
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s; /* Smooth transitions */
+}
+
+/* Active Item */
+.sidenav-menu .ant-menu-item-active {
+  background: rgba(255, 255, 255, 0.2); /* Active item background */
+}
+
+/* Icon Styles */
+.sidenav-menu .ant-menu-item .anticon {
+  font-size: 18px; /* Adjust icon size */
+  color: #ffffff !important; /* Ensure icon color is white */
+  transition: color 0.3s; /* Smooth transition for icon color */
+}
+
+.sidenav-menu .ant-menu-item:hover .anticon {
+  color: #e6f7ff; /* Change icon color on hover */
+}
+
+/* Floating Effect */
+.sidenav::before {
+  content: "";
+  position: absolute;
+  top: -8px; /* Offset from top */
+  left: -8px; /* Offset from left */
+  right: -8px; /* Offset from right */
+  bottom: -8px; /* Offset from bottom */
+  background: rgba(0, 0, 0, 0.2); /* Slightly darker shadow */
+  border-radius: 16px; /* Match the border-radius of the sidenav */
+  z-index: -1; /* Place behind the sidenav */
+  filter: blur(10px); /* Blur effect for depth */
 }

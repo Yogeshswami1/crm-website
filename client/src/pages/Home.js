@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Radio } from 'antd';
 import Admindashboard from './Admindashboard';
-import Adminpayment from './Adminpayment';
-import Admin1 from './Admin1';
-import Reports from './Reports';
+
 
 const AdminDashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState('1');
@@ -15,13 +13,13 @@ const AdminDashboard = () => {
   const renderComponent = () => {
     switch (selectedComponent) {
       case '1':
-        return <Admin1 />;
+        // return <Admin1 />;
       case '2':
-        return <Reports />;
+        // return <Reports />;
       case '3':
-        return <Admindashboard />;
+        // return <Admindashboard />;
       case '4':
-        return <Adminpayment />;
+        // return <Adminpayment />;
       default:
         return null;
     }

@@ -16,3 +16,151 @@
     align-items: stretch;
   }
 }
+
+/* Contact.css */
+
+/* General Styles */
+.contact-container {
+  padding: 24px;
+  background: #f0f2f5; /* Light gray background for contrast */
+}
+
+.contact-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.contact-container .ant-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1d39c4; /* Blue color for title */
+}
+
+.contact-container .ant-table {
+  border-radius: 8px;
+}
+
+.contact-container .ant-table-thead > tr > th {
+  background: #003a8c; /* Darker blue for table header */
+  color: white;
+  font-weight: bold;
+}
+
+.contact-container .ant-table-tbody > tr:hover > td {
+  background: #e6f7ff; /* Light blue on row hover */
+}
+
+.contact-container .ant-table-tbody > tr > td {
+  background: #ffffff; /* White background for table cells */
+}
+
+/* Buttons */
+.ant-btn-primary {
+  background: #1890ff; /* Blue color for primary buttons */
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.ant-btn-dangerous {
+  background: #ff4d4f; /* Red color for danger buttons */
+  border-color: #ff4d4f;
+}
+
+.ant-btn-dangerous:hover {
+  background: #ff7875;
+  border-color: #ff7875;
+}
+
+.ant-btn-default {
+  background: #ffffff;
+  border-color: #d9d9d9;
+}
+
+.ant-btn-default:hover {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+}
+
+/* Modal */
+.ant-modal {
+  border-radius: 8px;
+}
+
+.ant-modal-header {
+  background: #003a8c; /* Darker blue for modal header */
+  color: white;
+}
+
+.ant-modal-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.ant-form-item-label > label {
+  color: #1d39c4; /* Blue color for form labels */
+}
+
+/* Upload Button */
+.ant-upload {
+  display: inline-block;
+}
+
+.ant-upload-btn {
+  background: #1890ff; /* Blue color for upload button */
+  border-color: #1890ff;
+}
+
+.ant-upload-btn:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* Filters Modal */
+.ant-form-item {
+  margin-bottom: 16px;
+}
+
+
+/* Buttons */
+.ant-btn-primary {
+  background: linear-gradient(145deg, #0050b3, #1890ff); /* Blue chrome gradient for primary buttons */
+  border-color: #1890ff;
+  color: #ffffff; /* Text color for buttons */
+  transition: background 0.3s ease, transform 0.3s ease; /* Smooth background and transform transitions */
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(145deg, #0066cc, #1d39c4); /* Lighter blue gradient on hover */
+  border-color: #0066cc;
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.ant-btn-dangerous {
+  background: linear-gradient(145deg, #ff4d4f, #ff7875); /* Red gradient for danger buttons */
+  border-color: #ff4d4f;
+  color: #ffffff; /* Text color for buttons */
+  transition: background 0.3s ease, transform 0.3s ease; /* Smooth background and transform transitions */
+}
+
+.ant-btn-dangerous:hover {
+  background: linear-gradient(145deg, #ff7875, #ff4d4f); /* Lighter red gradient on hover */
+  border-color: #ff4d4f;
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.ant-btn-default {
+  background: #ffffff; /* White background for default buttons */
+  border-color: #d9d9d9;
+  color: #000000; /* Text color for default buttons */
+  transition: background 0.3s ease, transform 0.3s ease; /* Smooth background and transform transitions */
+}
+
+.ant-btn-default:hover {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+}

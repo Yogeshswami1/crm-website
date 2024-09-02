@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Select, Radio, message } from "antd";
 import Dash from "./Dash";
-import Stagecomponent from "./Stagecomponent";
-import Stageincomponent from "./Stageincomponent";
-import Stagecomcomponent from "./Stagecomcomponent";
-import FloatingButton from "../Float/Floatingbutton";
+import FloatingButton from "./Float/Floatingbutton";
 import Stagewebsite from "./Stagewebsite";
 import Stage2website from "./Stage2website";
 import Stage3website from "./Stage3website";
 import axios from "axios";
-import Dashamazon from "./Dashamazon";
 import Mainwebsite from "./Mainwebsite";
 import ArchiveTable from "./Archivetable";
 
@@ -44,11 +40,9 @@ const Managerdashboard = () => {
   }, []);
 
   const setDefaultTab = (serviceType) => {
-    if (serviceType === "AMAZON") {
-      setActiveTab("dashamazon");
-    } else if (serviceType === "WEBSITE") {
+    if (serviceType === "WEBSITE") {
       setActiveTab("dashwebsite");
-    }
+    } 
   };
 
   const handleTabChange = (e) => {
@@ -60,16 +54,6 @@ const Managerdashboard = () => {
       <h1>Manager Dashboard</h1>
       <div style={{ marginBottom: 16 }}>
         <Radio.Group onChange={handleTabChange} value={activeTab}>
-          
-          {serviceType === "AMAZON" && (
-            <>
-              <Radio.Button value="dashamazon">Dashboard</Radio.Button>
-              <Radio.Button value="stage1">Stage 1 (AMAZON)</Radio.Button>
-              <Radio.Button value="stage2In">Stage 2 (IN)</Radio.Button>
-              <Radio.Button value="stage2Com">Stage 2 (COM)</Radio.Button>
-              <Radio.Button value="archiveTable">Archive</Radio.Button>
-            </>
-          )}
           {serviceType === "WEBSITE" && (
             <>
               <Radio.Button value="dashwebsite">Dashboard</Radio.Button>
@@ -83,10 +67,6 @@ const Managerdashboard = () => {
       </div>
 
       {activeTab === "dashwebsite" && <Dash />}
-      {activeTab === "dashamazon" && <Dashamazon />}
-      {activeTab === "stage1" && <Stagecomponent />}
-      {activeTab === "stage2In" && <Stageincomponent />}
-      {activeTab === "stage2Com" && <Stagecomcomponent />}
       {activeTab === "archiveTable" && <ArchiveTable />}
       {activeTab === "mainwebsite" && <Mainwebsite />}
       {activeTab === "stage1Website" && <Stagewebsite />}
