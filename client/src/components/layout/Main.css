@@ -1,0 +1,12 @@
+.layout-dashboard .ant-layout-content {
+    padding: 24px;
+    transition: margin-left 0.2s ease-in-out;
+    width: auto; /* Ensure full width */
+  }
+  
+  .layout-dashboard .content-expanded {
+    margin-left: 0 !important; /* Override margin when expanded */
+  }
+  
+
+  

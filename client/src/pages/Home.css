@@ -1,0 +1,35 @@
+
+
+.dashboard-content {
+  padding: 24px;
+  background: #fff;
+}
+
+
+
+.manager-card {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.manager-card:hover {
+  transform: scale(1.05);
+}
+
+
+.ant-layout .payment-layout
+{
+    margin-left: -1rem;
+
+
+}
+.ant-layout .dashboard-layout
+{
+    margin-left: 2rem;
+
+
+}
+.ant-btn .ant-btn-default .ant-btn-icon-only .ant-input-search-button {
+    width: 3rem;
+}
+

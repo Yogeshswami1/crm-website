@@ -1,0 +1,21 @@
+.shine-border {
+    position: relative;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: linear-gradient(90deg, #c5e3f4, #96e7f7, #f3d19c, #f8cfca, #ead0f5, #c0f7ec, #aadaf4);
+    background-size: 400% 400%;
+    animation: shine-pulse 5s ease-in-out infinite;
+  }
+  
+  @keyframes shine-pulse {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  

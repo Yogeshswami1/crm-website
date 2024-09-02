@@ -1,0 +1,10 @@
+/* Custom table styles */
+.custom-table .ant-table-tbody > tr:hover > td {
+    background-color: lightblue !important;
+  }
+  
+  .custom-table .ant-table-thead > tr > th,
+  .custom-table .ant-table-tbody > tr > td {
+    background-color: unset !important;
+  }
+  

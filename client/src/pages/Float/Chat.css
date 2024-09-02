@@ -1,0 +1,44 @@
+/* Chat.css */
+.chat-layout {
+  height: 100%;
+}
+
+.chat-sider {
+  background: #fff;
+  padding: 20px;
+}
+
+.chat-content {
+  padding: 20px;
+  background: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.message-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.selected-manager {
+  background-color: #e6f7ff;
+  cursor: pointer;
+}
+
+.my-message {
+  text-align: right;
+}
+
+.other-message {
+  text-align: left;
+}
+
+.no-manager-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 18px;
+}

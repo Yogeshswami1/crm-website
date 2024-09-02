@@ -1,0 +1,104 @@
+.vertical-timeline::before {
+    background: linear-gradient(to bottom, #007bff, #00ff88); /* Blue to green gradient */
+    width: 4px;
+  }
+  
+  .vertical-timeline-element-content {
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .vertical-timeline-element-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vertical-timeline-element-date {
+    color: #666 !important;
+  }
+  
+  .vertical-timeline-element-icon {
+    box-shadow: none !important;
+  }
+  
+  .vertical-timeline-element-title {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .vertical-timeline-element-description {
+    color: #666;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .vertical-timeline-element {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 40px;
+  }
+  
+  .vertical-timeline-element-content {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+  
+  .vertical-timeline-element-content-arrow {
+    border-right: 7px solid #f9f9f9;
+  }
+  
+  .vertical-timeline-element-date {
+    color: #999;
+    font-size: 14px;
+  }
+  
+  .vertical-timeline-element-content h3 {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .vertical-timeline-element-content p {
+    color: #666;
+  }
+  .task-done {
+    background-color: #e0f7e9; /* Light green background */
+    border-left: 5px solid #28a745; /* Dark green border */
+  }
+  
+  .task-pending {
+    background-color: #e7f1ff; /* Light blue background */
+    border-left: 5px solid #007bff; /* Dark blue border */
+  }
+  
+  .task-default {
+    background-color: #fce8e8; /* Light red background */
+    border-left: 5px solid #dc3545; /* Dark red border */
+  }
+  

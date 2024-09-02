@@ -1,0 +1,51 @@
+/* Sidenav.css */
+
+.sidenav {
+  padding: 1.5rem; /* Add padding around the Sidenav */
+  background-color: #f8f9fa; /* Light background for a clean look */
+  border-right: 1px solid #e0e0e0; /* Subtle border on the right */
+  height: 100vh; /* Full height for the Sidenav */
+}
+
+.sidenav .brand {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.sidenav .brand img {
+  border-radius: 8px; /* Rounded corners for the logo */
+  width: 40px; /* Set logo size */
+  height: 40px;
+  margin-right: 15px;
+}
+
+.sidenav .brand span {
+  font-weight: 600;
+  font-size: 20px;
+  color: #333; /* Darker text color for the brand name */
+}
+
+.sidenav-menu .sidenav-item {
+  margin-bottom: 12px; /* Space between menu items */
+  padding: 10px 15px; /* Increase padding for a more spacious feel */
+  font-size: 16px;
+  border-radius: 6px; /* Subtle rounding of the corners */
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidenav-menu .sidenav-item:hover {
+  background-color: #e6f7ff; /* Soft blue background on hover */
+  color: #1890ff; /* Primary blue color for text on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+.sidenav-menu .sidenav-item .label {
+  display: inline-block;
+  font-weight: 500;
+}
+
+.sidenav-menu .sidenav-item .anticon {
+  font-size: 18px; /* Larger icon size for better visibility */
+  margin-right: 10px;
+}

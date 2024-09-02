@@ -1,0 +1,72 @@
+/* Managertodo.css */
+.container {
+    padding: 16px;
+  }
+  
+  .header {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .button-row {
+    margin-bottom: 16px;
+  }
+  
+  /* Mobile devices */
+  @media (max-width: 575px) {
+    .header {
+      font-size: 1.5rem;
+    }
+  
+    .button-row {
+      text-align: center;
+    }
+  
+    .ant-table {
+      font-size: 0.875rem; /* Adjust table font size */
+    }
+  
+    .ant-form-item-label {
+      font-size: 0.875rem; /* Adjust form label font size */
+    }
+  }
+  
+  /* Tablets */
+  @media (min-width: 576px) and (max-width: 767px) {
+    .header {
+      font-size: 1.75rem;
+    }
+  
+    .button-row {
+      text-align: center;
+    }
+  
+    .ant-table {
+      font-size: 1rem; /* Adjust table font size */
+    }
+  
+    .ant-form-item-label {
+      font-size: 1rem; /* Adjust form label font size */
+    }
+  }
+  
+  /* Desktops */
+  @media (min-width: 768px) {
+    .header {
+      font-size: 2rem;
+    }
+  
+    .button-row {
+      text-align: right;
+    }
+  
+    .ant-table {
+      font-size: 1rem; /* Adjust table font size */
+    }
+  
+    .ant-form-item-label {
+      font-size: 1rem; /* Adjust form label font size */
+    }
+  }
+  

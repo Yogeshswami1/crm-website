@@ -1,0 +1,80 @@
+.dashboard-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .welcome-card {
+    width: 100%;
+    max-width: 1200px;
+    background: linear-gradient(45deg, #1e90ff, #ff6b81, #f0e130);
+    background-size: 200% 200%;
+    animation: gradient-animation 8s ease infinite;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .user-details-card,
+  .available-codes-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    border: 2px solid orange;
+  }
+  
+  .user-details-content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+  
+  .user-details-content div {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .codes-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .code-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .code-item div:first-child {
+    width: 10%;
+  }
+  
+  .code-item div:nth-child(2),
+  .code-item div:nth-child(3) {
+    width: 45%;
+  }
+  
+  @media (max-width: 768px) {
+    .user-details-card,
+    .available-codes-card {
+      margin-bottom: 20px;
+    }
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  

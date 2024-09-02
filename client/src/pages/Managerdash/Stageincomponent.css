@@ -1,0 +1,73 @@
+/* StageInComponent.css */
+
+/* General Styles */
+.stage-in-component {
+    padding: 20px;
+  }
+  
+  .stage-in-component .ant-table {
+    margin-top: 20px;
+  }
+  
+  /* Table Styles */
+  .stage-in-component .ant-table-thead > tr > th {
+    background-color: #fafafa;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .stage-in-component .ant-table-tbody > tr > td {
+    text-align: center;
+  }
+  
+  .stage-in-component .ant-btn {
+    margin: 0;
+    padding: 0 10px;
+  }
+  
+  .stage-in-component .ant-switch {
+    margin: 0 auto;
+  }
+  
+  /* Modal Styles */
+  .stage-in-component .ant-modal {
+    top: 20px;
+  }
+  
+  .stage-in-component .ant-modal-body {
+    padding: 24px;
+  }
+  
+  .stage-in-component .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .stage-in-component .ant-form-item-label {
+    padding: 0;
+  }
+  
+  .stage-in-component .ant-input,
+  .stage-in-component .ant-select,
+  .stage-in-component .ant-picker {
+    width: 100%;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 576px) {
+    .stage-in-component .ant-modal {
+      width: 100% !important;
+    }
+  }
+  
+  @media (min-width: 577px) and (max-width: 768px) {
+    .stage-in-component .ant-modal {
+      width: 75% !important;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .stage-in-component .ant-modal {
+      width: 50% !important;
+    }
+  }
+  
