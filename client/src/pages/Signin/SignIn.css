@@ -64,7 +64,7 @@
 
 /* Container for the form with a semi-transparent background and some padding */
 .signin-form-container {
-  background: rgba(255, 255, 255, 0.8); /* More transparent white background */
+  background: rgba(255, 255, 255, 0.4); /* More transparent white background */
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);

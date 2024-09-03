@@ -138,12 +138,13 @@
 // };
 
 // export default Sidenav;
-import React from "react";
-import { Menu } from "antd";
+import React, { useState } from "react";
+import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
-  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   TeamOutlined,
   FileDoneOutlined,
   DollarOutlined,
@@ -153,44 +154,53 @@ import {
 import logo from "../../assets/logo.png";
 import "./Sidenav.css";
 
-const Sidenav = ({ role, collapse }) => {
+const Sidenav = ({ role }) => {
+  const [collapsed, setCollapsed] = useState(false);
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
 
+  const toggleCollapse = () => setCollapsed(!collapsed);
+
   return (
-    <div className={`sidenav ${collapse ? "collapsed" : ""}`}>
+    <div className={`sidenav ${collapsed ? "collapsed" : ""}`}>
       <div className="brand">
         <img src={logo} alt="Logo" className="brand-logo" />
-        {!collapse && <span className="brand-name">Saumic Craft CRM</span>}
+        {!collapsed && <span className="brand-name">Saumic Craft CRM</span>}
       </div>
-
+      <Button 
+        type="primary" 
+        onClick={toggleCollapse} 
+        className="collapse-button"
+        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      />
       <Menu
-        theme="dark" // Using dark theme for better contrast
+        theme="dark"
         mode="inline"
         selectedKeys={[page]}
-        className={`sidenav-menu ${collapse ? "collapsed-menu" : ""}`}
+        className="sidenav-menu"
+        inlineCollapsed={collapsed}
       >
         {role === "admin" && (
           <>
-            <Menu.Item key="home">
+            <Menu.Item key="home" icon={<HomeOutlined />}>
               <NavLink to="/home">Admin Dashboard</NavLink>
             </Menu.Item>
-            <Menu.Item key="contact">
+            <Menu.Item key="contact" icon={<TeamOutlined />}>
               <NavLink to="/contact">Contacts</NavLink>
             </Menu.Item>
-            <Menu.Item key="managertab">
+            <Menu.Item key="managertab" icon={<FileDoneOutlined />}>
               <NavLink to="/managertab">Manager Tab</NavLink>
             </Menu.Item>
-            <Menu.Item key="assignmenttab">
+            <Menu.Item key="assignmenttab" icon={<SettingOutlined />}>
               <NavLink to="/assignmenttab">Assignment Tab</NavLink>
             </Menu.Item>
-            <Menu.Item key="accountanttab">
+            <Menu.Item key="accountanttab" icon={<DollarOutlined />}>
               <NavLink to="/accountanttab">Accountant Tab</NavLink>
             </Menu.Item>
-            <Menu.Item key="telesalestab" >
+            <Menu.Item key="telesalestab" icon={<ProfileOutlined />}>
               <NavLink to="/telesalestab">Telesales Tab</NavLink>
             </Menu.Item>
-            <Menu.Item key="useridpass">
+            <Menu.Item key="useridpass" icon={<ProfileOutlined />}>
               <NavLink to="/useridpass">User ID & Pass</NavLink>
             </Menu.Item>
           </>
@@ -200,21 +210,11 @@ const Sidenav = ({ role, collapse }) => {
             <Menu.Item key="managerdashboard" icon={<HomeOutlined />}>
               <NavLink to="/managerdashboard">Manager Dashboard</NavLink>
             </Menu.Item>
-            <Menu.Item key="franchisedashboard" icon={<TeamOutlined />}>
-              <NavLink to="/franchisedashboard">Franchise Dashboard</NavLink>
-            </Menu.Item>
-            <Menu.Item key="tasktab" icon={<FileDoneOutlined />}>
-              <NavLink to="/tasktab">Task Tab</NavLink>
-            </Menu.Item>
+           
             <Menu.Item key="managersetpassword" icon={<SettingOutlined />}>
               <NavLink to="/managersetpassword">User ID & Pass</NavLink>
             </Menu.Item>
-            <Menu.Item key="dashwithfilters" icon={<ProfileOutlined />}>
-              <NavLink to="/dashwithfilters">Dash With Filters</NavLink>
-            </Menu.Item>
-            <Menu.Item key="managertodo" icon={<ProfileOutlined />}>
-              <NavLink to="/managertodo">Manager TO DO</NavLink>
-            </Menu.Item>
+           
           </>
         )}
         {role === "user" && (

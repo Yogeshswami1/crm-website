@@ -108,7 +108,7 @@ const SignIn = () => {
           <Col xs={24} lg={8} md={12}>
             <div className="signin-form-container">
               <Title className="mb-15" level={2}>Welcome</Title>
-              <Title className="font-regular text-muted" level={5}>Enter your details to sign in</Title>
+              <Title className="font-regular text-muted" level={5}>Enter your details</Title>
               <Form
                 form={form}
                 onFinish={onFinish}
@@ -120,7 +120,7 @@ const SignIn = () => {
                   name="identifier"
                   rules={[{ required: true, message: "Please input your identifier!" }]}
                 >
-                  <Input placeholder="Email / Position / Enrollment ID / Supervisor ID / Accountant ID / RMD ID / SOCIAL MEDIA MANAGER ID" />
+                  <Input placeholder="Login ID" />
                 </Form.Item>
                 <Form.Item
                   label="Password"

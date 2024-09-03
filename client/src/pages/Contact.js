@@ -27,6 +27,7 @@ import {
 import axios from "axios";
 import Sample from "./Sample.csv";
 import "./Contact.css";
+import { toast } from 'react-toastify';
 
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
@@ -141,7 +142,7 @@ const handleAddOrUpdateContact = async (values) => {
       );
       setOriginalContacts(updatedContacts);
       setContacts(updatedContacts);
-      message.success("Contact updated successfully!");
+      toast.success("Contact updated successfully!");
     } else {
       // Add new contact
       const response = await axios.post(`${apiUrl}/api/contact/add`, contactData);
@@ -152,13 +153,13 @@ const handleAddOrUpdateContact = async (values) => {
       const updatedContacts = [...originalContacts, newContact];
       setOriginalContacts(updatedContacts);
       setContacts(updatedContacts);
-      message.success("Contact added successfully!");
+      toast.success("Contact added successfully!");
     }
     setIsModalVisible(false);
     form.resetFields();
   } catch (error) {
     console.error(currentContact ? "Error updating contact:" : "Error adding contact:", error);
-    message.error(currentContact ? "Failed to update contact. Please try again." : "Failed to add contact. Please try again.");
+    toast.error(currentContact ? "Failed to update contact. Please try again." : "Failed to add contact. Please try again.");
   }
 };
 
@@ -186,13 +187,13 @@ const handleUpload = async (file) => {
     setOriginalContacts([...sortedContacts, ...originalContacts]);
     setContacts([...sortedContacts, ...originalContacts]);
     
-    message.success(
+    toast.success(
       `File uploaded and contacts imported successfully! ${response.data.skippedEntriesCount} entries were skipped.`
     );
   } catch (error) {
     console.error("Error uploading file:", error);
     setUploading(false);
-    message.error("Failed to upload file and import contacts. Please try again.");
+    toast.error("Failed to upload file and import contacts. Please try again.");
   }
 };
 
@@ -202,15 +203,15 @@ const handleUpload = async (file) => {
    beforeUpload: (file) => {
      const isCSV = file.type === "text/csv" || file.name.endsWith(".csv");
      if (!isCSV) {
-       message.error("You can only upload CSV files!");
+       toast.error("You can only upload CSV files!");
      }
      return isCSV;
    },
    onChange: (info) => {
      if (info.file.status === "done") {
-       message.success(`${info.file.name} file uploaded successfully.`);
+       toast.success(`${info.file.name} file uploaded successfully.`);
      } else if (info.file.status === "error") {
-       message.error(`${info.file.name} file upload failed.`);
+       toast.error(`${info.file.name} file upload failed.`);
      }
    },
    customRequest: ({ file }) => {
@@ -222,11 +223,11 @@ const handleUpload = async (file) => {
  const handleDelete = async (id) => {
    try {
      await axios.delete(`${apiUrl}/api/contact/${id}`);
-     message.success("Contact deleted successfully");
+     toast.success("Contact deleted successfully");
      fetchContacts();
    } catch (error) {
      console.error("Error deleting contact:", error);
-     message.error("Failed to delete contact");
+     toast.error("Failed to delete contact");
    }
  };
 
@@ -234,7 +235,7 @@ const handleUpload = async (file) => {
  const handleDeleteSelected = async () => {
    try {
      if (selectedRowKeys.length === 0) {
-       message.warning("Please select contacts to delete.");
+       toast.warning("Please select contacts to delete.");
        return;
      }
 
@@ -244,12 +245,12 @@ const handleUpload = async (file) => {
      });
 
 
-     message.success("Selected contacts deleted successfully");
+     toast.success("Selected contacts deleted successfully");
      fetchContacts();
      setSelectedRowKeys([]);
    } catch (error) {
      console.error("Error deleting selected contacts:", error);
-     message.error("Failed to delete selected contacts");
+     toast.error("Failed to delete selected contacts");
    }
  };
 
@@ -269,7 +270,7 @@ const handleUpload = async (file) => {
 
    setContacts(filteredContacts);
    setIsFilterModalVisible(false);
-   message.success("Filters applied successfully!");
+   toast.success("Filters applied successfully!");
  };
 
 
@@ -277,7 +278,7 @@ const handleUpload = async (file) => {
    filterForm.resetFields();
    setContacts(originalContacts);
    setIsFilterModalVisible(false);
-   message.success("Filters reset successfully!");
+   toast.success("Filters reset successfully!");
  };
 
 

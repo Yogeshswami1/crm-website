@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Radio } from 'antd';
-import Admindashboard from './Admindashboard';
 
 
 const AdminDashboard = () => {
