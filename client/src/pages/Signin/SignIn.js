@@ -1,18 +1,27 @@
+
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Layout, Button, Row, Col, Typography, Form, Input, Switch } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Form,
+ Input,
+  Switch,
+} from "antd";
 import axios from "axios";
+import signinbg from "../../assets/images/img-signin.jpg";
 import { useUser } from "../../UserContext";
-import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
-import HeaderComponent from "./Header/Header";
-import FooterComponent from "./Footer/Footer";
-import "./SignIn.css";
-import good from "../../assets/good.mp4";
-import { toast } from 'react-toastify'; // Import react-toastify
+import { EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
+import { toast } from "react-toastify";
+
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const { Title } = Typography;
-const { Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
 const SignIn = () => {
   const history = useHistory();
@@ -23,129 +32,190 @@ const SignIn = () => {
     try {
       let response;
       let role;
-      const { identifier, password } = values;
+
+      const identifier = values.identifier;
+      const password = values.password;
 
       if (/\S+@\S+\.\S+/.test(identifier)) {
         role = "admin";
-        response = await axios.post(`${apiUrl}/api/admin/login`, { email: identifier, password });
+        response = await axios.post(`${apiUrl}/api/admin/login`, {
+          email: identifier,
+          password: password,
+        });
       } else if (/^TL\d+$/.test(identifier)) {
         role = "manager";
-        response = await axios.post(`${apiUrl}/api/managers/login`, { position: identifier, password });
+        response = await axios.post(`${apiUrl}/api/managers/login`, {
+          position: identifier,
+          password: password,
+        });
+      } else if (/^SP\d+$/.test(identifier)) {
+        role = "supervisor";
+        response = await axios.post(`${apiUrl}/api/supervisors/login`, {
+          id: identifier,
+          password: password,
+        });
       } else if (/^AT\d+$/.test(identifier)) {
         role = "accountant";
-        response = await axios.post(`${apiUrl}/api/accountants/login`, { id: identifier, password });
+        response = await axios.post(`${apiUrl}/api/accountants/login`, {
+          id: identifier,
+          password: password,
+        });
       } else if (/^TS\d+$/.test(identifier)) {
         role = "telesales";
-        response = await axios.post(`${apiUrl}/api/telesales/login`, { id: identifier, password });
+        response = await axios.post(`${apiUrl}/api/telesales/login`, {
+          id: identifier,
+          password: password,
+        });
       } else {
         role = "user";
-        response = await axios.post(`${apiUrl}/api/contact/login`, { enrollmentId: identifier, password });
+        response = await axios.post(`${apiUrl}/api/contact/login`, {
+          enrollmentId: identifier,
+          password: password,
+        });
       }
 
       if (response && response.data) {
-        toast.success("Login successful!"); // Use toast for success
+        toast.success("Login successful!");
         setUser({ ...response.data.user, role });
 
-
+        // Store token and user details in localStorage
         localStorage.setItem("token", response.data.token);
         if (response.data.manager) {
           localStorage.setItem("managerId", response.data.manager._id);
         } else if (response.data.user) {
           localStorage.setItem("enrollmentId", response.data.user.enrollmentId);
-        } else if (response.data.supervisor) {
-          localStorage.setItem("supervisorId", response.data.supervisor._id);
-        } else if (response.data.accountant) {
-          localStorage.setItem("accountantId", response.data.accountant._id);
         }
-        else if (response.data.telesales) {
-          localStorage.setItem("telesalesId", response.data.telesales._id);
+        else if (response.data.user) {
+          localStorage.setItem("supervisorId", response.data.user.supervisorId);
         }
-        else if (response.data.social) {
-          localStorage.setItem("socialId", response.data.social._id);
+        else if (response.data.user) {
+          localStorage.setItem("accountantId", response.data.user.accountantId);
+        }
+        else if (response.data.user) {
+          localStorage.setItem("telesalesId", response.data.user.telesalesId);
         }
         localStorage.setItem("user", JSON.stringify({ ...response.data.user, role }));
 
-        const rolePath = {
-          admin: "/home",
-          manager: "/managerdashboard",
-          accountant: "/accountantdashboard",
-          telesales: "/telesalesdashboard",
-          user: "/userdashboard"
-        };
-        history.push(rolePath[role] || "/");
+        if (role === "admin") {
+          history.push("/home");
+        } else if (role === "manager") {
+          history.push("/managerdashboard");
+        } else if (role === "supervisor") {
+          history.push("/supervisordashboard");
+        } else if (role === "accountant") {
+          history.push("/accountantdashboard");
+        }  else if (role === "telesales") {
+          history.push("/telesalesdashboard");
+        }  else if (role === "user") {
+          history.push("/userdashboard");
+        }
       } else {
-        toast.error("Login failed! No data returned."); // Use toast for errors
+        toast.error("Login failed! No data returned.");
       }
     } catch (error) {
-      toast.error("Login failed!"); // Use toast for errors
-      console.error("Failed:", error.response?.data || error.message);
+      toast.error("Login failed!");
+      console.log("Failed:", error.response?.data || error.message);
     }
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.error("Failed:", errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   const onChange = (checked) => {
-    console.log(`Switch to ${checked}`);
+    console.log(`switch to ${checked}`);
   };
 
   return (
     <Layout className="layout-default layout-signin">
-      <HeaderComponent />
-      <Content className="signin">
-        <div className="video-background">
-          <video autoPlay loop muted>
-            <source src={good} type="video/mp4" />
-          </video>
+      <Header>
+        <div className="header-col header-brand">
+          <h5>Saumic Craft CRM</h5>
         </div>
-        <Row
-          gutter={[24, 0]}
-          justify="center"
-          align="middle"
-          className="signin-content"
-        >
-          <Col xs={24} lg={8} md={12}>
-            <div className="signin-form-container">
-              <Title className="mb-15" level={2}>Welcome</Title>
-              <Title className="font-regular text-muted" level={5}>Enter your details</Title>
-              <Form
-                form={form}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                layout="vertical"
+        <div className="header-col header-nav"></div>
+      </Header>
+      <Content className="signin">
+        <Row gutter={[24, 0]} justify="space-around">
+          <Col
+            xs={{ span: 24, offset: 0 }}
+            lg={{ span: 6, offset: 2 }}
+            md={{ span: 12 }}
+          >
+            <Title className="mb-15">Welcome</Title>
+            <Title className="font-regular text-muted" level={5}>
+              Enter your details to sign in
+            </Title>
+            <Form
+              form={form}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              layout="vertical"
+              className="row-col"
+            >
+              <Form.Item
+                className="username"
+                label="Login ID"
+                name="identifier"
+                rules={[
+                  { required: true, message: "Please input your identifier!" },
+                ]}
               >
-                <Form.Item
-                  label="Login ID"
-                  name="identifier"
-                  rules={[{ required: true, message: "Please input your identifier!" }]}
+                <Input placeholder="Email / Position / Enrollment ID / Supervisor ID / Accountant ID / RMD ID / SOCIAL MEDIA MANAGER ID" />
+              </Form.Item>
+
+              <Form.Item
+      className="username"
+      label="Password"
+      name="password"
+      rules={[{ required: true, message: "Please input your password!" }]}
+    >
+      <Input.Password
+        placeholder="Password"
+        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+      />
+    </Form.Item>
+
+              <Form.Item
+                name="remember"
+                className="align-center"
+                valuePropName="checked"
+              >
+                <Switch defaultChecked onChange={onChange} />
+                Remember me
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: "100%" }}
                 >
-                  <Input placeholder="Login ID" />
-                </Form.Item>
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[{ required: true, message: "Please input your password!" }]}
-                >
-                  <Input.Password
-                    placeholder="Password"
-                    iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
-                  />
-                </Form.Item>
-                <Form.Item name="remember" valuePropName="checked">
-                  <Switch defaultChecked onChange={onChange} /> Remember me
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" block>
-                    Log In
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div>
+                  Log In
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+          <Col
+            className="sign-img"
+            style={{ padding: 12 }}
+            xs={{ span: 24 }}
+            lg={{ span: 12 }}
+            md={{ span: 12 }}
+          >
+            <img src={signinbg} alt="" />
           </Col>
         </Row>
       </Content>
-      <FooterComponent />
+      <Footer>
+        <Menu mode="horizontal">
+          <Menu.Item>Company</Menu.Item>
+          <Menu.Item>About Us</Menu.Item>
+        </Menu>
+        <p className="copyright">
+          {" "}
+          Copyright © 2024 Saumic Craft. All Rights Reserved{" "}
+        </p>
+      </Footer>
     </Layout>
   );
 };
