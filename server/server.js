@@ -119,10 +119,10 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 })
   .then(() => {
-    console.log('DB connected successfully');
+    console.log('Database initialized successfully');
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server Initialized on ${PORT}`);
     });
   })
   .catch((error) => {

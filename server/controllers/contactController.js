@@ -252,6 +252,73 @@ export const updateRemarkContactByEnrollmentId = async (req, res) => {
 
 
 
+// export const updateContactById = async (req, res) => {
+//   const { id } = req.params;
+
+//   if (!id) {
+//     console.error("Update failed: Contact ID is required.");
+//     return res.status(400).json({ error: "Contact ID is required." });
+//   }
+
+//   try {
+//     const { managerPosition, ...contactData } = req.body;
+
+//     // Find the manager by position if the managerPosition is provided
+//     let managerId = null;
+//     if (managerPosition) {
+//       const manager = await Manager.findOne({ position: managerPosition });
+//       if (!manager) {
+//         console.error(`Update failed: Manager with position ${managerPosition} not found.`);
+//         return res.status(404).json({ error: "Manager with the specified position not found." });
+//       }
+//       managerId = manager._id;
+//     }
+
+//     // Get the current date as an ISO string
+//     const currentDate = new Date().toISOString();
+
+//     // List of string fields to update with the current date
+//     const stringFields = [
+//       'idCard', 'training', 'ebook', 'supportPortal', 'walletPortal',
+//       'gallery', 'legality', 'category', 'state', 'gst', 'onboardingStatus',
+//       'brandName', 'accountOpenIn', 'gtin', 'listingsIn', 'launchDateIn',
+//       'addRegionIn', 'shipping', 'fbaIn', 'stateCom', 'documentStatus', 'storeName', 'accountOpenCom',
+//       'videoKyc', 'deduct', 'listingsCom', 'launchDateCom', 'nia', 'addCredit', 'fbaCom', 'ovc', 'theme', 'stage1Completion', 'callDone',
+//       'cvcIn', 'cvcCom', 'stage2Completion', 'stage3Completion'
+//     ];
+
+//     // Append the current date to the string fields if they are present in the request body
+//     stringFields.forEach(field => {
+//       if (contactData[field]) {
+//         contactData[field] = `${contactData[field]} (updated on ${currentDate})`;
+//       }
+//     });
+
+//     // Log the data to be updated
+//     console.info(`Attempting to update contact with ID ${id}. Update data:`, contactData);
+
+//     // Update contact data including managerId if provided
+//     const updatedContact = await Contact.findByIdAndUpdate(
+//       id,
+//       { ...contactData, ...(managerId && { managerId }) },
+//       { new: true }
+//     );
+
+//     if (!updatedContact) {
+//       console.error(`Update failed: Contact with ID ${id} not found.`);
+//       return res.status(404).json({ error: "Contact not found." });
+//     }
+
+//     // Log successful update
+//     console.info(`Contact with ID ${id} updated successfully. Updated data:`, updatedContact);
+//     res.status(200).json(updatedContact);
+
+//   } catch (error) {
+//     console.error(`Error updating contact with ID ${id}:`, error);
+//     res.status(500).json({ error: "Failed to update contact. Please try again." });
+//   }
+// };
+
 export const updateContactById = async (req, res) => {
   const { id } = req.params;
 
@@ -273,26 +340,6 @@ export const updateContactById = async (req, res) => {
       }
       managerId = manager._id;
     }
-
-    // Get the current date as an ISO string
-    const currentDate = new Date().toISOString();
-
-    // List of string fields to update with the current date
-    const stringFields = [
-      'idCard', 'training', 'ebook', 'supportPortal', 'walletPortal',
-      'gallery', 'legality', 'category', 'state', 'gst', 'onboardingStatus',
-      'brandName', 'accountOpenIn', 'gtin', 'listingsIn', 'launchDateIn',
-      'addRegionIn', 'shipping', 'fbaIn', 'stateCom', 'documentStatus', 'storeName', 'accountOpenCom',
-      'videoKyc', 'deduct', 'listingsCom', 'launchDateCom', 'nia', 'addCredit', 'fbaCom', 'ovc', 'theme', 'stage1Completion', 'callDone',
-      'cvcIn', 'cvcCom', 'stage2Completion', 'stage3Completion'
-    ];
-
-    // Append the current date to the string fields if they are present in the request body
-    stringFields.forEach(field => {
-      if (contactData[field]) {
-        contactData[field] = `${contactData[field]} (updated on ${currentDate})`;
-      }
-    });
 
     // Log the data to be updated
     console.info(`Attempting to update contact with ID ${id}. Update data:`, contactData);
@@ -318,7 +365,6 @@ export const updateContactById = async (req, res) => {
     res.status(500).json({ error: "Failed to update contact. Please try again." });
   }
 };
-
 
 
 

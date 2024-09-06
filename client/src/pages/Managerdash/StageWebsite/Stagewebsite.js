@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Select, Modal, Form, Input, Button, List, Row, Col, Switch } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import Callmodal from "./Callmodal";
+import Callmodal from "../Callmodal";
 import { toast } from "react-toastify";
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
