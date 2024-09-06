@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Modal, Form, Input, Button, message, List, Row, Col, Switch } from 'antd';
+import { Table, Select, Modal, Form, Input, Button, List, Row, Col, Switch } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import Callmodal from "./Callmodal";
