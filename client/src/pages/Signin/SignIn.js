@@ -207,10 +207,10 @@ const SignIn = () => {
         </Row>
       </Content>
       <Footer>
-        <Menu mode="horizontal">
+        {/* <Menu mode="horizontal">
           <Menu.Item>Company</Menu.Item>
           <Menu.Item>About Us</Menu.Item>
-        </Menu>
+        </Menu> */}
         <p className="copyright">
           {" "}
           Copyright © 2024 Saumic Craft. All Rights Reserved{" "}

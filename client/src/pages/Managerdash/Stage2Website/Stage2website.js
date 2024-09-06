@@ -4,51 +4,43 @@ import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
 
+
+
+import Stage2PaymentModal from './Stage2PaymentModal';
+import CatFileModal from './CatFileModal';
+import ProductFileModal from './ProductFileModal';
+import LogoModal from './LogoModal';
+import BannerModal from './BannerModal';
+import GalleryModal from './GalleryModal';
+import Stage2CompletionModal from './Stage2CompletionModal';
+
+
 const { Option } = Select;
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 const StageMedia = () => {
   const [data, setData] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [form] = Form.useForm();
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
-  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const [isDescriptionModalVisible, setIsDescriptionModalVisible] = useState(false);
-  const [uploadedDocumentPath, setUploadedDocumentPath] = useState(null);
-  const [description, setDescription] = useState('');
-  const [descriptionField, setDescriptionField] = useState('');
-
-  const [isTemplateModalVisible, setIsTemplateModalVisible] = useState(false);
-const [selectedTemplate, setSelectedTemplate] = useState('');
-
 const [remarks, setRemarks] = useState([]);
  const [newRemark, setNewRemark] = useState('');
  const [isRemarksModalVisible, setIsRemarksModalVisible] = useState(false);
 
 
+ const [isCatFileModalVisible, setIsCatFileModalVisible] = useState(false);
+ const [productFileModalVisible, setProductFileModalVisible] = useState(false);
+ const [selectedRecord, setSelectedRecord] = useState(null);
+ const [logoModalVisible, setLogoModalVisible] = useState(false);
+ const [bannerModalVisible, setBannerModalVisible] = useState(false);
+ const [galleryModalVisible, setGalleryModalVisible] = useState(false);
+ const [stage2CompletionModalVisible, setStage2CompletionModalVisible] = useState(false);
 
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`);
-  
-  //     // Filter and sort data by enrollmentId in descending order
-  //     const filteredData = response.data
-  //       .filter(item => item.stage1Completion && item.stage1Completion.startsWith('Done'))
-  //       .sort((a, b) => b.enrollmentId.localeCompare(a.enrollmentId));
-  
-  //     setData(filteredData);
-  
-  //   } catch (error) {
-  //     message.error("Failed to fetch data");
-  //   }
-  // };
   const fetchData = async () => {
     try {
       const managerId = localStorage.getItem("managerId");
@@ -85,56 +77,6 @@ const [remarks, setRemarks] = useState([]);
       message.error("Failed to fetch data");
     }
   };
-  
-  
-
-  const handleToggleChange = async (record, field, checked) => {
-    const value = checked ? `Done (updated on ${new Date().toISOString()})` : `Not Done (updated on ${new Date().toISOString()})`;
-    try {
-      await axios.put(`${apiUrl}/api/contact/${record._id}`, { [field]: value });
-      message.success("Field updated successfully");
-      fetchData();
-    } catch (error) {
-      message.error("Failed to update field");
-    }
-  };
-
-  const handleDropdownChange = (record, field, value) => {
-    if (value === 'Not Done') {
-      setCurrentRecord(record);
-      setDescriptionField(field);
-      setIsDescriptionModalVisible(true);
-    } else {
-      handleToggleChange(record, field, true);
-    }
-  };
-
-  const handleDescriptionSave = async () => {
-    const value = `Not Done (updated on ${new Date().toISOString()}): ${description}`;
-    try {
-      await axios.put(`${apiUrl}/api/contact/${currentRecord._id}`, { [descriptionField]: value });
-      message.success("Field updated successfully");
-      fetchData();
-      setIsDescriptionModalVisible(false);
-      setDescription('');
-    } catch (error) {
-      message.error("Failed to update field");
-    }
-  };
-  const handleOpenModal = (record) => {
-    setCurrentRecord(record);
-    setIsModalVisible(true);
-  };
-
-  const handleModalOk = () => {
-    setIsModalVisible(false);
-    setCurrentRecord(null);
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-    setCurrentRecord(null);
-  };
 
   const handleOpenPaymentModal = (record) => {
     setCurrentRecord(record);
@@ -142,45 +84,11 @@ const [remarks, setRemarks] = useState([]);
   };
 
   const handleCancel = () => {
-    setIsDetailModalVisible(false);
     setIsPaymentModalVisible(false);
-    setIsDescriptionModalVisible(false);
     setCurrentRecord(null);
     setIsRemarksModalVisible(false);
     setNewRemark('');
-  };
-
-  const getSwitchState = (fieldValue) => {
-    return fieldValue ? fieldValue.startsWith('Done') : false;
-  };
-
-  const handleUpload = async (info) => {
-    if (info.file.status === 'done') {
-      // Ensure the backend response includes the document path
-      const { response } = info.file;
-      setUploadedDocumentPath(response.filePath); // Store the document path from the response
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  };
-
-  const handlePaymentSave = async (values) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${currentRecord._id}`, {
-        'payment.stage2': {
-          amount: values.amount,
-          paymentMode: values.paymentMode,
-          document: uploadedDocumentPath || currentRecord.payment?.stage2?.document,
-          status: values.status,
-        },
-      });
-      message.success("Payment details updated successfully");
-      fetchData();
-      handleCancel();
-    } catch (error) {
-      message.error("Failed to update payment details");
-    }
+    setIsCatFileModalVisible(false);
   };
 
   const handleSendTemplate = async (templateName) => {
@@ -203,7 +111,7 @@ const [remarks, setRemarks] = useState([]);
       if (response.status === 200) {
         message.success('Template sent successfully');
         fetchData();
-        setSelectedTemplate(templateName); // Mark the template as sent
+        // setSelectedTemplate(templateName);
       } else {
         message.error('Failed to send template');
       }
@@ -246,7 +154,64 @@ const [remarks, setRemarks] = useState([]);
     setRemarks(record.remarks || []);
     setIsRemarksModalVisible(true);
   };
-  
+
+
+
+
+  const handleOpenCatFileModal = (record) => {
+    setCurrentRecord(record);
+    setIsCatFileModalVisible(true);
+  };
+
+  const openProductFileModal = (record) => {
+    setSelectedRecord(record);
+    setProductFileModalVisible(true);
+  };
+
+  const handleCancelProductFileModal = () => {
+    setProductFileModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const openLogoModal = (record) => {
+    setSelectedRecord(record);
+    setLogoModalVisible(true);
+  };
+
+  const handleCancelLogoModal = () => {
+    setLogoModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const openBannerModal = (record) => {
+    setSelectedRecord(record);
+    setBannerModalVisible(true);
+  };
+
+const handleCancelBannerModal = () => {
+  setBannerModalVisible(false);
+  setSelectedRecord(null);
+};
+
+const openGalleryModal = (record) => {
+  setSelectedRecord(record);
+  setGalleryModalVisible(true);
+};
+ 
+const handleCancelGalleryModal = () => {
+  setGalleryModalVisible(false);
+  setSelectedRecord(null);
+};
+
+const openStage2CompletionModal = (record) => {
+  setSelectedRecord(record);
+  setStage2CompletionModalVisible(true);
+};
+
+const handleCancelStage2CompletionModal = () => {
+  setStage2CompletionModalVisible(false);
+  setSelectedRecord(null);
+};
 
   const mediaColumns = [
     {
@@ -265,160 +230,50 @@ const [remarks, setRemarks] = useState([]);
       ),
     },
     {
-      title: "Cat File",
-      dataIndex: "catFile",
-      key: "catFile",
-      width: 100,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.catFile === value,
+      title: 'Cat File',
+      dataIndex: 'catFile',
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(record.catFile)}
-          onChange={(checked) => handleToggleChange(record, "catFile", checked)}
-        />
+        <Button onClick={() => handleOpenCatFileModal(record)}>
+          Edit Cat File
+        </Button>
       ),
     },
     {
-      title: "Product File",
-      dataIndex: "productFile",
-      key: "productFile",
-      width: 100,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.productFile === value,
-      render: (text, record) => {
-        // Extract the status and date from the text if needed
-        const parts = text ? text.split(' (updated on ') : [];
-        const status = parts[0] || '';
-        const datePart = parts[1] ? parts[1].slice(0, -1) : ''; // Remove the closing parenthesis
-    
-        // Format the date if available
-        const formattedDate = datePart ? new Date(datePart).toLocaleDateString("en-GB") : '';
-    
-        // Determine background color based on status
-        const backgroundColor = status === 'Done' ? 'lightgreen' : 'transparent';
-    
-        return (
-          <div
-            style={{
-              backgroundColor,
-              padding: '5px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '120px',
-            }}
-          >
-            <Select
-              value={`${status}${formattedDate ? ` (${formattedDate})` : ''}`}
-              onChange={(value) => handleDropdownChange(record, 'productFile', value)}
-              style={{ width: '100%' }}
-            >
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </div>
-        );
-      },
-    },    
-    {
-      title: "Logo",
-      dataIndex: "logo",
-      key: "logo",
-      width: 100,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.logo === value,
-      render: (text, record) => {
-        // Extract the status and date from the text if needed
-        const parts = text ? text.split(' (updated on ') : [];
-        const status = parts[0] || '';
-        const datePart = parts[1] ? parts[1].slice(0, -1) : ''; // Remove the closing parenthesis
-    
-        // Format the date if available
-        const formattedDate = datePart ? new Date(datePart).toLocaleDateString("en-GB") : '';
-    
-        // Determine background color based on status
-        const backgroundColor = status === 'Done' ? 'lightgreen' : 'transparent';
-    
-        return (
-          <div
-            style={{
-              backgroundColor,
-              padding: '5px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '100px',
-            }}
-          >
-            <Select
-              value={`${status}${formattedDate ? ` (${formattedDate})` : ''}`}
-              onChange={(value) => handleDropdownChange(record, 'logo', value)}
-              style={{ width: '100%' }}
-            >
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </div>
-        );
-      },
-    },    
-    {
-      title: "Banner",
-      dataIndex: "banner",
-      key: "banner",
-      width: 100,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.banner === value,
+      title: 'Product File',
+      dataIndex: 'productFile',
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(record.banner)}
-          onChange={(checked) => handleToggleChange(record, "banner", checked)}
-        />
+        <Button onClick={() => openProductFileModal(record)}>
+          Edit Product File
+        </Button>
       ),
     },
     {
-      title: "Gallery",
-      dataIndex: "gallery",
-      key: "gallery",
-      width: 100,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.gallery === value,
+      title: 'Logo',
+      dataIndex: 'logo',
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(record.gallery)}
-          onChange={(checked) => handleToggleChange(record, "gallery", checked)}
-        />
+        <Button onClick={() => openLogoModal(record)}>
+          Edit Logo File
+        </Button>
       ),
     },
-    // {
-    //   title: "Send Template",
-    //   key: "sendTemplate",
-    //   width: 100,
-    //   render: (text, record) => (
-    //     <Button onClick={() => {
-    //       setCurrentRecord(record);
-    //       setIsTemplateModalVisible(true);
-    //       setSelectedTemplate(''); // Reset the selected template
-    //     }}>
-    //       Send Template
-    //     </Button>
-    //   ),
-    // },
+    {
+      title: 'Banner',
+      dataIndex: 'banner',
+      render: (text, record) => (
+        <Button onClick={() => openBannerModal(record)}>
+          Edit Banner File
+        </Button>
+      ),
+    },
+    {
+      title: 'Gallery',
+      dataIndex: 'gallery',
+      render: (text, record) => (
+        <Button onClick={() => openGalleryModal(record)}>
+          Edit Gallery File
+        </Button>
+      ),
+    },
     {
       title: "Remarks",
       key: "remarks",
@@ -427,51 +282,15 @@ const [remarks, setRemarks] = useState([]);
       ),
     },
     {
-      title: "Stage 2 Completion",
-      dataIndex: "stage2Completion",
-      key: "stage2Completion",
-      width: 160,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.stage2Completion === value,
+      title: 'Stage 2 Completion',
+      dataIndex: 'stage2Completion',
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(record.stage2Completion)}
-          onChange={(checked) => handleToggleChange(record, "stage2Completion", checked)}
-        />
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      width: 100,
-      render: (_, record) => (
-        <Button onClick={() => handleOpenModal(record)}>
-          View/Update
+        <Button onClick={() => openStage2CompletionModal(record)}>
+          Edit Stage 2 Completion 
         </Button>
       ),
-    }
+    },
   ];
-
-  const formatDate = (dateString) => {
-    return moment(dateString).format('DD-MM-YYYY');
-  };
-
-  const formatField = (field) => {
-    if (!field) return 'N/A';
-
-    const match = field.match(/(Done|Not Done) \(updated on ([\d\-T:.Z]+)\)/);
-    if (match) {
-      const status = match[1];
-      const originalDate = match[2];
-      const formattedDate = moment(originalDate, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD-MM-YYYY');
-      return `${status} (updated on ${formattedDate})`;
-    }
-
-    return field;
-  };
 
   return (
     <>
@@ -479,91 +298,69 @@ const [remarks, setRemarks] = useState([]);
         <Table columns={mediaColumns} dataSource={data} rowKey="_id" scroll={{ x: 'max-content', y: 601 }} sticky />
       </div>
 
-      <Modal
-        title="Details"
-        open={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      >
-        <p><strong>Enrollment ID:</strong> {currentRecord?.enrollmentId}</p>
-        <p><strong>Payment Amount:</strong> {(currentRecord?.payment?.stage2?.amount)}</p>
-        <p><strong>Payment Mode:</strong> {(currentRecord?.payment?.stage2?.paymentMode)}</p>
-        <p><strong>Payment Status:</strong> {(currentRecord?.payment?.stage2?.status)}</p>
-        <p><strong>Sub Domain:</strong> {currentRecord?.subDomain}</p>
-        <p><strong>Cat File:</strong> {formatField(currentRecord?.catFile)}</p>
-        <p><strong>Product File:</strong> {formatField(currentRecord?.productFile)}</p>
-        <p><strong>Logo:</strong> {formatField(currentRecord?.logo)}</p>
-        <p><strong>Banner:</strong> {formatField(currentRecord?.banner)}</p>
-        <p><strong>Gallery:</strong> {formatField(currentRecord?.gallery)}</p>
-        <p><strong>Stage 2 Completion:</strong> {formatField(currentRecord?.stage2Completion)}</p>
-       
-      </Modal>
+      {/* Stage 2 payment */}
 
-      <Modal
-        title="Stage 2 Payment"
-        open={isPaymentModalVisible}
+      <Stage2PaymentModal
+        visible={isPaymentModalVisible}
         onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={() => form.submit()}>
-            Save
-          </Button>,
-        ]}
-      >
-        <Form
-          form={form}
-          initialValues={{
-            amount: currentRecord?.payment?.stage2?.amount || '',
-            paymentMode: currentRecord?.payment?.stage2?.paymentMode || '',
-            status: currentRecord?.payment?.stage2?.status || '',
-          }}
-          onFinish={handlePaymentSave}
-        >
-          <Form.Item
-            name="amount"
-            label="Amount"
-            rules={[{ required: true, message: 'Please input the amount' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="paymentMode"
-            label="Payment Mode"
-            rules={[{ required: true, message: 'Please select the payment mode' }]}
-          >
-            <Select>
-              <Option value="Cash">Cash</Option>
-              <Option value="Phonepay">Phonepay</Option>
-              <Option value="Paytm">Paytm</Option>
-              <Option value="Google Pay">Google Pay</Option>
-              <Option value="Credit Card">Credit Card</Option>
-              <Option value="Debit Card">Debit Card</Option>
-              <Option value="Bank Transfer">Bank Transfer</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true, message: 'Please select the status' }]}
-          >
-            <Select>
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Upload Document">
-            <Upload
-              name="document"
-              action={`${apiUrl}/api/upload`}
-              onChange={handleUpload}
-            >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
-        </Form>
-      </Modal>
+        record={currentRecord}
+        fetchData={fetchData} // Pass the fetchData function to refresh the data after saving
+      />
+
+      {/* cat file */}
+
+      <CatFileModal
+        visible={isCatFileModalVisible}
+        onCancel={handleCancel}
+        record={currentRecord}
+        fetchData={fetchData} // Refresh the data after saving
+      />
+
+      {/* product file */}
+
+      <ProductFileModal
+  visible={productFileModalVisible}
+  onCancel={handleCancelProductFileModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+
+      {/* logo modal */}
+
+      <LogoModal
+  visible={logoModalVisible}
+  onCancel={handleCancelLogoModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+
+      {/* banner modal */}
+
+      <BannerModal
+  visible={bannerModalVisible}
+  onCancel={handleCancelBannerModal}
+  record={selectedRecord}
+  fetchData={fetchData} // Function to refresh the data after the upload
+/>
+
+      {/* gallery modal */}
+
+      <GalleryModal
+  visible={galleryModalVisible}
+  onCancel={handleCancelGalleryModal}
+  record={selectedRecord}
+  fetchData={fetchData} // Function to refresh the data after the upload
+/>
+
+      {/* stage 2 completio modal */}
+
+      <Stage2CompletionModal
+  visible={stage2CompletionModalVisible}
+  onCancel={handleCancelStage2CompletionModal}
+  record={selectedRecord}
+  fetchData={fetchData} // Function to refresh the data after the upload
+/>
+
 
       {/* remarks modal */}
       <Modal
@@ -593,132 +390,6 @@ const [remarks, setRemarks] = useState([]);
         <Button type="primary" onClick={handleAddRemark}>Add Remark</Button>
       </Modal>
 
-
-      {/* template modal */}
-
-      <Modal
-  title="Send Template"
-  open={isTemplateModalVisible}
-  onCancel={() => setIsTemplateModalVisible(false)}
-  footer={null}
->
-  {currentRecord && (
-    <Row gutter={[0, 16]}>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template13Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('moving_to_stage_second')}
-          style={{ width: '100%' }}
-        >
-          Moving To Stage 2
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template14Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('2nd_installment_reminder')}
-          style={{ width: '100%' }}
-        >
-          2nd Installment Reminder
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template15Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('payment_due')}
-          style={{ width: '100%' }}
-        >
-          Payment Due
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template16Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('banners')}
-          style={{ width: '100%' }}
-        >
-          Banners
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template17Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('logo_file')}
-          style={{ width: '100%' }}
-        >
-          Logo File
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template18Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('forgalleryaccess')}
-          style={{ width: '100%' }}
-        >
-          Gallery Access
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template19Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('categor_selection')}
-          style={{ width: '100%' }}
-        >
-          Category Selection
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template20Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('websitelearning')}
-          style={{ width: '100%' }}
-        >
-          Website Learning
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template21Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('calling_status')}
-          style={{ width: '100%' }}
-        >
-          Calling Status
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template22Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('week_off')}
-          style={{ width: '100%' }}
-        >
-          Week Off
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template23Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('manager_is_on_leave')}
-          style={{ width: '100%' }}
-        >
-          Manager Is On Leave
-        </Button>
-      </Col>
-    </Row>
-  )}
-</Modal>
-
-      <Modal
-        title="Description"
-        open={isDescriptionModalVisible}
-        onCancel={handleCancel}
-        onOk={handleDescriptionSave}
-      >
-        <Form>
-          <Form.Item label="Description">
-            <Input.TextArea value={description} onChange={(e) => setDescription(e.target.value)} />
-          </Form.Item>
-        </Form>
-      </Modal>
     </>
   );
 };

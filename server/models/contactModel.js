@@ -70,18 +70,21 @@ const paymentSchema = new mongoose.Schema({
   stage1: {
     amount: { type: String },
     paymentMode: { type: String },
+    date: { type: String },
     document: { type: String },
     status: { type: String },
   },
   stage2: {
     amount: { type: String },
     paymentMode: { type: String },
+    date: { type: String },
     document: { type: String },
     status: { type: String },
   },
   stage3: {
     amount: { type: String },
     paymentMode: { type: String },
+    date: { type: String },
     document: { type: String },
     status: { type: String },
   },
@@ -147,6 +150,9 @@ const contactSchema = new Schema({
     type: String,
   },
   gallery: {
+    type: String,
+  },
+  galleryDate: {
     type: String,
   },
   archive: {
@@ -344,19 +350,32 @@ const contactSchema = new Schema({
   catFile: {
     type: String,
   },
+  catDate: {
+    type: Date,
+  },
   flagStatus: { type: Boolean, default: false },
   productFile: {
     type: String,
-    description: String
+  },
+  productDate: {
+    type: String,
   },
   logo: {
     type: String,
-    description: String
+  },
+  logoDate: {
+    type: String,
   },
   banner: {
     type: String,
   },
+  bannerDate: {
+    type: String,
+  },
   stage2Completion: {
+    type: String,
+  },
+  stage2CompletionDate: {
     type: String,
   },
   stage3Completion: {

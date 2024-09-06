@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Table, Switch, Button, Modal, Input, Form, message, Upload, Select, Row, Col } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { UploadOutlined } from '@ant-design/icons';
+import PaymentModal from './PaymentModal';
+import ServerPurchaseModal from './ServerPurchaseModal';
+import DomainClaimModal from './DomainClaimModal';
+import DomainMailVerificationModal from './DomainMailVerificationModal';
+import WebsiteUploadedModal from './WebsiteUploadedModal';
 
 const { Option } = Select;
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
@@ -10,52 +14,30 @@ const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const Stage3website = () => {
   const [data, setData] = useState([]);
   const [isIdPassModalVisible, setIsIdPassModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState(null);
   const [form] = Form.useForm();
   const [paymentForm] = Form.useForm();
   const [paymentGatewayValues, setPaymentGatewayValues] = useState({});
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
   const [uploadedDocumentPath, setUploadedDocumentPath] = useState(null);
   const [domainClaimValues, setDomainClaimValues] = useState({});
 
   const [isTemplateModalVisible, setIsTemplateModalVisible] = useState(false);
 const [selectedTemplate, setSelectedTemplate] = useState('');
 
- 
+const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+const [currentRecord, setCurrentRecord] = useState(null);
+const [serverPurchaseModalVisible, setServerPurchaseModalVisible] = useState(false);
+const [selectedRecord, setSelectedRecord] = useState(null);
+const [domainClaimModalVisible, setDomainClaimModalVisible] = useState(false);
+const [domainMailVerificationModalVisible, setDomainMailVerificationModalVisible] = useState(false);
+const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(false);
+
+
+
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`);
-  
-  //     // Filter and sort data by enrollmentId in descending order
-  //     const filteredData = response.data
-  //       .filter(item => item.stage2Completion && item.stage2Completion.startsWith('Done'))
-  //       .sort((a, b) => b.enrollmentId.localeCompare(a.enrollmentId));
-  
-  //     setData(filteredData);
-  
-  //     const initialPaymentGatewayValues = filteredData.reduce((acc, record) => {
-  //       acc[record._id] = record.paymentGateway || '';
-  //       return acc;
-  //     }, {});
-  //     setPaymentGatewayValues(initialPaymentGatewayValues);
-  
-  //     const initialDomainClaimValues = filteredData.reduce((acc, record) => {
-  //       acc[record._id] = record.domainClaim || '';
-  //       return acc;
-  //     }, {});
-  //     setDomainClaimValues(initialDomainClaimValues);
-  
-  //   } catch (error) {
-  //     message.error("Failed to fetch data");
-  //   }
-  // };
-  
 
   const fetchData = async () => {
     try {
@@ -179,10 +161,6 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
     handlePaymentGatewayChange(recordId, paymentGatewayValues[recordId]);
   };
 
-  const handleOpenPaymentModal = (record) => {
-    setCurrentRecord(record);
-    setIsPaymentModalVisible(true);
-  };
 
   const handleCancel = () => {
     setIsDetailModalVisible(false);
@@ -265,6 +243,58 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
     }
   };
 
+
+
+  const handleOpenPaymentModal = (record) => {
+    setCurrentRecord(record);
+    setIsPaymentModalVisible(true);
+  };
+
+  const handleCancelPaymentModal = () => {
+    setIsPaymentModalVisible(false);
+    setCurrentRecord(null);
+  };
+
+  const openServerPurchaseModal = (record) => {
+    setSelectedRecord(record);
+    setServerPurchaseModalVisible(true);
+  };
+
+  const handleCancelServerPurchaseModal = () => {
+    setServerPurchaseModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const openDomainClaimModal = (record) => {
+    setSelectedRecord(record);
+    setDomainClaimModalVisible(true);
+  };
+
+  const handleCancelDomainClaimModal = () => {
+    setDomainClaimModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const openDomainMailVerificationModal = (record) => {
+    setSelectedRecord(record);
+    setDomainMailVerificationModalVisible(true);
+  };
+
+  const handleCancelDomainMailVerificationModal = () => {
+    setDomainMailVerificationModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const openWebsiteUploadedModal = (record) => {
+    setSelectedRecord(record);
+    setWebsiteUploadedModalVisible(true);
+  };
+
+  const handleCancelWebsiteUploadedModal = () => {
+    setWebsiteUploadedModalVisible(false);
+    setSelectedRecord(null);
+  };
+
   
   const serverColumns = [
     {
@@ -275,28 +305,28 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
       width: 100,
     },
     {
-      title: "Stage 3 Payment",
-      key: "stage3Payment",
-      width: 100,
+      title: 'Stage 3 Payment',
+      key: 'stage3Payment',
       render: (text, record) => (
         <Button onClick={() => handleOpenPaymentModal(record)}>Stage 3 Payment</Button>
       ),
     },
     {
-      title: "Server Purchase",
-      dataIndex: "serverPurchase",
-      key: "serverPurchase",
-      width: 150,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.serverPurchase === value,
+      title: 'Server Purchase',
+      dataIndex: 'serverPurchase',
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(text)}
-          onChange={(checked) => handleToggleChange(record, "serverPurchase", checked)}
-        />
+        <Button onClick={() => openServerPurchaseModal(record)}>
+          Edit Server Purchase
+        </Button>
+      ),
+    },
+    {
+      title: 'Domain Claim',
+      dataIndex: 'domainClaim',
+      render: (text, record) => (
+        <Button onClick={() => openDomainClaimModal(record)}>
+          Edit Domain Claim
+        </Button>
       ),
     },
     {
@@ -314,6 +344,15 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
       ),
     },
     {
+      title: 'Domain Mail Verification',
+      dataIndex: 'domainMailVerification',
+      render: (text, record) => (
+        <Button onClick={() => openDomainMailVerificationModal(record)}>
+          Edit Domain Mail Verification
+        </Button>
+      ),
+    },
+    {
       title: "Domain Mail Verification",
       dataIndex: "domainMailVerification",
       key: "domainMailVerification",
@@ -328,6 +367,15 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
           checked={getSwitchState(text)}
           onChange={(checked) => handleToggleChange(record, "domainMailVerification", checked)}
         />
+      ),
+    },
+    {
+      title: 'Website Uploaded',
+      dataIndex: 'websiteUploaded',
+      render: (text, record) => (
+        <Button onClick={() => openWebsiteUploadedModal(record)}>
+          Edit Website Uploaded
+        </Button>
       ),
     },
     {
@@ -397,22 +445,7 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
         />
       ),
     },
-    // {
-    //   title: "Send Template",
-    //   key: "sendTemplate",
-    //   width: 100,
-    //   render: (text, record) => (
-    //     <Button onClick={() => {
-    //       setCurrentRecord(record);
-    //       setIsTemplateModalVisible(true);
-    //       setSelectedTemplate(''); // Reset the selected template
-    //     }}>
-    //       Send Template
-    //     </Button>
-    //   ),
-    // },
-    
-    {
+     {
       title: "Stage 3 Completion",
       dataIndex: "stage3Completion",
       key: "stage3Completion",
@@ -429,54 +462,10 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
         />
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      width: 100,
-      render: (text, record) => (
-        <Button onClick={() => viewDetails(record)}>
-          View Details
-        </Button>
-      ),
-    },
   ];
 
   const formatDate = (dateString) => {
     return moment(dateString).format('DD-MM-YYYY');
-  };
-
-  const viewDetails = (record) => {
-    const formatStatus = (status) => {
-
-      if (typeof status !== 'string') {
-        return 'Unknown'; // or return an appropriate default value
-      }
-      const match = status.match(/Done \(updated on (.*)\)/);
-      if (match) {
-        return `Done (${formatDate(match[1])})`;
-      }
-      return status;
-    };
-
-    Modal.info({
-      title: 'Details',
-      content: (
-        <div>
-          <p><strong>Enrollment ID:</strong> {record.enrollmentId}</p>
-          <p><strong>Payment Amount:</strong> {currentRecord?.payment?.stage3?.amount}</p>
-          <p><strong>Payment Mode:</strong> {(currentRecord?.payment?.stage3?.paymentMode)}</p>
-          <p><strong>Payment Status:</strong> {(currentRecord?.payment?.stage3?.status)}</p>
-          <p><strong>Server Purchase:</strong> {formatStatus(record.serverPurchase)}</p>
-          <p><strong>Domain Claim:</strong> {formatStatus(record.domainClaim)}</p>
-          <p><strong>Domain Mail Verification:</strong> {formatStatus(record.domainMailVerification)}</p>
-          <p><strong>Website Uploaded:</strong> {formatStatus(record.websiteUploaded)}</p>
-          <p><strong>Payment Gateway:</strong> {record.paymentGateway}</p>
-          <p><strong>Ready to Handover:</strong> {formatStatus(record.readyToHandover)}</p>
-          <p><strong>Stage 3 Completion:</strong> {formatStatus(record.stage3Completion)}</p>
-        </div>
-      ),
-      onOk() {},
-    });
   };
 
   return (
@@ -485,6 +474,53 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
       <div style={{ maxHeight: '1000px', overflowY: 'auto' }}>
       <Table columns={serverColumns} dataSource={data} rowKey="_id" scroll={{ x: 'max-content', y: 601 }} sticky />
     </div>
+
+      {/* payment modal */}
+
+      <PaymentModal
+        visible={isPaymentModalVisible}
+        onCancel={handleCancelPaymentModal}
+        record={currentRecord}
+        apiUrl={apiUrl}
+        fetchData={fetchData}
+      />
+
+      {/* server purchase modal */}
+
+      <ServerPurchaseModal
+  visible={serverPurchaseModalVisible}
+  onCancel={handleCancelServerPurchaseModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+
+      {/* domain claim modal */}
+
+      <DomainClaimModal
+  visible={domainClaimModalVisible}
+  onCancel={handleCancelDomainClaimModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+
+      {/* domain mail verification */}
+
+      <DomainMailVerificationModal
+  visible={domainMailVerificationModalVisible}
+  onCancel={handleCancelDomainMailVerificationModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+
+    {/* website uploaded modal */}
+
+    <WebsiteUploadedModal
+  visible={websiteUploadedModalVisible}
+  onCancel={handleCancelWebsiteUploadedModal}
+  record={selectedRecord}
+  fetchData={fetchData} // A function to refresh the data after upload
+/>
+       
 {/* id and pass modal */}
       <Modal
         title="Set ID & Pass"
@@ -510,181 +546,7 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
         </Form>
       </Modal>
 
-      {/* template modal */}
-
-      <Modal
-  title="Send Template"
-  open={isTemplateModalVisible}
-  onCancel={() => setIsTemplateModalVisible(false)}
-  footer={null}
->
-  {currentRecord && (
-    <Row gutter={[0, 16]}>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template24Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('moving_on_third_stage')}
-          style={{ width: '100%' }}
-        >
-          Moving To Stage 3
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template25Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('domain_not_sended')}
-          style={{ width: '100%' }}
-        >
-          Domain Not Sended
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template26Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('payment_reminder')}
-          style={{ width: '100%' }}
-        >
-          Payment Reminder
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template27Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('domain_and_server')}
-          style={{ width: '100%' }}
-        >
-          Domain & Server
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template28Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('website_is_live')}
-          style={{ width: '100%' }}
-        >
-          Website Is Live
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template29Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('handover_new')}
-          style={{ width: '100%' }}
-        >
-          Handover
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template30Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('maxmind')}
-          style={{ width: '100%' }}
-        >
-          Maxmind
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template31Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('changes')}
-          style={{ width: '100%' }}
-        >
-          Changes
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template32Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('changes_done')}
-          style={{ width: '100%' }}
-        >
-          Changes Done
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template33Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('calling_issue_v2')}
-          style={{ width: '100%' }}
-        >
-          Calling Issue V2
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template34Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('dispatch_manager')}
-          style={{ width: '100%' }}
-        >
-          Dispatch Manager
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template35Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('manager_is_on_leave')}
-          style={{ width: '100%' }}
-        >
-          Manager Is On Leave
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template36Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('letter_of_completion')}
-          style={{ width: '100%' }}
-        >
-          Letter Of Completion
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template37Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('feedback_form')}
-          style={{ width: '100%' }}
-        >
-          Feedback Form
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template38Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('cc_avenue')}
-          style={{ width: '100%' }}
-        >
-          CC Avenue
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template39Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('payment_gateway_active')}
-          style={{ width: '100%' }}
-        >
-          Payment Gateway Active
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template40Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('ccavenue')}
-          style={{ width: '100%' }}
-        >
-          CCAVENUE
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template41Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('_video_1')}
-          style={{ width: '100%' }}
-        >
-          Video 1
-        </Button>
-      </Col>
-    </Row>
-  )}
-</Modal>
+    
       <Modal
         title="Stage 3 Payment"
         open={isPaymentModalVisible}
@@ -739,15 +601,7 @@ const [selectedTemplate, setSelectedTemplate] = useState('');
               <Option value="Not Done">Not Done</Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Upload Document">
-            <Upload
-              name="document"
-              action={`${apiUrl}/api/upload`}
-              onChange={handleUpload}
-            >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
+         
         </Form>
       </Modal>
 
