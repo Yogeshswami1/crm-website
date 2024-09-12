@@ -8,6 +8,7 @@ import Stage3website from "./Stage3Website/Stage3website";
 import axios from "axios";
 import Mainwebsite from "./Mainwebsite";
 import ArchiveTable from "./Archivetable";
+import Template from "./Templates/Template";
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL
 
@@ -61,6 +62,7 @@ const Managerdashboard = () => {
               <Radio.Button value="stage1Website">Stage 1 (WEBSITE)</Radio.Button>
               <Radio.Button value="stage2Website">Stage 2 (WEBSITE)</Radio.Button>
               <Radio.Button value="stage3Website">Stage 3 (WEBSITE)</Radio.Button>
+              <Radio.Button value="templates">Templates</Radio.Button>
             </>
           )}
         </Radio.Group>
@@ -72,6 +74,7 @@ const Managerdashboard = () => {
       {activeTab === "stage1Website" && <Stagewebsite />}
       {activeTab === "stage2Website" && <Stage2website />}
       {activeTab === "stage3Website" && <Stage3website />}
+      {activeTab === "templates" && <Template />}
 
       <FloatingButton />
     </div>

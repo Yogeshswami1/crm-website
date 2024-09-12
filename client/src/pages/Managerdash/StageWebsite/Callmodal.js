@@ -53,6 +53,7 @@ const CallModal = ({ visible, onCancel, record }) => {
     });
   };
 
+
   const handleCallDisconnect = () => {
     setIsCalling(false);
     stopTimer();
@@ -65,6 +66,15 @@ const CallModal = ({ visible, onCancel, record }) => {
     }
   }, [visible]);
 
+  const maskContact = (contact) => {
+    if (!contact) return 'N/A';
+    if (contact.length > 3) {
+      return `****${contact.slice(-3)}`;
+    }
+    return contact;
+  };
+  
+
   return (
     <Modal
       title="Contact Details"
@@ -76,7 +86,7 @@ const CallModal = ({ visible, onCancel, record }) => {
         <>
           <p><strong>Name:</strong> {record.name || 'N/A'}</p>
           <p><strong>Email:</strong> {record.email || 'N/A'}</p>
-          <p><strong>Primary Contact:</strong> {record.primaryContact || 'N/A'}</p>
+          <p><strong>Primary Contact:</strong> {maskContact(record.primaryContact || 'N/A')}</p>
           <p><strong>Secondary Contact:</strong> {record.secondaryContact || 'N/A'}</p>
           <div style={{ marginTop: '20px' }}>
             <Button 

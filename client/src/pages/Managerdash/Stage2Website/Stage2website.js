@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Button, Modal, Input, Upload, message, Row, Col, Form, Switch, List } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Input, message, List } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -15,26 +14,24 @@ import GalleryModal from './GalleryModal';
 import Stage2CompletionModal from './Stage2CompletionModal';
 
 
-const { Option } = Select;
-
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-const StageMedia = () => {
+const StageMedia = (record) => {
   const [data, setData] = useState([]);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
 const [remarks, setRemarks] = useState([]);
  const [newRemark, setNewRemark] = useState('');
  const [isRemarksModalVisible, setIsRemarksModalVisible] = useState(false);
 
-
- const [isCatFileModalVisible, setIsCatFileModalVisible] = useState(false);
- const [productFileModalVisible, setProductFileModalVisible] = useState(false);
+ const [visibleModal, setVisibleModal] = useState(null);
  const [selectedRecord, setSelectedRecord] = useState(null);
- const [logoModalVisible, setLogoModalVisible] = useState(false);
- const [bannerModalVisible, setBannerModalVisible] = useState(false);
- const [galleryModalVisible, setGalleryModalVisible] = useState(false);
- const [stage2CompletionModalVisible, setStage2CompletionModalVisible] = useState(false);
+ 
+const openModal = (modalType, record) => {
+ setSelectedRecord(record);
+ setVisibleModal(modalType);
+};
+ 
+const closeModal = () => setVisibleModal(null);
 
 
   useEffect(() => {
@@ -78,17 +75,10 @@ const [remarks, setRemarks] = useState([]);
     }
   };
 
-  const handleOpenPaymentModal = (record) => {
-    setCurrentRecord(record);
-    setIsPaymentModalVisible(true);
-  };
-
   const handleCancel = () => {
-    setIsPaymentModalVisible(false);
     setCurrentRecord(null);
     setIsRemarksModalVisible(false);
     setNewRemark('');
-    setIsCatFileModalVisible(false);
   };
 
   const handleSendTemplate = async (templateName) => {
@@ -156,63 +146,6 @@ const [remarks, setRemarks] = useState([]);
   };
 
 
-
-
-  const handleOpenCatFileModal = (record) => {
-    setCurrentRecord(record);
-    setIsCatFileModalVisible(true);
-  };
-
-  const openProductFileModal = (record) => {
-    setSelectedRecord(record);
-    setProductFileModalVisible(true);
-  };
-
-  const handleCancelProductFileModal = () => {
-    setProductFileModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  const openLogoModal = (record) => {
-    setSelectedRecord(record);
-    setLogoModalVisible(true);
-  };
-
-  const handleCancelLogoModal = () => {
-    setLogoModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  const openBannerModal = (record) => {
-    setSelectedRecord(record);
-    setBannerModalVisible(true);
-  };
-
-const handleCancelBannerModal = () => {
-  setBannerModalVisible(false);
-  setSelectedRecord(null);
-};
-
-const openGalleryModal = (record) => {
-  setSelectedRecord(record);
-  setGalleryModalVisible(true);
-};
- 
-const handleCancelGalleryModal = () => {
-  setGalleryModalVisible(false);
-  setSelectedRecord(null);
-};
-
-const openStage2CompletionModal = (record) => {
-  setSelectedRecord(record);
-  setStage2CompletionModalVisible(true);
-};
-
-const handleCancelStage2CompletionModal = () => {
-  setStage2CompletionModalVisible(false);
-  setSelectedRecord(null);
-};
-
   const mediaColumns = [
     {
       title: "Enrollment ID",
@@ -223,71 +156,86 @@ const handleCancelStage2CompletionModal = () => {
     },
     {
       title: "Stage 2 Payment",
-      key: "stage2Payment",
-      width: 100,
       render: (text, record) => (
-        <Button onClick={() => handleOpenPaymentModal(record)}>Stage 2 Payment</Button>
-      ),
-    },
-    {
-      title: 'Cat File',
-      dataIndex: 'catFile',
-      render: (text, record) => (
-        <Button onClick={() => handleOpenCatFileModal(record)}>
-          Edit Cat File
+        <Button
+          style={{ backgroundColor: record?.payment?.stage2?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('stage2payment', record)}
+        >
+          Edit Payment
         </Button>
       ),
-    },
+    },    
     {
-      title: 'Product File',
-      dataIndex: 'productFile',
+      title: "CAT File",
       render: (text, record) => (
-        <Button onClick={() => openProductFileModal(record)}>
-          Edit Product File
+        <Button
+          style={{ backgroundColor: record?.catFile === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('catFile', record)}
+        >
+          CAT File
         </Button>
       ),
-    },
+    },    
     {
-      title: 'Logo',
-      dataIndex: 'logo',
+      title: "Product File",
       render: (text, record) => (
-        <Button onClick={() => openLogoModal(record)}>
-          Edit Logo File
+        <Button
+          style={{ backgroundColor: record?.productFile === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('productFile', record)}
+        >
+          Product File
         </Button>
       ),
-    },
+    },    
     {
-      title: 'Banner',
-      dataIndex: 'banner',
+      title: "Logo",
       render: (text, record) => (
-        <Button onClick={() => openBannerModal(record)}>
-          Edit Banner File
+        <Button
+          style={{ backgroundColor: record?.logo === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('logo', record)}
+        >
+          Logo
         </Button>
       ),
-    },
+    },    
     {
-      title: 'Gallery',
-      dataIndex: 'gallery',
+      title: "Banner",
       render: (text, record) => (
-        <Button onClick={() => openGalleryModal(record)}>
-          Edit Gallery File
+        <Button
+          style={{ backgroundColor: record?.banner === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('banner', record)}
+        >
+          Banner
         </Button>
       ),
-    },
+    },    
+    {
+      title: "Gallery",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.gallery === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('gallery', record)}
+        >
+          Gallery
+        </Button>
+      ),
+    },    
+    {
+      title: "Stage 2 Completion",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.stage2Completion === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('stage2completion', record)}
+        >
+          Stage 2 Completion
+        </Button>
+      ),
+    },    
     {
       title: "Remarks",
       key: "remarks",
       render: (text, record) => (
         <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
-      ),
-    },
-    {
-      title: 'Stage 2 Completion',
-      dataIndex: 'stage2Completion',
-      render: (text, record) => (
-        <Button onClick={() => openStage2CompletionModal(record)}>
-          Edit Stage 2 Completion 
-        </Button>
       ),
     },
   ];
@@ -300,66 +248,80 @@ const handleCancelStage2CompletionModal = () => {
 
       {/* Stage 2 payment */}
 
-      <Stage2PaymentModal
-        visible={isPaymentModalVisible}
-        onCancel={handleCancel}
-        record={currentRecord}
-        fetchData={fetchData} // Pass the fetchData function to refresh the data after saving
-      />
+      {visibleModal === 'stage2payment' && (
+        <Stage2PaymentModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* cat file */}
 
-      <CatFileModal
-        visible={isCatFileModalVisible}
-        onCancel={handleCancel}
-        record={currentRecord}
-        fetchData={fetchData} // Refresh the data after saving
-      />
+      {visibleModal === 'catFile' && (
+        <CatFileModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* product file */}
 
-      <ProductFileModal
-  visible={productFileModalVisible}
-  onCancel={handleCancelProductFileModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'productFile' && (
+        <ProductFileModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* logo modal */}
 
-      <LogoModal
-  visible={logoModalVisible}
-  onCancel={handleCancelLogoModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'logo' && (
+        <LogoModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* banner modal */}
 
-      <BannerModal
-  visible={bannerModalVisible}
-  onCancel={handleCancelBannerModal}
-  record={selectedRecord}
-  fetchData={fetchData} // Function to refresh the data after the upload
-/>
+{visibleModal === 'banner' && (
+        <BannerModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* gallery modal */}
 
-      <GalleryModal
-  visible={galleryModalVisible}
-  onCancel={handleCancelGalleryModal}
-  record={selectedRecord}
-  fetchData={fetchData} // Function to refresh the data after the upload
-/>
+{visibleModal === 'gallery' && (
+        <GalleryModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* stage 2 completio modal */}
 
-      <Stage2CompletionModal
-  visible={stage2CompletionModalVisible}
-  onCancel={handleCancelStage2CompletionModal}
-  record={selectedRecord}
-  fetchData={fetchData} // Function to refresh the data after the upload
-/>
+{visibleModal === 'stage2completion' && (
+        <Stage2CompletionModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
 
       {/* remarks modal */}

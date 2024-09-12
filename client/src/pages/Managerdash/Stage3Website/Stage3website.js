@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Switch, Button, Modal, Input, Form, message, Upload, Select, Row, Col } from 'antd';
+import { Table, Button, Modal, Input, Form, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import PaymentModal from './PaymentModal';
@@ -7,32 +7,28 @@ import ServerPurchaseModal from './ServerPurchaseModal';
 import DomainClaimModal from './DomainClaimModal';
 import DomainMailVerificationModal from './DomainMailVerificationModal';
 import WebsiteUploadedModal from './WebsiteUploadedModal';
+import PaymentGatewayModal from './PaymentGatewayModal';
+import Ready2HandoverModal from './Ready2HandoverModal';
+import Stage3CompletionModal from './Stage3CompletionModal';
 
-const { Option } = Select;
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Stage3website = () => {
+const Stage3website = (record) => {
   const [data, setData] = useState([]);
   const [isIdPassModalVisible, setIsIdPassModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const [paymentForm] = Form.useForm();
-  const [paymentGatewayValues, setPaymentGatewayValues] = useState({});
-  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const [uploadedDocumentPath, setUploadedDocumentPath] = useState(null);
-  const [domainClaimValues, setDomainClaimValues] = useState({});
+  const [currentRecord, setCurrentRecord] = useState(null);
 
-  const [isTemplateModalVisible, setIsTemplateModalVisible] = useState(false);
-const [selectedTemplate, setSelectedTemplate] = useState('');
 
-const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
-const [currentRecord, setCurrentRecord] = useState(null);
-const [serverPurchaseModalVisible, setServerPurchaseModalVisible] = useState(false);
+const [visibleModal, setVisibleModal] = useState(null);
 const [selectedRecord, setSelectedRecord] = useState(null);
-const [domainClaimModalVisible, setDomainClaimModalVisible] = useState(false);
-const [domainMailVerificationModalVisible, setDomainMailVerificationModalVisible] = useState(false);
-const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(false);
 
+const openModal = (modalType, record) => {
+setSelectedRecord(record);
+setVisibleModal(modalType);
+};
 
+const closeModal = () => setVisibleModal(null);
 
 
   useEffect(() => {
@@ -76,34 +72,17 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
         acc[record._id] = record.paymentGateway || '';
         return acc;
       }, {});
-      setPaymentGatewayValues(initialPaymentGatewayValues);
+      // setPaymentGatewayValues(initialPaymentGatewayValues);
   
       const initialDomainClaimValues = filteredData.reduce((acc, record) => {
         acc[record._id] = record.domainClaim || '';
         return acc;
       }, {});
-      setDomainClaimValues(initialDomainClaimValues);
+      // setDomainClaimValues(initialDomainClaimValues);
   
     } catch (error) {
       console.error("Error fetching data:", error);
       message.error("Failed to fetch data");
-    }
-  };
-  
-  
-  
-
-  const handleToggleChange = async (record, field, checked) => {
-    const value = checked
-      ? `Done (updated on ${new Date().toISOString()})`
-      : `Not Done (updated on ${new Date().toISOString()})`;
-
-    try {
-      await axios.put(`${apiUrl}/api/contact/${record._id}`, { [field]: value });
-      message.success("Field updated successfully");
-      fetchData();
-    } catch (error) {
-      message.error("Failed to update field");
     }
   };
 
@@ -136,85 +115,7 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
     setIsIdPassModalVisible(false);
     setCurrentRecord(null);
   };
- 
 
-  // Utility function to determine the switch state
-  const getSwitchState = (fieldValue) => {
-    return fieldValue ? fieldValue.startsWith('Done') : false;
-  };
-
-  const handlePaymentGatewayChange = async (recordId, value) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${recordId}`, { paymentGateway: value });
-      message.success("Payment Gateway updated successfully");
-      fetchData();
-    } catch (error) {
-      message.error("Failed to update Payment Gateway");
-    }
-  };
-
-  const handleInputChange = (recordId, value) => {
-    setPaymentGatewayValues(prev => ({ ...prev, [recordId]: value }));
-  };
-
-  const handleInputBlur = (recordId) => {
-    handlePaymentGatewayChange(recordId, paymentGatewayValues[recordId]);
-  };
-
-
-  const handleCancel = () => {
-    setIsDetailModalVisible(false);
-    setIsPaymentModalVisible(false);
-    setCurrentRecord(null);
-  };
-
-  const handleUpload = async (info) => {
-    if (info.file.status === 'done') {
-      // Ensure the backend response includes the document path
-      const { response } = info.file;
-      setUploadedDocumentPath(response.filePath); // Store the document path from the response
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  };
-  
-  const handlePaymentSave = async (values) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${currentRecord._id}`, {
-        'payment.stage3': {
-          amount: values.amount,
-          paymentMode: values.paymentMode,
-          document: uploadedDocumentPath || currentRecord.payment?.stage3?.document,
-          status: values.status,
-        },
-      });
-      message.success("Payment details updated successfully");
-      fetchData();
-      handleCancel();
-    } catch (error) {
-      message.error("Failed to update payment details");
-    }
-  };
-
-
-  const handleDomainClaimChange = async (recordId, value) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${recordId}`, { domainClaim: value });
-      message.success("Domain Claim updated successfully");
-      fetchData();
-    } catch (error) {
-      message.error("Failed to update Domain Claim");
-    }
-  };
-  
-  const handleDomainClaimInputChange = (recordId, value) => {
-    setDomainClaimValues(prev => ({ ...prev, [recordId]: value }));
-  };
-  
-  const handleDomainClaimInputBlur = (recordId) => {
-    handleDomainClaimChange(recordId, domainClaimValues[recordId]);
-  };
 
   const handleSendTemplate = async (templateName) => {
     try {
@@ -234,7 +135,7 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
       if (response.status === 200) {
         message.success('Template sent successfully');
         fetchData();
-        setSelectedTemplate(templateName); // Mark the template as sent
+        // setSelectedTemplate(templateName);
       } else {
         message.error('Failed to send template');
       }
@@ -243,59 +144,6 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
     }
   };
 
-
-
-  const handleOpenPaymentModal = (record) => {
-    setCurrentRecord(record);
-    setIsPaymentModalVisible(true);
-  };
-
-  const handleCancelPaymentModal = () => {
-    setIsPaymentModalVisible(false);
-    setCurrentRecord(null);
-  };
-
-  const openServerPurchaseModal = (record) => {
-    setSelectedRecord(record);
-    setServerPurchaseModalVisible(true);
-  };
-
-  const handleCancelServerPurchaseModal = () => {
-    setServerPurchaseModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  const openDomainClaimModal = (record) => {
-    setSelectedRecord(record);
-    setDomainClaimModalVisible(true);
-  };
-
-  const handleCancelDomainClaimModal = () => {
-    setDomainClaimModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  const openDomainMailVerificationModal = (record) => {
-    setSelectedRecord(record);
-    setDomainMailVerificationModalVisible(true);
-  };
-
-  const handleCancelDomainMailVerificationModal = () => {
-    setDomainMailVerificationModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  const openWebsiteUploadedModal = (record) => {
-    setSelectedRecord(record);
-    setWebsiteUploadedModalVisible(true);
-  };
-
-  const handleCancelWebsiteUploadedModal = () => {
-    setWebsiteUploadedModalVisible(false);
-    setSelectedRecord(null);
-  };
-
-  
   const serverColumns = [
     {
       title: "Enrollment ID",
@@ -305,96 +153,60 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
       width: 100,
     },
     {
-      title: 'Stage 3 Payment',
-      key: 'stage3Payment',
+      title: "Stage 3 Payment",
       render: (text, record) => (
-        <Button onClick={() => handleOpenPaymentModal(record)}>Stage 3 Payment</Button>
-      ),
-    },
-    {
-      title: 'Server Purchase',
-      dataIndex: 'serverPurchase',
-      render: (text, record) => (
-        <Button onClick={() => openServerPurchaseModal(record)}>
-          Edit Server Purchase
+        <Button
+          style={{ backgroundColor: record?.payment?.stage3?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('payment', record)}
+        >
+          Edit Payment
         </Button>
       ),
-    },
+    },    
     {
-      title: 'Domain Claim',
-      dataIndex: 'domainClaim',
+      title: "Server Purchase",
       render: (text, record) => (
-        <Button onClick={() => openDomainClaimModal(record)}>
-          Edit Domain Claim
+        <Button
+          style={{ backgroundColor: record?.serverPurchase === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('server', record)}
+        >
+          Server Purchase
         </Button>
       ),
-    },
+    },   
     {
       title: "Domain Claim",
-      dataIndex: "domainClaim",
-      key: "domainClaim",
-      width: 120,
       render: (text, record) => (
-        <Input
-        style={{width:"9rem"}}
-          value={domainClaimValues[record._id] || ''}
-          onChange={(e) => handleDomainClaimInputChange(record._id, e.target.value)}
-          onBlur={() => handleDomainClaimInputBlur(record._id)}
-        />
-      ),
-    },
-    {
-      title: 'Domain Mail Verification',
-      dataIndex: 'domainMailVerification',
-      render: (text, record) => (
-        <Button onClick={() => openDomainMailVerificationModal(record)}>
-          Edit Domain Mail Verification
+        <Button
+          style={{ backgroundColor: record?.domainClaim ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+          onClick={() => openModal('domainclaim', record)}
+        >
+          Domain Claim
         </Button>
       ),
-    },
+    },    
     {
       title: "Domain Mail Verification",
-      dataIndex: "domainMailVerification",
-      key: "domainMailVerification",
-      width: 190,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.domainMailVerification === value,
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(text)}
-          onChange={(checked) => handleToggleChange(record, "domainMailVerification", checked)}
-        />
-      ),
-    },
-    {
-      title: 'Website Uploaded',
-      dataIndex: 'websiteUploaded',
-      render: (text, record) => (
-        <Button onClick={() => openWebsiteUploadedModal(record)}>
-          Edit Website Uploaded
+        <Button
+          style={{ backgroundColor: record?.domainMailVerification === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('domainmail', record)}
+        >
+          Domain Mail Verification
         </Button>
       ),
-    },
+    },   
     {
       title: "Website Uploaded",
-      dataIndex: "websiteUploaded",
-      key: "websiteUploaded",
-      width: 150,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.websiteUploaded === value,
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(text)}
-          onChange={(checked) => handleToggleChange(record, "websiteUploaded", checked)}
-        />
+        <Button
+          style={{ backgroundColor: record?.websiteUploaded === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('websiteuploaded', record)}
+        >
+          Website Uploaded
+        </Button>
       ),
-    },
+    },   
     {
       title: "ID & Pass",
       dataIndex: "idAndPassWebsite",
@@ -417,56 +229,39 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
     },
     {
       title: "Payment Gateway",
-      dataIndex: "paymentGateway",
-      key: "paymentGateway",
-      width: 150,
       render: (text, record) => (
-        <Input
-          value={paymentGatewayValues[record._id] || ''}
-          onChange={(e) => handleInputChange(record._id, e.target.value)}
-          onBlur={() => handleInputBlur(record._id)}
-        />
+        <Button
+          style={{ backgroundColor: record?.paymentGateway ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+          onClick={() => openModal('paymentgateway', record)}
+        >
+          Payment Gateway
+        </Button>
       ),
-    },
+    },    
     {
-      title: "Ready to Handover",
-      dataIndex: "readyToHandover",
-      key: "readyToHandover",
-      width: 160,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.readyToHandover === value,
+      title: "Ready To Handover",
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(text)}
-          onChange={(checked) => handleToggleChange(record, "readyToHandover", checked)}
-        />
+        <Button
+          style={{ backgroundColor: record?.readyToHandover === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('ready2handover', record)}
+        >
+          Ready To Handover
+        </Button>
       ),
-    },
-     {
+    },   
+    {
       title: "Stage 3 Completion",
-      dataIndex: "stage3Completion",
-      key: "stage3Completion",
-      width: 160,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.stage3Completion === value,
       render: (text, record) => (
-        <Switch
-          checked={getSwitchState(text)}
-          onChange={(checked) => handleToggleChange(record, "stage3Completion", checked)}
-        />
+        <Button
+          style={{ backgroundColor: record?.stage3Completion === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('stage3completion', record)}
+        >
+          Stage 3 Completion
+        </Button>
       ),
-    },
+    },   
   ];
 
-  const formatDate = (dateString) => {
-    return moment(dateString).format('DD-MM-YYYY');
-  };
 
   return (
     <>
@@ -477,50 +272,92 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
 
       {/* payment modal */}
 
-      <PaymentModal
-        visible={isPaymentModalVisible}
-        onCancel={handleCancelPaymentModal}
-        record={currentRecord}
-        apiUrl={apiUrl}
-        fetchData={fetchData}
-      />
+      {visibleModal === 'payment' && (
+        <PaymentModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* server purchase modal */}
 
-      <ServerPurchaseModal
-  visible={serverPurchaseModalVisible}
-  onCancel={handleCancelServerPurchaseModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'server' && (
+        <ServerPurchaseModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* domain claim modal */}
 
-      <DomainClaimModal
-  visible={domainClaimModalVisible}
-  onCancel={handleCancelDomainClaimModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'domainclaim' && (
+        <DomainClaimModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
       {/* domain mail verification */}
 
-      <DomainMailVerificationModal
-  visible={domainMailVerificationModalVisible}
-  onCancel={handleCancelDomainMailVerificationModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'domainmail' && (
+        <DomainMailVerificationModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
     {/* website uploaded modal */}
 
-    <WebsiteUploadedModal
-  visible={websiteUploadedModalVisible}
-  onCancel={handleCancelWebsiteUploadedModal}
-  record={selectedRecord}
-  fetchData={fetchData} // A function to refresh the data after upload
-/>
+{visibleModal === 'websiteuploaded' && (
+        <WebsiteUploadedModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+{/* payment gateway modal */}
        
+{visibleModal === 'paymentgateway' && (
+        <PaymentGatewayModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+{/* ready to handover modal */}
+
+{visibleModal === 'ready2handover' && (
+        <Ready2HandoverModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+{/* stage 3 completion modal */}
+
+{visibleModal === 'stage3completion' && (
+        <Stage3CompletionModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
 {/* id and pass modal */}
       <Modal
         title="Set ID & Pass"
@@ -532,80 +369,17 @@ const [websiteUploadedModalVisible, setWebsiteUploadedModalVisible] = useState(f
           <Form.Item
             label="ID"
             name="id"
-            rules={[{ required: true, message: 'Please input the ID!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Password"
             name="pass"
-            rules={[{ required: true, message: 'Please input the Password!' }]}
           >
             <Input.Password />
           </Form.Item>
         </Form>
-      </Modal>
-
-    
-      <Modal
-        title="Stage 3 Payment"
-        open={isPaymentModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={() => form.submit()}>
-            Save
-          </Button>,
-        ]}
-      >
-        <Form
-          form={form}
-          initialValues={{
-            amount: currentRecord?.payment?.stage3?.amount || '',
-            paymentMode: currentRecord?.payment?.stage3?.paymentMode || '',
-            status: currentRecord?.payment?.stage3?.status || '',
-          }}
-          onFinish={handlePaymentSave}
-        >
-          <Form.Item
-            name="amount"
-            label="Amount"
-            rules={[{ required: true, message: 'Please input the amount' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="paymentMode"
-            label="Payment Mode"
-            rules={[{ required: true, message: 'Please select the payment mode' }]}
-          >
-            <Select>
-              <Option value="Cash">Cash</Option>
-              <Option value="Phonepay">Phonepay</Option>
-              <Option value="Paytm">Paytm</Option>
-              <Option value="Google Pay">Google Pay</Option>
-              <Option value="Credit Card">Credit Card</Option>
-              <Option value="Debit Card">Debit Card</Option>
-              <Option value="Bank Transfer">Bank Transfer</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true, message: 'Please select the status' }]}
-          >
-            <Select>
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </Form.Item>
-         
-        </Form>
-      </Modal>
-
-      
+      </Modal>      
     </>
   );
 };

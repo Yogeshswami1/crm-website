@@ -1,82 +1,63 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form, Input, Select, DatePicker } from 'antd';
+import React from 'react';
+import { Modal, Form, Input, Button, DatePicker, Switch } from 'antd';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import moment from 'moment';
-import {toast} from 'react-toastify';
-
-const { Option } = Select;
 
 const Stage2PaymentModal = ({ visible, onCancel, record, fetchData }) => {
   const [form] = Form.useForm();
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-  const handleSave = async (values) => {
+  const handlePaymentSave = async (values) => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
         'payment.stage2': {
           amount: values.amount,
           paymentMode: values.paymentMode,
+          status: values.status ? "Done" : "Not Done",
           date: values.date,
-          status: values.status,
         },
       });
-      toast.success('Payment details updated successfully');
-      fetchData(); // Refresh the data
-      onCancel(); // Close the modal
+      toast.success("Payment details updated successfully");
+      fetchData();
+      onCancel();
     } catch (error) {
-      toast.error('Failed to update payment details');
+      toast.error("Failed to update payment details");
     }
   };
 
   return (
-    <Modal
-      title="Stage 2 Payment"
-      visible={visible}
-      onCancel={onCancel}
-      footer={[
-        <Button key="back" onClick={onCancel}>Cancel</Button>,
-        <Button key="submit" type="primary" onClick={() => form.submit()}>Save</Button>,
-      ]}
-    >
+    <Modal title="Payment Stage 2" open={visible} onCancel={onCancel} footer={null}>
       <Form
         form={form}
+        onFinish={handlePaymentSave}
         initialValues={{
-          amount: record?.payment?.stage2?.amount || '',
-          paymentMode: record?.payment?.stage2?.paymentMode || '',
-          date: record?.payment?.stage2?.date ? moment(record.payment.stage2.date) : null,
-          status: record?.payment?.stage2?.status || '',
+          amount: record?.payment?.stage2?.amount,
+          paymentMode: record?.payment?.stage2?.paymentMode,
+          status: record?.payment?.stage2?.status === "Done",
+          date: record?.payment?.stage2?.date ? moment(record?.payment?.stage2?.date) : null,
         }}
-        onFinish={handleSave}
       >
-        <Form.Item
-          name="amount"
-          label="Amount"
-        >
+        <Form.Item name="amount" label="Amount">
           <Input />
         </Form.Item>
-        <Form.Item
-          name="paymentMode"
-          label="Payment Mode"
-        >
+
+        <Form.Item name="paymentMode" label="Payment Mode">
           <Input />
         </Form.Item>
-        <Form.Item
-          name="date"
-          label="Payment Date"
-        >
+
+        <Form.Item name="date" label="Date">
           <DatePicker
             disabledDate={(current) => current && current < moment().startOf('day')}
-            format="YYYY-MM-DD"
           />
         </Form.Item>
-        <Form.Item
-          name="status"
-          label="Status"
-        >
-          <Select>
-            <Option value="Done">Done</Option>
-            <Option value="Not Done">Not Done</Option>
-          </Select>
+
+        <Form.Item name="status" label="Status" valuePropName="checked">
+          <Switch checkedChildren="Done" unCheckedChildren="Not Done" />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">Save</Button>
         </Form.Item>
       </Form>
     </Modal>

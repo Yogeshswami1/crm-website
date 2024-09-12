@@ -4,31 +4,30 @@ import axios from 'axios';
 import moment from 'moment';
 import {toast} from 'react-toastify';
 
-const ProductFileModal = ({ visible, onCancel, record, fetchData }) => {
-  const [productFileStatus, setProductFileStatus] = useState(false); // Default to "Not Done"
-  const [productDate, setProductDate] = useState(null); // Default to no date
+const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
+  const [serverPurchaseStatus, setServerPurchaseStatus] = useState(false);
+  const [serverPurchaseDate, setServerPurchaseDate] = useState(null);
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-  // Effect to set initial values when modal opens
   useEffect(() => {
     if (record) {
-      setProductFileStatus(record.productFile === 'Done'); // Set switch based on status
-      setProductDate(record.productDate ? moment(record.productDate) : null); // Ensure date is a moment object
+      setServerPurchaseStatus(record.serverPurchase === 'Done');
+      setServerPurchaseDate(record.serverPurchaseDate ? moment(record.serverPurchaseDate) : null);
     }
   }, [record]);
 
   const handleSave = async () => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-        productFile: productFileStatus ? 'Done' : 'Not Done',
-        productDate: productDate ? productDate.toISOString() : null, // Convert moment to ISO format
+        serverPurchase: serverPurchaseStatus ? 'Done' : 'Not Done',
+        serverPurchaseDate: serverPurchaseDate ? serverPurchaseDate.toISOString() : null,
       });
-      toast.success('Product file updated successfully');
-      fetchData(); // Refresh the data
-      onCancel(); // Close the modal
+      toast.success('Server Purchase updated successfully');
+      fetchData(); 
+      onCancel();
     } catch (error) {
-      toast.error('Failed to update product file');
+      toast.error('Failed to update Server Purchase');
     }
   };
 
@@ -39,7 +38,7 @@ const ProductFileModal = ({ visible, onCancel, record, fetchData }) => {
 
   return (
     <Modal
-      title="Product File"
+      title="Server Purchase"
       open={visible}
       onCancel={onCancel}
       footer={[
@@ -50,16 +49,16 @@ const ProductFileModal = ({ visible, onCancel, record, fetchData }) => {
       <div style={{ marginBottom: 16 }}>
         <span>Status: </span>
         <Switch
-          checked={productFileStatus}
-          onChange={(checked) => setProductFileStatus(checked)}
+          checked={serverPurchaseStatus}
+          onChange={(checked) => setServerPurchaseStatus(checked)}
           checkedChildren="Done"
           unCheckedChildren="Not Done"
         />
       </div>
 
       <DatePicker
-        value={productDate} // Ensure this is a moment object
-        onChange={(date) => setProductDate(date)}
+        value={serverPurchaseDate} // Ensure this is a moment object
+        onChange={(date) => setServerPurchaseDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
       />
@@ -67,4 +66,4 @@ const ProductFileModal = ({ visible, onCancel, record, fetchData }) => {
   );
 };
 
-export default ProductFileModal;
+export default ServerPurchaseModal;

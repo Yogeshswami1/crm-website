@@ -71,21 +71,18 @@ const paymentSchema = new mongoose.Schema({
     amount: { type: String },
     paymentMode: { type: String },
     date: { type: String },
-    document: { type: String },
     status: { type: String },
   },
   stage2: {
     amount: { type: String },
     paymentMode: { type: String },
     date: { type: String },
-    document: { type: String },
     status: { type: String },
   },
   stage3: {
     amount: { type: String },
     paymentMode: { type: String },
     date: { type: String },
-    document: { type: String },
     status: { type: String },
   },
 });
@@ -131,22 +128,7 @@ const contactSchema = new Schema({
   idCard: {
     type: String,
   },
-  gstNumber: {
-    type: String,
-  },
-  legalityDescription: {
-    type: String,
-  },
-  training: {
-    type: String,
-  },
-  ebook: {
-    type: String,
-  },
-  supportPortal: {
-    type: String,
-  },
-  walletPortal: {
+  idCardDate: {
     type: String,
   },
   gallery: {
@@ -161,28 +143,34 @@ const contactSchema = new Schema({
   legality: {
     type: String,
   },
-  // template1Sent: { type: Boolean, default: false },
-  // template2Sent: { type: Boolean, default: false },
-  // template3Sent: { type: Boolean, default: false },
-  // template4Sent: { type: Boolean, default: false },
-  // template5Sent: { type: Boolean, default: false },
-  // template6Sent: { type: Boolean, default: false },
-  // template7Sent: { type: Boolean, default: false },
-  // template8Sent: { type: Boolean, default: false },
-  // template9Sent: { type: Boolean, default: false },
-  // template10Sent: { type: Boolean, default: false },
-  // template11Sent: { type: Boolean, default: false },
-  // template12Sent: { type: Boolean, default: false },
-  // template13Sent: { type: Boolean, default: false },
-  // template14Sent: { type: Boolean, default: false },
-  // template15Sent: { type: Boolean, default: false },
-  // template16Sent: { type: Boolean, default: false },
-  // template17Sent: { type: Boolean, default: false },
-  // template18Sent: { type: Boolean, default: false },
-  // template19Sent: { type: Boolean, default: false },
-  // template20Sent: { type: Boolean, default: false },
-  // template21Sent: { type: Boolean, default: false },
-  // template22Sent: { type: Boolean, default: false },
+  legalityLink: {
+    type: String,
+  },
+  legalityDate: {
+    type: String,
+  },
+  template1Sent: { type: Boolean, default: false },
+  template2Sent: { type: Boolean, default: false },
+  template3Sent: { type: Boolean, default: false },
+  template4Sent: { type: Boolean, default: false },
+  template5Sent: { type: Boolean, default: false },
+  template6Sent: { type: Boolean, default: false },
+  template7Sent: { type: Boolean, default: false },
+  template8Sent: { type: Boolean, default: false },
+  template9Sent: { type: Boolean, default: false },
+  template10Sent: { type: Boolean, default: false },
+  template11Sent: { type: Boolean, default: false },
+  template12Sent: { type: Boolean, default: false },
+  template13Sent: { type: Boolean, default: false },
+  template14Sent: { type: Boolean, default: false },
+  template15Sent: { type: Boolean, default: false },
+  template16Sent: { type: Boolean, default: false },
+  template17Sent: { type: Boolean, default: false },
+  template18Sent: { type: Boolean, default: false },
+  template19Sent: { type: Boolean, default: false },
+  template20Sent: { type: Boolean, default: false },
+  template21Sent: { type: Boolean, default: false },
+  template22Sent: { type: Boolean, default: false },
   // template23Sent: { type: Boolean, default: false },
   // template24Sent: { type: Boolean, default: false },
   // template25Sent: { type: Boolean, default: false },
@@ -308,37 +296,58 @@ const contactSchema = new Schema({
   ovc: {
     type: String,
   },
+  ovcDate: {
+    type: String,
+  },
   documents: [fileSchema],
  
   stage1Completion: {
     type: String,
   },
-  payment: paymentSchema,
-  invoice: {
-    document: { type: String },
+  stage1CompletionDate: {
+    type: String,
   },
+  payment: paymentSchema,
   theme: {
+    type: String,
+  },
+  themeDate: {
     type: String,
   },
   serverPurchase: {
     type: String,
   },
+  serverPurchaseDate: {
+    type: String,
+  },
   domainClaim: {
+    type: String,
+  },
+  domainClaimDate: {
     type: String,
   },
   domainMailVerification: {
     type: String,
   },
+  domainMailVerificationDate: {
+    type: String,
+  },
   websiteUploaded: {
+    type: String,
+  },
+  websiteUploadedDate: {
     type: String,
   },
   paymentGateway: {
     type: String,
   },
+  paymentGatewayDate: {
+    type: String,
+  },
   readyToHandover: {
     type: String,
   },
-  socialMedia: {
+  readyToHandoverDate: {
     type: String,
   },
   idAndPassWebsite: {
@@ -379,6 +388,9 @@ const contactSchema = new Schema({
     type: String,
   },
   stage3Completion: {
+    type: String,
+  },
+  stage3CompletionDate: {
     type: String,
   },
   callDone: {

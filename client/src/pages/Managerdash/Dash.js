@@ -385,7 +385,7 @@ const Dash = () => {
                 </Card>
               </Col>
             </Row>
-            <Row gutter={16}>
+            {/* <Row gutter={16}>
               <Col span={24}>
                 <Title level={4} style={{ textAlign: 'center' }}>Stage Completion Table</Title>
                 <Card>
@@ -397,7 +397,7 @@ const Dash = () => {
                   />
                 </Card>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
         </Col>
       </Row>

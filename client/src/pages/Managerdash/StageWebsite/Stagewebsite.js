@@ -1,35 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Modal, Form, Input, Button, List, Row, Col, Switch } from 'antd';
+import { Table, Modal, Input, Button, List } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import Callmodal from "../Callmodal";
+import Callmodal from "./Callmodal";
 import { toast } from "react-toastify";
 
-const apiUrl = process.env.REACT_APP_BACKEND_URL;
-const { Option } = Select;
+import Stage1PaymentModal from './Stage1PaymentModal';
+import LegalityModal from './LegalityModal';
+import OnboardingVideoCallModal from './OnboardingVideoCallModal';
+import IDCardModal from './IDCardModal';
+import ThemeModal from './ThemeModal';
+import Stage1CompletionModal from './Stage1CompletionModal';
 
-const Stagewebsite = () => {
+const apiUrl = process.env.REACT_APP_BACKEND_URL;
+
+const Stagewebsite = (record) => {
   const [data, setData] = useState([]);
-  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
   const [isRemarksModalVisible, setIsRemarksModalVisible] = useState(false);
   const [isContactModalVisible, setIsContactModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [uploadedDocumentPath, setUploadedDocumentPath] = useState(null);
   const [remarks, setRemarks] = useState([]);
   const [newRemark, setNewRemark] = useState('');
-  const [isTemplateModalVisible, setIsTemplateModalVisible] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  
 
-  const [isLegalityModalVisible, setIsLegalityModalVisible] = useState(false);
-const [legalityDescription, setLegalityDescription] = useState('');
-const [legalityStatus, setLegalityStatus] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
   
-
+const openModal = (modalType, record) => {
+  setSelectedRecord(record);
+  setVisibleModal(modalType);
+};
   
+const closeModal = () => setVisibleModal(null);
 
-  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchData();
@@ -87,36 +89,6 @@ const [legalityStatus, setLegalityStatus] = useState(false);
     }
   };
   
-  
-  const handleFieldChange = async (record, field, value) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${record._id}`, { [field]: value });
-      toast.success("Field updated successfully");
-      fetchData();
-    } catch (error) {
-      toast.error("Failed to update field");
-    }
-  };
-
-  const handleThemeChange = async (record, theme) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${record._id}`, { theme });
-      toast.success("Theme updated successfully");
-      fetchData();
-    } catch (error) {
-      toast.error("Failed to update theme");
-    }
-  };
-
-  const handleOpenDetailModal = (record) => {
-    setCurrentRecord(record);
-    setIsDetailModalVisible(true);
-  };
-
-  const handleOpenPaymentModal = (record) => {
-    setCurrentRecord(record);
-    setIsPaymentModalVisible(true);
-  };
 
   const handleOpenRemarksModal = (record) => {
     setCurrentRecord(record);
@@ -130,45 +102,12 @@ const [legalityStatus, setLegalityStatus] = useState(false);
   };
 
   const handleCancel = () => {
-    setIsDetailModalVisible(false);
-    setIsPaymentModalVisible(false);
     setIsRemarksModalVisible(false);
     setIsContactModalVisible(false);
     setCurrentRecord(null);
     setNewRemark('');
   };
 
-  const getSwitchState = (fieldValue) => {
-    return fieldValue ? fieldValue.startsWith('Done') : false;
-  };
-
-  const handleUpload = async (info) => {
-    if (info.file.status === 'done') {
-      const { response } = info.file;
-      setUploadedDocumentPath(response.filePath);
-      toast.success(`${info.file.name} file uploaded successfully.`);
-    } else if (info.file.status === 'error') {
-      toast.error(`${info.file.name} file upload failed.`);
-    }
-  };
-
-  const handlePaymentSave = async (values) => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${currentRecord._id}`, {
-        'payment.stage1': {
-          amount: values.amount,
-          paymentMode: values.paymentMode,
-          document: uploadedDocumentPath || currentRecord.payment?.stage1?.document,
-          status: values.status,
-        },
-      });
-      toast.success("Payment details updated successfully");
-      fetchData();
-      handleCancel();
-    } catch (error) {
-      toast.error("Failed to update payment details");
-    }
-  };
 
   const handleAddRemark = async () => {
     if (!newRemark) {
@@ -199,27 +138,6 @@ const [legalityStatus, setLegalityStatus] = useState(false);
     }
   };
 
-  const formatThemeText = (text) => {
-    if (typeof text !== 'string' || !text.includes(' (updated on ')) {
-      return text;
-    }
-  
-    const [theme, date] = text.split(' (updated on ');
-    if (!date) {
-      return text;
-    }
-  
-    const formattedDate = moment(date.replace(')', '')).format('DD-MM-YYYY');
-    return `${theme} (${formattedDate})`;
-  };
-
-  const maskContact = (contact) => {
-    if (!contact) return 'N/A';
-    if (contact.length > 3) {
-      return `****${contact.slice(-3)}`;
-    }
-    return contact;
-  };
   
 
   const handleSendTemplate = async (templateName) => {
@@ -240,34 +158,12 @@ const [legalityStatus, setLegalityStatus] = useState(false);
       if (response.status === 200) {
         toast.success('Template sent successfully');
         fetchData();
-        setSelectedTemplate(templateName); // Mark the template as sent
+        // setSelectedTemplate(templateName); 
       } else {
         toast.error('Failed to send template');
       }
     } catch (error) {
       toast.error('Failed to send template');
-    }
-  };
-
-
-  const handleOpenLegalityModal = (record) => {
-    setCurrentRecord(record);
-    setLegalityDescription(record.legalityDescription || '');
-    setLegalityStatus(record.simpleStatus.legality === 'Done');
-    setIsLegalityModalVisible(true);
-  };
-
-  const handleLegalitySave = async () => {
-    try {
-      await axios.put(`${apiUrl}/api/contact/${currentRecord._id}`, {
-        legality: legalityStatus ? 'Done' : 'Not Done',
-        legalityDescription,
-      });
-      toast.success("Legality details updated successfully");
-      fetchData();
-      setIsLegalityModalVisible(false);
-    } catch (error) {
-      toast.error("Failed to update legality details");
     }
   };
   
@@ -292,192 +188,77 @@ const [legalityStatus, setLegalityStatus] = useState(false);
     },
     {
       title: "Stage 1 Payment",
-      key: "stage1Payment",
       render: (text, record) => (
-        <Button onClick={() => handleOpenPaymentModal(record)}>Stage 1 Payment</Button>
+        <Button
+          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('payment', record)}
+        >
+          Edit Payment
+        </Button>
       ),
-    }, 
+    },    
     {
       title: "Legality",
-      dataIndex: "legality",
-      key: "legality",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.legality === value,
-      render: (text, record) => {
-        const backgroundColor = record.simpleStatus.legality === 'Done' ? 'lightgreen' : 'transparent';
-        return (
-          <div style={{ backgroundColor, padding: '5px', borderRadius: '4px' }}>
-            <Button onClick={() => handleOpenLegalityModal(record)}>
-              {record.simpleStatus.legality}
-            </Button>
-          </div>
-        );
-      },
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('legality', record)}
+        >
+          Legality
+        </Button>
+      ),
     },    
     {
-      title: "Onboarding Video Call",
-      dataIndex: "ovc",
-      key: "ovc",
-      width: 170,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.ovc === value,
-      render: (text, record) => {
-        // Extract the status and date from the text if needed
-        const parts = text ? text.split(' (updated on ') : [];
-        const status = parts[0] || '';
-        const datePart = parts[1] ? parts[1].slice(0, -1) : ''; // Remove the closing parenthesis
-        
-        // Format the date if available
-        const formattedDate = datePart ? new Date(datePart).toLocaleDateString("en-GB") : '';
-        
-        // Determine background color based on status
-        const backgroundColor = status === 'Done' ? 'lightgreen' : 'transparent';
-        
-        return (
-          <div
-            style={{
-              backgroundColor,
-              padding: '5px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '165px',
-            }}
-          >
-            <Select
-              value={`${status}${formattedDate ? ` (${formattedDate})` : ''}`}
-              onChange={(value) => handleFieldChange(record, 'ovc', value)}
-              style={{ width: '100%' }}
-            >
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </div>
-        );
-      },
-    },
-    
+      title: "OVC",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.ovc === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('videoCall', record)}
+        >
+          Onboarding Video Call
+        </Button>
+      ),
+    },  
     {
       title: "ID Card",
-      dataIndex: "idCard",
-      key: "idCard",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.idCard === value,
-      render: (text, record) => {
-        // Extract the status and date from the text if needed
-        const parts = text ? text.split(' (updated on ') : [];
-        const status = parts[0] || '';
-        const datePart = parts[1] ? parts[1].slice(0, -1) : ''; // Remove the closing parenthesis
-        
-        // Format the date if available
-        const formattedDate = datePart ? new Date(datePart).toLocaleDateString("en-GB") : '';
-        
-        // Determine background color based on status
-        const backgroundColor = status === 'Done' ? 'lightgreen' : 'transparent';
-        
-        return (
-          <div
-            style={{
-              backgroundColor,
-              padding: '5px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '165px',
-            }}
-          >
-            <Select
-              value={`${status}${formattedDate ? ` (${formattedDate})` : ''}`}
-              onChange={(value) => handleFieldChange(record, 'idCard', value)}
-              style={{ width: '100%' }}
-            >
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </div>
-        );
-      },
-    },    
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.idCard === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('idCard', record)}
+        >
+          ID Card
+        </Button>
+      ),
+    },  
     {
       title: "Theme",
-      dataIndex: "theme",
-      key: "theme",
       render: (text, record) => (
-        <Select defaultValue={formatThemeText(text)} onChange={(value) => handleThemeChange(record, value)}>
-          <Option value="Theme 1">Theme 1</Option>
-          <Option value="Theme 2">Theme 2</Option>
-          <Option value="Theme 3">Theme 3</Option>
-        </Select>
+        <Button
+          style={{ backgroundColor: record?.theme ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+          onClick={() => openModal('theme', record)}
+        >
+          Theme
+        </Button>
       ),
-    },
+    },    
     {
       title: "Stage 1 Completion",
-      dataIndex: "stage1Completion",
-      key: "stage1Completion",
-      width: 170,
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.simpleStatus.stage1Completion === value,
-      render: (text, record) => {
-        // Extract the status and date from the text if needed
-        const parts = text ? text.split(' (updated on ') : [];
-        const status = parts[0] || '';
-        const datePart = parts[1] ? parts[1].slice(0, -1) : ''; // Remove the closing parenthesis
-    
-        // Format the date if available
-        const formattedDate = datePart ? new Date(datePart).toLocaleDateString("en-GB") : '';
-    
-        // Determine background color based on status
-        const backgroundColor = status === 'Done' ? 'lightgreen' : 'transparent';
-    
-        return (
-          <div
-            style={{
-              backgroundColor,
-              padding: '5px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '165px',
-            }}
-          >
-            <Select
-              value={`${status}${formattedDate ? ` (${formattedDate})` : ''}`}
-              onChange={(value) => handleFieldChange(record, 'stage1Completion', value)}
-              style={{ width: '100%' }}
-            >
-              <Option value="Done">Done</Option>
-              <Option value="Not Done">Not Done</Option>
-            </Select>
-          </div>
-        );
-      },
-    },     
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.stage1Completion === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          onClick={() => openModal('stageCompletion', record)}
+        >
+          Stage 1 Completion
+        </Button>
+      ),
+    },  
     {
       title: "Remarks",
       key: "remarks",
       render: (text, record) => (
         <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
       ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (text, record) => (
-        <Button onClick={() => handleOpenDetailModal(record)}>Show Details</Button>
-      ),
-    },
+    }
   ];
 
   return (
@@ -486,188 +267,73 @@ const [legalityStatus, setLegalityStatus] = useState(false);
       <Table columns={stageColumns} dataSource={data} rowKey="_id" scroll={{ x: 'max-content', y: 601 }} sticky />
       </div>
 
-      <Modal
-        title="Payment Stage 1"
-        open={isPaymentModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <Form form={form} onFinish={handlePaymentSave} initialValues={{
-          amount: currentRecord?.payment?.stage1?.amount,
-          paymentMode: currentRecord?.payment?.stage1?.paymentMode,
-          document: currentRecord?.payment?.stage1?.document,
-          status: currentRecord?.payment?.stage1?.status,
-        }}>
-          <Form.Item name="amount" label="Amount">
-            <Input />
-          </Form.Item>
-          <Form.Item name="paymentMode" label="Payment Mode">
-            <Select>
-              <Option value="Cash">Cash</Option>
-              <Option value="Bank Transfer">Bank Transfer</Option>
-              <Option value="Online">Online</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name="status" label="Status">
-            <Select>
-              <Option value="Pending">Pending</Option>
-              <Option value="Completed">Completed</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">Save</Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      {/* payment stage 1 modal */}
 
+      {visibleModal === 'payment' && (
+        <Stage1PaymentModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
-{/* legality modal */}
-<Modal
-  title="Legality Details"
-  open={isLegalityModalVisible}
-  onCancel={() => setIsLegalityModalVisible(false)}
-  onOk={handleLegalitySave}
->
-  <Form layout="vertical">
-    <Form.Item label="Legality Status">
-      <Switch 
-        checked={legalityStatus} 
-        onChange={(checked) => setLegalityStatus(checked)} 
-        checkedChildren="Done" 
-        unCheckedChildren="Not Done"
-      />
-    </Form.Item>
-    <Form.Item label="Legality Description">
-      <Input.TextArea 
-        value={legalityDescription} 
-        onChange={(e) => setLegalityDescription(e.target.value)} 
-        rows={4}
-      />
-    </Form.Item>
-  </Form>
-</Modal>
+      {/* legality modal */}
 
-      
-<Modal
-  title="Send Template"
-  open={isTemplateModalVisible}
-  onCancel={() => setIsTemplateModalVisible(false)}
-  footer={null}
->
-  {currentRecord && (
-    <Row gutter={[0, 16]}>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template1Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('new_whatsapp_update')}
-          style={{ width: '100%' }}
-        >
-          New WhatsApp Update
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template2Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('id_card')}
-          style={{ width: '100%' }}
-        >
-          ID Card
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template3Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('performa_invoice')}
-          style={{ width: '100%' }}
-        >
-          Performa Invoice
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template4Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('theme_t1')}
-          style={{ width: '100%' }}
-        >
-          Theme 1
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template5Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('theme_t2')}
-          style={{ width: '100%' }}
-        >
-          Theme 2
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template6Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('theme_t3')}
-          style={{ width: '100%' }}
-        >
-          Theme 3
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template7Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('theme_selections')}
-          style={{ width: '100%' }}
-        >
-          Theme Selections
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template8Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('time_schedule_schedule')}
-          style={{ width: '100%' }}
-        >
-          Time Schedule
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template9Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('calling_issue')}
-          style={{ width: '100%' }}
-        >
-          Calling Issue
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template10Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('manager_is_on_leave')}
-          style={{ width: '100%' }}
-        >
-          Manager Is On Leave
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template11Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('rank')}
-          style={{ width: '100%' }}
-        >
-          Rank
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          type={currentRecord.template12Sent ? 'primary' : 'default'}
-          onClick={() => handleSendTemplate('wp_optimizer')}
-          style={{ width: '100%' }}
-        >
-          WP Optimizer
-        </Button>
-      </Col>
-    </Row>
-  )}
-</Modal>
+      {visibleModal === 'legality' && (
+        <LegalityModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
 
+      {/* onboarding video call modal */}
+
+      {visibleModal === 'videoCall' && (
+        <OnboardingVideoCallModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+      {/* id card modal */}
+
+      {visibleModal === 'idCard' && (
+        <IDCardModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+      {/* theme modal */}
+
+      {visibleModal === 'theme' && (
+        <ThemeModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+      {/* stage 1 completion modal */}
+
+      {visibleModal === 'stageCompletion' && (
+        <Stage1CompletionModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
+     
 {/* Remarks Modal */}
 
       <Modal
@@ -702,31 +368,6 @@ const [legalityStatus, setLegalityStatus] = useState(false);
         onCancel={handleCancel}
         record={currentRecord}
       />
-
-      <Modal
-        title="Details"
-        visible={isDetailModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        {currentRecord && (
-          <Form layout="vertical">
-            <Form.Item label="Name">
-              <Input value={currentRecord.name} readOnly />
-            </Form.Item>
-            <Form.Item label="Email">
-              <Input value={currentRecord.email} readOnly />
-            </Form.Item>
-            <Form.Item label="Primary Contact">
-              <Input value={currentRecord.primaryContact} readOnly />
-            </Form.Item>
-            <Form.Item label="Secondary Contact">
-              <Input value={currentRecord.secondaryContact} readOnly />
-            </Form.Item>
-            {/* Add other fields as needed */}
-          </Form>
-        )}
-      </Modal>
     </div>
   );
 };

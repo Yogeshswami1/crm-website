@@ -4,31 +4,31 @@ import axios from 'axios';
 import moment from 'moment';
 import {toast} from 'react-toastify';
 
-const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
-  const [websiteUploadedStatus, setWebsiteUploadedStatus] = useState(false); 
-  const [websiteUploadedDate, setWebsiteUploadedDate] = useState(null); 
+const Ready2HandoverModal = ({ visible, onCancel, record, fetchData }) => {
+  const [readyToHandoverStatus, setReadyToHandoverStatus] = useState(false); // Default to "Not Done"
+  const [readyToHandoverDate, setReadyToHandoverDate] = useState(null); // Default to no date
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-  
+  // Effect to set initial values when modal opens
   useEffect(() => {
     if (record) {
-      setWebsiteUploadedStatus(record.websiteUploaded === 'Done'); // Set switch based on status
-      setWebsiteUploadedDate(record.websiteUploadedDate ? moment(record.websiteUploadedDate) : null); // Ensure date is a moment object
+      setReadyToHandoverStatus(record.readyToHandover === 'Done'); // Set switch based on status
+      setReadyToHandoverDate(record.readyToHandoverDate ? moment(record.readyToHandoverDate) : null); // Ensure date is a moment object
     }
   }, [record]);
 
   const handleSave = async () => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-        websiteUploaded: websiteUploadedStatus ? 'Done' : 'Not Done',
-        websiteUploadedDate: websiteUploadedDate ? websiteUploadedDate.toISOString() : null, // Convert moment to ISO format
+        readyToHandover: readyToHandoverStatus ? 'Done' : 'Not Done',
+        readyToHandoverDate: readyToHandoverDate ? readyToHandoverDate.toISOString() : null, // Convert moment to ISO format
       });
-      toast.success('Website Uploaded updated successfully');
+      toast.success('Ready To Handover updated successfully');
       fetchData(); // Refresh the data
       onCancel(); // Close the modal
     } catch (error) {
-      toast.error('Failed to update website uploaded');
+      toast.error('Failed to update Ready To Handover');
     }
   };
 
@@ -39,7 +39,7 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
 
   return (
     <Modal
-      title="Website Uploaded"
+      title="Ready To Handover"
       open={visible}
       onCancel={onCancel}
       footer={[
@@ -50,16 +50,16 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
       <div style={{ marginBottom: 16 }}>
         <span>Status: </span>
         <Switch
-          checked={websiteUploadedStatus}
-          onChange={(checked) => setWebsiteUploadedStatus(checked)}
+          checked={readyToHandoverStatus}
+          onChange={(checked) => setReadyToHandoverStatus(checked)}
           checkedChildren="Done"
           unCheckedChildren="Not Done"
         />
       </div>
 
       <DatePicker
-        value={websiteUploadedDate} // Ensure this is a moment object
-        onChange={(date) => setWebsiteUploadedDate(date)}
+        value={readyToHandoverDate} // Ensure this is a moment object
+        onChange={(date) => setReadyToHandoverDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
       />
@@ -67,4 +67,4 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
   );
 };
 
-export default WebsiteUploadedModal;
+export default Ready2HandoverModal;

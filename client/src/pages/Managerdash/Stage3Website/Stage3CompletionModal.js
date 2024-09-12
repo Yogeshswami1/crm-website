@@ -4,31 +4,31 @@ import axios from 'axios';
 import moment from 'moment';
 import {toast} from 'react-toastify';
 
-const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
-  const [websiteUploadedStatus, setWebsiteUploadedStatus] = useState(false); 
-  const [websiteUploadedDate, setWebsiteUploadedDate] = useState(null); 
+const Stage3CompletionModal = ({ visible, onCancel, record, fetchData }) => {
+  const [stage3CompletionStatus, setStage3CompletionStatus] = useState(false); // Default to "Not Done"
+  const [stage3CompletionDate, setStage3CompletionDate] = useState(null); // Default to no date
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-  
+  // Effect to set initial values when modal opens
   useEffect(() => {
     if (record) {
-      setWebsiteUploadedStatus(record.websiteUploaded === 'Done'); // Set switch based on status
-      setWebsiteUploadedDate(record.websiteUploadedDate ? moment(record.websiteUploadedDate) : null); // Ensure date is a moment object
+      setStage3CompletionStatus(record.stage3Completion === 'Done'); // Set switch based on status
+      setStage3CompletionDate(record.stage3CompletionDate ? moment(record.stage3CompletionDate) : null); // Ensure date is a moment object
     }
   }, [record]);
 
   const handleSave = async () => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-        websiteUploaded: websiteUploadedStatus ? 'Done' : 'Not Done',
-        websiteUploadedDate: websiteUploadedDate ? websiteUploadedDate.toISOString() : null, // Convert moment to ISO format
+        stage3Completion: stage3CompletionStatus ? 'Done' : 'Not Done',
+        stage3CompletionDate: stage3CompletionDate ? stage3CompletionDate.toISOString() : null, // Convert moment to ISO format
       });
-      toast.success('Website Uploaded updated successfully');
+      toast.success(' Stage 3 Completed successfully');
       fetchData(); // Refresh the data
       onCancel(); // Close the modal
     } catch (error) {
-      toast.error('Failed to update website uploaded');
+      toast.error('Failed to update Stage 3 Completion');
     }
   };
 
@@ -39,7 +39,7 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
 
   return (
     <Modal
-      title="Website Uploaded"
+      title="Stage 3 Completion"
       open={visible}
       onCancel={onCancel}
       footer={[
@@ -50,16 +50,16 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
       <div style={{ marginBottom: 16 }}>
         <span>Status: </span>
         <Switch
-          checked={websiteUploadedStatus}
-          onChange={(checked) => setWebsiteUploadedStatus(checked)}
+          checked={stage3CompletionStatus}
+          onChange={(checked) => setStage3CompletionStatus(checked)}
           checkedChildren="Done"
           unCheckedChildren="Not Done"
         />
       </div>
 
       <DatePicker
-        value={websiteUploadedDate} // Ensure this is a moment object
-        onChange={(date) => setWebsiteUploadedDate(date)}
+        value={stage3CompletionDate} // Ensure this is a moment object
+        onChange={(date) => setStage3CompletionDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
       />
@@ -67,4 +67,4 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
   );
 };
 
-export default WebsiteUploadedModal;
+export default Stage3CompletionModal;

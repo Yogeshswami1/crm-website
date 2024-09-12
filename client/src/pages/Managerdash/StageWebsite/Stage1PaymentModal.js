@@ -4,14 +4,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 
-const PaymentModal = ({ visible, onCancel, record, fetchData }) => {
+const Stage1PaymentModal = ({ visible, onCancel, record, fetchData }) => {
   const [form] = Form.useForm();
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handlePaymentSave = async (values) => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-        'payment.stage3': {
+        'payment.stage1': {
           amount: values.amount,
           paymentMode: values.paymentMode,
           status: values.status ? "Done" : "Not Done",
@@ -27,15 +27,15 @@ const PaymentModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   return (
-    <Modal title="Payment Stage 3" open={visible} onCancel={onCancel} footer={null}>
+    <Modal title="Payment Stage 1" open={visible} onCancel={onCancel} footer={null}>
       <Form
         form={form}
         onFinish={handlePaymentSave}
         initialValues={{
-          amount: record?.payment?.stage3?.amount,
-          paymentMode: record?.payment?.stage3?.paymentMode,
-          status: record?.payment?.stage3?.status === "Done",
-          date: record?.payment?.stage3?.date ? moment(record?.payment?.stage3?.date) : null,
+          amount: record?.payment?.stage1?.amount,
+          paymentMode: record?.payment?.stage1?.paymentMode,
+          status: record?.payment?.stage1?.status === "Done",
+          date: record?.payment?.stage1?.date ? moment(record?.payment?.stage1?.date) : null,
         }}
       >
         <Form.Item name="amount" label="Amount">
@@ -64,4 +64,4 @@ const PaymentModal = ({ visible, onCancel, record, fetchData }) => {
   );
 };
 
-export default PaymentModal;
+export default Stage1PaymentModal;
