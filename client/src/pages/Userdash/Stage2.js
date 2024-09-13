@@ -1,3 +1,6 @@
+// 
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
@@ -10,68 +13,36 @@ import moment from 'moment';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const { Title } = Typography;
 
-const Stage2 = () => {
-  const [tasks, setTasks] = useState([]);
+const Stage1 = () => {
+  const [userData, setUserData] = useState(null);
+  const [userCreatedDate, setUserCreatedDate] = useState('');
+  const [projectStatus, setProjectStatus] = useState('Pending');
+  const [completionDate, setCompletionDate] = useState('Pending');
 
   useEffect(() => {
     const id = localStorage.getItem('enrollmentId');
     if (id) {
-      fetchTasks(id);
+      fetchUserData(id);
     }
   }, []);
 
-  useEffect(() => {
-    
-  }, [tasks]);
-
-  const fetchTasks = async (id) => {
+  const fetchUserData = async (enrollmentId) => {
     try {
-      const response = await axios.get(`${apiUrl}/api/contact/enrollmentId/${id}`);
-      const contactData = response.data;
-      const additionalTasksData = getAdditionalTasks(contactData);
-      setTasks(additionalTasksData);
+      const response = await axios.get(`${apiUrl}/api/contact/enrollmentId/${enrollmentId}`);
+      const userData = response.data;
+      setUserCreatedDate(userData.date);
+      setUserData(userData);
+      checkProjectStatus(userData);
     } catch (error) {
-      console.error('Error fetching tasks: ', error);
+      console.error('Error fetching user data: ', error);
     }
   };
 
-
-  const getAdditionalTasks = (contactData) => {
-    const fields = [
-      { key: 'stage2Completion', label: 'Stage 2 Completion' },
-      { key: 'gallery', label: 'Gallery' },
-      { key: 'banner', label: 'Banner' },
-      { key: 'logo', label: 'Logo' },
-      { key: 'productFile', label: 'Product File' },
-      { key: 'catFile', label: 'CAT File' },
-      { key: 'subDomain', label: 'Sub Domain' },
-    ];
-
-    return fields.map(field => {
-      const fieldValue = contactData[field.key];
-      let status = 'Pending';
-      let formattedComment = `${field.label}: ${fieldValue || 'N/A'}`;
-
-      if (field.key === 'subDomain') {
-        status = fieldValue && fieldValue !== 'N/A' ? 'Done' : 'Pending';
-      } else if (fieldValue && fieldValue.includes('(updated on')) {
-        const [actualValue, datePart] = fieldValue.split(' (updated on ');
-        status = actualValue === 'Done' ? 'Done' : 'Pending';
-
-        if (datePart) {
-          const date = datePart.replace(')', ''); // Remove the closing parenthesis
-          const formattedDate = moment(date).format('DD-MM-YYYY');
-          formattedComment = `${field.label}: ${actualValue} (updated on ${formattedDate})`;
-        }
-      }
-
-      return {
-        comment: formattedComment,
-        status,
-      };
-    });
+  const checkProjectStatus = (userData) => {
+    const stage2Completion = userData?.stage2Completion === 'Done';
+    setProjectStatus(stage2Completion ? 'Completed' : 'Pending');
+    setCompletionDate(stage2Completion ? moment().format('DD-MM-YYYY') : 'Pending');
   };
-
 
   const getIcon = (status) => {
     switch (status) {
@@ -115,30 +86,125 @@ const Stage2 = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+     
+
       <VerticalTimeline>
-        {tasks.slice().reverse().map((task, index) => (
+        {/* Payment Stage 2 Card */}
+        {userData && (
           <VerticalTimelineElement
-            key={index}
-            date={`Status: ${task.status}`}
-            icon={getIcon(task.status)}
-            iconStyle={{
-              background: 'white',
-              color: '#fff',
-              boxShadow: '0 3px 5px rgba(0,0,0,0.2)',
-            }}
-            contentStyle={getContentStyle(task.status)}
+            date={`Payment Stage 2 Status: ${userData?.payment?.stage2?.status || 'Pending'}`}
+            icon={getIcon(userData?.payment?.stage2?.status)}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.payment?.stage2?.status)}
             contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
-            dateStyle={{
-              color: '#999',
-              fontSize: '14px',
-            }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
           >
-            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>{task.comment}</Title>
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Payment Stage 2</Title>
+            <p><strong>Amount:</strong> {userData?.payment?.stage2?.amount}</p>
+            <p><strong>Payment Mode:</strong> {userData?.payment?.stage2?.paymentMode}</p>
+            <p><strong>Status:</strong> {userData?.payment?.stage2?.status}</p>
+            <p><strong>Date:</strong> {userData?.payment?.stage2?.date ? moment(userData?.payment?.stage2?.date).format('DD-MM-YYYY') : 'N/A'}</p>
           </VerticalTimelineElement>
-        ))}
+        )}
+
+        {/* CAT File Card */}
+        {userData?.catFile && (
+          <VerticalTimelineElement
+            date={`CAT File Status: ${userData?.catFile ? 'Available' : 'Not Available'}`}
+            icon={getIcon(userData?.catFile ? 'Done' : 'Pending')}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.catFile ? 'Done' : 'Pending')}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>CAT File</Title>
+            <p><strong>File:</strong> {userData?.catFile}</p>
+            <p><strong>Date:</strong> {userData?.catDate ? moment(userData?.catDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
+
+        {/* Product File Card */}
+        {userData?.productFile && (
+          <VerticalTimelineElement
+            date={`Product File Status: ${userData?.productFile ? 'Available' : 'Not Available'}`}
+            icon={getIcon(userData?.productFile ? 'Done' : 'Pending')}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.productFile ? 'Done' : 'Pending')}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Product File</Title>
+            <p><strong>File:</strong> {userData?.productFile}</p>
+            <p><strong>Date:</strong> {userData?.productDate ? moment(userData?.productDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
+
+        {/* Logo Card */}
+        {userData?.logo && (
+          <VerticalTimelineElement
+            date={`Logo Status: ${userData?.logo ? 'Available' : 'Not Available'}`}
+            icon={getIcon(userData?.logo ? 'Done' : 'Pending')}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.logo ? 'Done' : 'Pending')}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Logo</Title>
+            <p><strong>File:</strong> {userData?.logo}</p>
+            <p><strong>Date:</strong> {userData?.logoDate ? moment(userData?.logoDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
+
+        {/* Banner Card */}
+        {userData?.banner && (
+          <VerticalTimelineElement
+            date={`Banner Status: ${userData?.banner ? 'Available' : 'Not Available'}`}
+            icon={getIcon(userData?.banner ? 'Done' : 'Pending')}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.banner ? 'Done' : 'Pending')}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Banner</Title>
+            <p><strong>File:</strong> {userData?.banner}</p>
+            <p><strong>Date:</strong> {userData?.bannerDate ? moment(userData?.bannerDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
+
+        {/* Gallery Card */}
+        {userData?.gallery && (
+          <VerticalTimelineElement
+            date={`Gallery Status: ${userData?.gallery ? 'Available' : 'Not Available'}`}
+            icon={getIcon(userData?.gallery ? 'Done' : 'Pending')}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.gallery ? 'Done' : 'Pending')}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Gallery</Title>
+            <p><strong>File:</strong> {userData?.gallery}</p>
+            <p><strong>Date:</strong> {userData?.galleryDate ? moment(userData?.galleryDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
+
+        {/* Stage 2 Completion Card */}
+        {userData?.stage2Completion && (
+          <VerticalTimelineElement
+            date={`Stage 2 Completion Status: ${userData?.stage2Completion || 'Pending'}`}
+            icon={getIcon(userData?.stage2Completion)}
+            iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
+            contentStyle={getContentStyle(userData?.stage2Completion)}
+            contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+            dateStyle={{ color: '#999', fontSize: '14px' }}
+          >
+            <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Stage 2 Completion</Title>
+            <p><strong>Status:</strong> {userData?.stage2Completion}</p>
+            <p><strong>Date:</strong> {userData?.stage2CompletionDate ? moment(userData?.stage2CompletionDate).format('DD-MM-YYYY') : 'N/A'}</p>
+          </VerticalTimelineElement>
+        )}
       </VerticalTimeline>
     </div>
   );
 };
 
-export default Stage2;
+export default Stage1;
