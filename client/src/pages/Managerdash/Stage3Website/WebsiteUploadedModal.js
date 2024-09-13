@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
-  const [websiteUploadedStatus, setWebsiteUploadedStatus] = useState(false); 
-  const [websiteUploadedDate, setWebsiteUploadedDate] = useState(null); 
+  const [websiteUploadedStatus, setWebsiteUploadedStatus] = useState(false);
+  const [websiteUploadedDate, setWebsiteUploadedDate] = useState(null);
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-  
   useEffect(() => {
     if (record) {
-      setWebsiteUploadedStatus(record.websiteUploaded === 'Done'); // Set switch based on status
-      setWebsiteUploadedDate(record.websiteUploadedDate ? moment(record.websiteUploadedDate) : null); // Ensure date is a moment object
+      setWebsiteUploadedStatus(record.websiteUploaded === 'Done');
+      setWebsiteUploadedDate(record.websiteUploadedDate ? moment(record.websiteUploadedDate) : null);
     }
   }, [record]);
 
@@ -22,19 +21,19 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
     try {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
         websiteUploaded: websiteUploadedStatus ? 'Done' : 'Not Done',
-        websiteUploadedDate: websiteUploadedDate ? websiteUploadedDate.toISOString() : null, // Convert moment to ISO format
+        websiteUploadedDate: websiteUploadedDate ? websiteUploadedDate.toISOString() : null,
       });
       toast.success('Website Uploaded updated successfully');
-      fetchData(); // Refresh the data
-      onCancel(); // Close the modal
+      fetchData();
+      onCancel();
     } catch (error) {
       toast.error('Failed to update website uploaded');
     }
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Can only select yesterday, today, and future dates
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (
@@ -62,6 +61,7 @@ const WebsiteUploadedModal = ({ visible, onCancel, record, fetchData }) => {
         onChange={(date) => setWebsiteUploadedDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
+        style={{ width: '100%' }}
       />
     </Modal>
   );

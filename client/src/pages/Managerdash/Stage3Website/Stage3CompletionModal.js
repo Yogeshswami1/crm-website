@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Stage3CompletionModal = ({ visible, onCancel, record, fetchData }) => {
   const [stage3CompletionStatus, setStage3CompletionStatus] = useState(false); // Default to "Not Done"
@@ -24,7 +24,7 @@ const Stage3CompletionModal = ({ visible, onCancel, record, fetchData }) => {
         stage3Completion: stage3CompletionStatus ? 'Done' : 'Not Done',
         stage3CompletionDate: stage3CompletionDate ? stage3CompletionDate.toISOString() : null, // Convert moment to ISO format
       });
-      toast.success(' Stage 3 Completed successfully');
+      toast.success('Stage 3 Completed successfully');
       fetchData(); // Refresh the data
       onCancel(); // Close the modal
     } catch (error) {
@@ -33,8 +33,8 @@ const Stage3CompletionModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Can only select yesterday, today, and future dates
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (
@@ -62,6 +62,7 @@ const Stage3CompletionModal = ({ visible, onCancel, record, fetchData }) => {
         onChange={(date) => setStage3CompletionDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
+        style={{ width: '100%' }}
       />
     </Modal>
   );

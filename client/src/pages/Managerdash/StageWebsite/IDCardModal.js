@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Switch, DatePicker, Button } from 'antd';
+import { Modal, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import moment from 'moment';
@@ -8,6 +8,12 @@ const IDCardModal = ({ visible, onCancel, record, fetchData }) => {
   const [idCardStatus, setIdCardStatus] = useState(record.idCard === 'Done');
   const [idCardDate, setIdCardDate] = useState(record.idCardDate ? moment(record.idCardDate) : null);
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
+
+  // Disable dates before yesterday
+  const disabledDate = (current) => {
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday;
+  };
 
   const handleSave = async () => {
     try {
@@ -39,7 +45,7 @@ const IDCardModal = ({ visible, onCancel, record, fetchData }) => {
         <DatePicker
           value={idCardDate}
           onChange={(date) => setIdCardDate(date)}
-          disabledDate={(current) => current && current < moment().startOf('day')}
+          disabledDate={disabledDate} // Disable past dates except yesterday
           style={{ width: '100%' }}
         />
       </div>

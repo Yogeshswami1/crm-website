@@ -12,7 +12,9 @@ const Template = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
+  
 
+  
   useEffect(() => {
     const managerId = localStorage.getItem("managerId");
     axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`)

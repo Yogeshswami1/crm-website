@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const DomainMailVerificationModal = ({ visible, onCancel, record, fetchData }) => {
   const [domainMailVerificationStatus, setDomainMailVerificationStatus] = useState(false);
@@ -24,7 +24,7 @@ const DomainMailVerificationModal = ({ visible, onCancel, record, fetchData }) =
         domainMailVerificationDate: domainMailVerificationDate ? domainMailVerificationDate.toISOString() : null,
       });
       toast.success('Domain Mail Verification updated successfully');
-      fetchData(); 
+      fetchData();
       onCancel();
     } catch (error) {
       toast.error('Failed to update Domain Mail Verification');
@@ -32,8 +32,8 @@ const DomainMailVerificationModal = ({ visible, onCancel, record, fetchData }) =
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Can only select yesterday, today, and future dates
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (

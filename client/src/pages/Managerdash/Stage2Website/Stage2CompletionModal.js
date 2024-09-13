@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Stage2CompletionModal = ({ visible, onCancel, record, fetchData }) => {
   const [stage2CompletionStatus, setStage2CompletionStatus] = useState(false); // Default to "Not Done"
@@ -28,13 +28,14 @@ const Stage2CompletionModal = ({ visible, onCancel, record, fetchData }) => {
       fetchData(); // Refresh the data
       onCancel(); // Close the modal
     } catch (error) {
-      toast.error('Failed to updated Stage 2');
+      toast.error('Failed to update Stage 2');
     }
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Disable all dates before yesterday
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday;
   };
 
   return (

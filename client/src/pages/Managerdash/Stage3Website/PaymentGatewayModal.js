@@ -32,8 +32,8 @@ const PaymentGatewayModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Can only select yesterday, today, and future dates
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (

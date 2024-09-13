@@ -40,11 +40,15 @@ const ThemeModal = ({ visible, onCancel, record, fetchData }) => {
       <div style={{ marginBottom: '16px' }}>
         <span>Date: </span>
         <DatePicker
-          value={themeDate}
-          onChange={(date) => setThemeDate(date)}
-          disabledDate={(current) => current && current < moment().startOf('day')}
-          style={{ width: '100%' }}
-        />
+  value={themeDate}
+  onChange={(date) => setThemeDate(date)}
+  disabledDate={(current) => {
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday; // Disable all dates before yesterday
+  }}
+  style={{ width: '100%' }}
+/>
+
       </div>
     </Modal>
   );

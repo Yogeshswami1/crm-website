@@ -33,8 +33,9 @@ const CatFileModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Disable dates before yesterday
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday;
   };
 
   return (

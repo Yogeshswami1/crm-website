@@ -320,6 +320,12 @@ const contactSchema = new Schema({
   serverPurchaseDate: {
     type: String,
   },
+  serverId: {
+    type: String,
+  },
+  serverPassword: {
+    type: String,
+  },
   domainClaim: {
     type: String,
   },

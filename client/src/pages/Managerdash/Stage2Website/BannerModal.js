@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const BannerModal = ({ visible, onCancel, record, fetchData }) => {
   const [bannerStatus, setBannerStatus] = useState(false); // Default to "Not Done"
@@ -33,8 +33,9 @@ const BannerModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Disable all dates before yesterday
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday;
   };
 
   return (

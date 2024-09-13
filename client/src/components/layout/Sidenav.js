@@ -47,6 +47,11 @@ const Sidenav = ({ color, role }) => {
                 <span className="label">Telesales Tab</span>
               </NavLink>
             </Menu.Item>
+            <Menu.Item key="rmd">
+              <NavLink to="/rmdtab">
+                <span className="label">RMD Tab</span>
+              </NavLink>
+            </Menu.Item>
             <Menu.Item key="useridpass">
               <NavLink to="/useridpass">
                 <span className="label">User ID & Pass</span>

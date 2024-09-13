@@ -66,6 +66,12 @@ const SignIn = () => {
           id: identifier,
           password: password,
         });
+      } else if (/^RMD\d+$/.test(identifier)) {
+        role = "rmd";
+        response = await axios.post(`${apiUrl}/api/rmd/login`, {
+          id: identifier,
+          password: password,
+        });
       } else {
         role = "user";
         response = await axios.post(`${apiUrl}/api/contact/login`, {
@@ -89,6 +95,9 @@ const SignIn = () => {
           localStorage.setItem("supervisorId", response.data.user.supervisorId);
         }
         else if (response.data.user) {
+          localStorage.setItem("rmdId", response.data.user.rmdId);
+        }
+        else if (response.data.user) {
           localStorage.setItem("accountantId", response.data.user.accountantId);
         }
         else if (response.data.user) {
@@ -102,6 +111,8 @@ const SignIn = () => {
           history.push("/managerdashboard");
         } else if (role === "supervisor") {
           history.push("/supervisordashboard");
+        } else if (role === "rmd") {
+          history.push("/rmddashboard");
         } else if (role === "accountant") {
           history.push("/accountantdashboard");
         }  else if (role === "telesales") {

@@ -131,7 +131,7 @@ const handleAddOrUpdateContact = async (values) => {
     const contactData = {
       ...values,
       enrollmentId: enrollmentIdWithPrefix,
-      date: values.date.format("DD/MM/YYYY"),
+      date: values.date.format("YYYY/MM/DD"),
     };
 
     if (currentContact) {
@@ -148,7 +148,7 @@ const handleAddOrUpdateContact = async (values) => {
       const response = await axios.post(`${apiUrl}/api/contact/add`, contactData);
       const newContact = {
         ...response.data,
-        date: values.date.format("DD/MM/YYYY"),
+        date: values.date.format("YYYY/MM/DD"),
       };
       const updatedContacts = [...originalContacts, newContact];
       setOriginalContacts(updatedContacts);
@@ -292,7 +292,7 @@ const handleUpload = async (file) => {
      title: "Date",
      dataIndex: "date",
      key: "date",
-     render: (text) => moment(text).format("DD/MM/YYYY"),
+     render: (text) => moment(text).format("YYYY/MM/DD"),
    },
    {
      title: "Name",
@@ -426,7 +426,7 @@ const handleUpload = async (file) => {
    form={form}
    initialValues={{
      ...currentContact,
-     date: currentContact ? moment(currentContact.date, "DD/MM/YYYY") : moment(),
+     date: currentContact ? moment(currentContact.date, "YYYY/MM/DD") : moment(),
    }}
    onFinish={handleAddOrUpdateContact}
  >
@@ -443,7 +443,7 @@ const handleUpload = async (file) => {
      name="date"
      rules={[{ required: true, message: "Please select the date!" }]}
    >
-     <DatePicker format="DD/MM/YYYY" />
+     <DatePicker format="YYYY/MM/DD" />
    </Form.Item>
    <Form.Item
      label="Name"

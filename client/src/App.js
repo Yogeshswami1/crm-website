@@ -106,6 +106,7 @@ import Socialtab from "./pages/Socialmediatab";
 import Accountantdashboard from "./pages/Accountant/Accountantdashboard";
 import Telesalesdashboard from "./pages/Telesales/Dashboard";
 import Waba from "./pages/Managerdash/Waba";
+import Rmddashboard from "./pages/RMD/Rmddashboard";
 
 function App() {
   return (
@@ -138,6 +139,7 @@ function App() {
 
               <ProtectedRoute exact path="/accountantdashboard" component={Accountantdashboard} roles={['accountant']} />
               <ProtectedRoute exact path="/telesalesdashboard" component={Telesalesdashboard} roles={['telesales']} />
+              <ProtectedRoute exact path="/rmddashboard" component={Rmddashboard} roles={['rmd']} />
               
             
             </Main>

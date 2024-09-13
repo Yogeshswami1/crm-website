@@ -32,8 +32,8 @@ const DomainClaimModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Disable all dates before yesterday
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (

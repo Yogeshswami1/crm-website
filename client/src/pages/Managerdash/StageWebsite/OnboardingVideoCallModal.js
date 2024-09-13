@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Switch, DatePicker, Button } from 'antd';
+import { Modal, Switch, DatePicker } from 'antd';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import moment from 'moment';
@@ -8,6 +8,12 @@ const OnboardingVideoCallModal = ({ visible, onCancel, record, fetchData }) => {
   const [ovcStatus, setOvcStatus] = useState(record.ovc === 'Done');
   const [ovcDate, setOvcDate] = useState(record.ovcDate ? moment(record.ovcDate) : null);
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
+
+  // Disable all dates before yesterday
+  const disabledDate = (current) => {
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday;
+  };
 
   const handleSave = async () => {
     try {
@@ -39,7 +45,7 @@ const OnboardingVideoCallModal = ({ visible, onCancel, record, fetchData }) => {
         <DatePicker
           value={ovcDate}
           onChange={(date) => setOvcDate(date)}
-          disabledDate={(current) => current && current < moment().startOf('day')}
+          disabledDate={disabledDate} // Apply the disabled date logic
           style={{ width: '100%' }}
         />
       </div>

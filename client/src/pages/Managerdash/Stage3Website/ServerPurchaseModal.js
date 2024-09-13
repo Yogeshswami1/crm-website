@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Switch, DatePicker } from 'antd';
+import { Modal, Button, Switch, DatePicker, Input } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
   const [serverPurchaseStatus, setServerPurchaseStatus] = useState(false);
   const [serverPurchaseDate, setServerPurchaseDate] = useState(null);
+  const [serverId, setServerId] = useState('');
+  const [serverPassword, setServerPassword] = useState('');
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,6 +16,8 @@ const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
     if (record) {
       setServerPurchaseStatus(record.serverPurchase === 'Done');
       setServerPurchaseDate(record.serverPurchaseDate ? moment(record.serverPurchaseDate) : null);
+      setServerId(record.serverId || '');
+      setServerPassword(record.serverPassword || '');
     }
   }, [record]);
 
@@ -22,6 +26,8 @@ const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
       await axios.put(`${apiUrl}/api/contact/${record._id}`, {
         serverPurchase: serverPurchaseStatus ? 'Done' : 'Not Done',
         serverPurchaseDate: serverPurchaseDate ? serverPurchaseDate.toISOString() : null,
+        serverId,
+        serverPassword,
       });
       toast.success('Server Purchase updated successfully');
       fetchData(); 
@@ -32,8 +38,8 @@ const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
   };
 
   const disabledDate = (current) => {
-    // Can only select today and future dates
-    return current && current < moment().startOf('day');
+    // Can only select yesterday, today, and future dates
+    return current && current < moment().subtract(1, 'days').startOf('day');
   };
 
   return (
@@ -57,10 +63,25 @@ const ServerPurchaseModal = ({ visible, onCancel, record, fetchData }) => {
       </div>
 
       <DatePicker
-        value={serverPurchaseDate} // Ensure this is a moment object
+        value={serverPurchaseDate}
         onChange={(date) => setServerPurchaseDate(date)}
         disabledDate={disabledDate}
         placeholder="Select Date"
+        style={{ marginBottom: 16 }}
+      />
+
+      <Input
+        placeholder="Server ID"
+        value={serverId}
+        onChange={(e) => setServerId(e.target.value)}
+        style={{ marginBottom: 16 }}
+      />
+
+      <Input.Password
+        placeholder="Server Password"
+        value={serverPassword}
+        onChange={(e) => setServerPassword(e.target.value)}
+        style={{ marginBottom: 16 }}
       />
     </Modal>
   );

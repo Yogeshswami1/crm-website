@@ -47,9 +47,12 @@ const PaymentModal = ({ visible, onCancel, record, fetchData }) => {
         </Form.Item>
 
         <Form.Item name="date" label="Date">
-          <DatePicker
-            disabledDate={(current) => current && current < moment().startOf('day')}
-          />
+        <DatePicker
+  disabledDate={(current) => {
+    const yesterday = moment().subtract(1, 'days').startOf('day');
+    return current && current < yesterday; // Disable all dates before yesterday
+  }}
+/>
         </Form.Item>
 
         <Form.Item name="status" label="Status" valuePropName="checked">
