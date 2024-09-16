@@ -1,0 +1,44 @@
+sudo nano /etc/nginx/sites-available/websitebackend.saumiccraft.com
+
+server {
+    listen 80;
+    server_name websitebackend.saumiccraft.com;
+
+    location / {
+        proxy_pass http://localhost:8000;  # Assuming your Node.js app is running on port 3000
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    error_log /var/log/nginx/websitebackend.saumiccraft.com.error.log;
+    access_log /var/log/nginx/websitebackend.saumiccraft.com.access.log;
+}
+
+sudo ln -s /etc/nginx/sites-available/websitebackend.saumiccraft.com /etc/nginx/sites-enabled/
+
+
+
+frontend
+
+
+sudo nano /etc/nginx/sites-available/website.saumiccraft.com
+
+server {
+    listen 80;
+    server_name website.saumiccraft.com; #  Replace it with your own domain 
+
+    root /var/www/html/crmwebsite/client/build; # Replace with the path to your build directory
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    error_log /var/log/nginx/website.saumiccraft.com.log;
+    access_log /var/log/nginx/website.saumiccraft.com.log;
+}
+
+sudo ln -s /etc/nginx/sites-available/website.saumiccraft.com /etc/nginx/sites-enabled/
