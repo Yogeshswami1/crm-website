@@ -1,0 +1,19 @@
+/* CSS for custom scrollbar */
+div[style*="overflow-y: auto"] {
+    scrollbar-width: thin;
+    scrollbar-color: #1890ff #f0f0f0;
+  }
+  
+  div[style*="overflow-y: auto"]::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+    background: #f0f0f0;
+  }
+  
+  div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+    background-color: #1890ff;
+    border-radius: 4px;
+  }
+  

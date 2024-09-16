@@ -508,70 +508,106 @@ const Stagewebsite = (record) => {
     },
     {
       title: "Stage 1 Payment",
+      dataIndex: "payment.stage1.status",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record?.payment?.stage1?.status === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}
           onClick={() => openModal('payment', record)}
         >
           Edit Payment
         </Button>
       ),
-    },    
+    },
     {
       title: "Legality",
+      dataIndex: "legality",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.legality === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('legality', record)}
         >
           Legality
         </Button>
       ),
-    },    
+    },
     {
       title: "OVC",
+      dataIndex: "ovc",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.ovc === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.ovc === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.ovc === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('videoCall', record)}
         >
           Onboarding Video Call
         </Button>
       ),
-    },  
+    },
     {
       title: "ID Card",
+      dataIndex: "idCard",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.idCard === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.idCard === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.idCard === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('idCard', record)}
         >
           ID Card
         </Button>
       ),
-    },  
+    },
     {
       title: "Theme",
+      dataIndex: "theme",
+      filters: [
+        { text: 'Selected', value: 'selected' },
+        { text: 'Not Selected', value: 'notSelected' },
+      ],
+      onFilter: (value, record) => (record.theme ? 'selected' : 'notSelected') === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.theme ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+          style={{ backgroundColor: record.theme ? '#90EE90' : undefined }}
           onClick={() => openModal('theme', record)}
         >
           Theme
         </Button>
       ),
-    },    
+    },
     {
       title: "Stage 1 Completion",
+      dataIndex: "stage1Completion",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.stage1Completion === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.stage1Completion === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.stage1Completion === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('stageCompletion', record)}
         >
           Stage 1 Completion
         </Button>
       ),
-    },  
+    },
     {
       title: "Remarks",
       key: "remarks",
@@ -580,7 +616,8 @@ const Stagewebsite = (record) => {
       ),
     }
   ];
-
+  
+  
   return (
     <div>
       <div style={{ maxHeight: '1000px', overflowY: 'auto' }}>

@@ -19,3 +19,49 @@
     }
   }
   
+  .timesheet-card {
+  background-color: #ffffff; /* Solid white background, no gradient */
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  border: 1px solid #e6e6e6; /* Light border */
+}
+
+.timesheet-card-container {
+  background-color: transparent; /* Set container background to transparent */
+  padding: 20px;
+}
+
+.timesheet-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timesheet-list li {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background-color: #fafafa; /* Light background for list items */
+  transition: background-color 0.3s ease;
+}
+
+.timesheet-list li:hover {
+  background-color: #f9f9f9;
+}
+
+.timesheet-task-title {
+  font-weight: 600; /* Slightly bolder font */
+  color: #333;
+}
+
+.timesheet-task-data {
+  color: #555; /* More contrasting color for task data */
+}
+
+.scrollable-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}

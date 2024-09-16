@@ -27,17 +27,17 @@ export const getChangesByEnrollmentId = async (req, res) => {
   const { enrollmentId } = req.query;
 
   try {
-    const changes = await Change.find({ enrollmentId });
-
-    if (changes.length === 0) {
+    const changes = await Change.findOne({ enrollmentId }); // Use findOne to get a single document
+    if (!changes) {
       return res.status(404).json({ message: 'No changes found for this enrollment ID' });
     }
 
-    res.status(200).json(changes);
+    res.status(200).json(changes.changes); // Return only the `changes` array
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Update a change's status or description
 export const updateChange = async (req, res) => {

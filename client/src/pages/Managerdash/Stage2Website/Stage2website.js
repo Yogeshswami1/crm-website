@@ -496,8 +496,8 @@ const StageMedia = (record) => {
           Edit Payment
         </Button>
       ),
-    },    
-        {
+    },
+    {
       title: "CAT File",
       render: (text, record) => (
         <Button
@@ -507,7 +507,12 @@ const StageMedia = (record) => {
           CAT File
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.catFile === value,
+    },
     {
       title: "Product File",
       render: (text, record) => (
@@ -518,7 +523,12 @@ const StageMedia = (record) => {
           Product File
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.productFile === value,
+    },
     {
       title: "Logo",
       render: (text, record) => (
@@ -529,7 +539,12 @@ const StageMedia = (record) => {
           Logo
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.logo === value,
+    },
     {
       title: "Banner",
       render: (text, record) => (
@@ -540,7 +555,12 @@ const StageMedia = (record) => {
           Banner
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.banner === value,
+    },
     {
       title: "Gallery",
       render: (text, record) => (
@@ -551,7 +571,12 @@ const StageMedia = (record) => {
           Gallery
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.gallery === value,
+    },
     {
       title: "Stage 2 Completion",
       render: (text, record) => (
@@ -562,7 +587,22 @@ const StageMedia = (record) => {
           Stage 2 Completion
         </Button>
       ),
-    },    
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.stage2Completion === value,
+    },
+    {
+      title: "Template 11 Sent",
+      dataIndex: "template11Sent",
+      filters: [
+        { text: 'Sent', value: true },
+        { text: 'Not Sent', value: false },
+      ],
+      onFilter: (value, record) => record.template11Sent === value,
+      render: (text, record) => record.template11Sent ? 'Sent' : 'Not Sent',
+    },
     {
       title: "Remarks",
       key: "remarks",
@@ -571,6 +611,7 @@ const StageMedia = (record) => {
       ),
     },
   ];
+  
 
   return (
     <>
