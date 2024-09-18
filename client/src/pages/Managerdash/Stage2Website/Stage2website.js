@@ -9,7 +9,8 @@ import LogoModal from './LogoModal';
 import BannerModal from './BannerModal';
 import GalleryModal from './GalleryModal';
 import Stage2CompletionModal from './Stage2CompletionModal';
-
+// import SocialContentModal from './SocialContentModal1';
+import SocialContentModal from './SocialContentModal1';
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -176,6 +177,17 @@ const closeModal = () => setVisibleModal(null);
           Banner
         </Button>
       ),
+    },
+    {
+      title: "Social Media Content",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.socialMedia1 === 'Completed' ? '#90EE90' : undefined }}
+          onClick={() => openModal('socialMediaContent', record)}  // Trigger modal
+        >
+          Social Media Content
+        </Button>
+      ),
     },    
     {
       title: "Gallery",
@@ -268,6 +280,15 @@ const closeModal = () => setVisibleModal(null);
           fetchData={fetchData}
         />
       )}
+
+{visibleModal === 'socialMediaContent' && (
+  <SocialContentModal
+    visible={true}
+    onCancel={closeModal}
+    record={selectedRecord}
+    fetchData={fetchData}
+  />
+)}
 
       {/* gallery modal */}
 

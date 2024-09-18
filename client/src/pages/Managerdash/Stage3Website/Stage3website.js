@@ -360,7 +360,7 @@ import PaymentGatewayModal from './PaymentGatewayModal';
 import Ready2HandoverModal from './Ready2HandoverModal';
 import Stage3CompletionModal from './Stage3CompletionModal';
 import './Stage3Css.css';
-
+import SocialContentModal from './SocialContentModal3';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Stage3website = () => {
@@ -534,6 +534,18 @@ const Stage3website = () => {
       ),
     },
     {
+      title: "Social Media Content",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.socialMedia2 === 'Completed' ? '#90EE90' : undefined }}
+          onClick={() => openModal('socialMediaContent', record)}  // Trigger modal
+        >
+          Social Media Content
+        </Button>
+      ),
+    }
+,    
+    {
       title: "Payment Gateway",
       render: (text, record) => (
         <Button
@@ -606,6 +618,14 @@ const Stage3website = () => {
       )}
 
       {/* server purchase modal */}
+      {visibleModal === 'socialMediaContent' && (
+    <SocialContentModal
+      visible={true}
+      onCancel={closeModal}
+      record={selectedRecord}
+      fetchData={fetchData}
+    />
+  )}
 
 {visibleModal === 'server' && (
         <ServerPurchaseModal

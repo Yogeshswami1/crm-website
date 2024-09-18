@@ -405,7 +405,25 @@ const contactSchema = new Schema({
   postWithDate: {
     type: String,
   },
+  socialMedia: {
+    type: String,
+  },
+  socialMediaDate: {
+    type: String,
+  },
+  socialMedia1: {
+    type: String,
+  },
+  socialMediaDate1: {
+    type: String,
+  },
 
+  socialMedia2: {
+    type: String,
+  },
+  socialMediaDate2: {
+    type: String,
+  },
 
   // Instagram
   accountOpenInsta: {

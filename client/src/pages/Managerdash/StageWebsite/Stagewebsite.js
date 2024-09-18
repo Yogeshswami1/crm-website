@@ -356,7 +356,7 @@ import IDCardModal from './IDCardModal';
 import ThemeModal from './ThemeModal';
 import Stage1CompletionModal from './Stage1CompletionModal';
 import './StageCss.css';
-
+import SocialContentModal from './SocialContentModal';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Stagewebsite = (record) => {
@@ -575,6 +575,18 @@ const Stagewebsite = (record) => {
       ),
     },
     {
+      title: "Social Media Content",
+      render: (text, record) => (
+        <Button
+          style={{ backgroundColor: record?.socialMedia === 'Completed' ? '#90EE90' : undefined }}
+          onClick={() => openModal('socialMediaContent', record)}  // Trigger modal
+        >
+          Social Media Content
+        </Button>
+      ),
+    }
+,    
+    {
       title: "Theme",
       dataIndex: "theme",
       filters: [
@@ -668,6 +680,14 @@ const Stagewebsite = (record) => {
           fetchData={fetchData}
         />
       )}
+          {visibleModal === 'socialMediaContent' && (
+  <SocialContentModal
+    visible={true}
+    onCancel={closeModal}
+    record={selectedRecord}
+    fetchData={fetchData}
+  />
+)}
 
       {visibleModal === 'theme' && (
         <ThemeModal
