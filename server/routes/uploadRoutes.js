@@ -76,12 +76,12 @@ router.post('/upload', (req, res) => {
   console.log('Request Headers:', req.headers);
 
   const busboy = Busboy({ headers: req.headers });
-  const uploadDir = path.join('uploads');
+  const uploadDir = path.join(__dirname, 'uploads');
 
   // Ensure the upload directory exists
   if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-    console.log('Created upload directory:', uploadDir);
+    console.log('Creating upload directory:', uploadDir);
+    fs.mkdirSync(uploadDir, { recursive: true });
   }
 
   let filePath = '';
@@ -98,6 +98,8 @@ router.post('/upload', (req, res) => {
     }
 
     filePath = path.join(uploadDir, `${Date.now()}-${filename}`);
+    console.log('Creating file at path:', filePath);
+
     const writeStream = fs.createWriteStream(filePath);
     writeStream.on('error', (err) => {
       console.error('Error writing file:', err);
