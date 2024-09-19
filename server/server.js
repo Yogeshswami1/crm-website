@@ -69,29 +69,28 @@ import chatRoutes from './routes/chatRoutes.js';
 import supervisorRoutes from './routes/supervisorRoutes.js';
 import accountantRoutes from './routes/accountantRoutes.js';
 import telesalesRoutes from './routes/telesalesRoutes.js';
-
 import whatsappRoutes from './routes/whatsapp.js';
 import changesRoutes from './routes/changesRoutes.js';
 import rmdRoutes from './routes/rmdRoutes.js';
 import socialRoutes from './routes/socialRoutes.js';
 import timesheetRoutes from './routes/timesheetRoutes.js';
 
-
-
-
 dotenv.config();
 
 const app = express();
 
-
-
+// CORS configuration to allow specific origins
 app.use(cors({
-  origin: ['https://website.saumiccraft.com'], // Allow your frontend domain
+  origin: 'https://website.saumiccraft.com', // Allow your frontend domain
   methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Specify allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
-}));app.use(express.json());
+  credentials: true,  // Allow credentials if needed
+}));
+
+app.use(express.json());
 app.use(bodyParser.json());
 
+// API routes
 app.use('/api/managers', managerRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
@@ -105,17 +104,11 @@ app.use('/api', chatRoutes);
 app.use('/api/supervisors', supervisorRoutes);
 app.use('/api/accountants', accountantRoutes);
 app.use('/api/telesales', telesalesRoutes);
-
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api', changesRoutes);
-
 app.use('/api/rmd', rmdRoutes);
 app.use('/api/social', socialRoutes);
-app.use('/api', changesRoutes);
 app.use('/api/timesheets', timesheetRoutes);
-
-
-
 
 const PORT = process.env.PORT || 5000;
 
@@ -124,7 +117,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('Database initialized successfully');
 
     app.listen(PORT, () => {
-      console.log(`Server Initialized on ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
