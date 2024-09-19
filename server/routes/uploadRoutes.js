@@ -62,13 +62,18 @@
 // export default router;
 
 
-import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { uploadContacts } from '../controllers/uploadController.js';
+import { fileURLToPath } from 'url';
+import express from 'express';
 import Busboy from 'busboy';
+import { uploadContacts } from '../controllers/uploadController.js';
 
 const router = express.Router();
+
+// Get the directory name from the current file URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create the route for uploading contacts
 router.post('/upload', (req, res) => {
