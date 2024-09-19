@@ -88,10 +88,15 @@ router.post('/upload', (req, res) => {
 
   busboy.on('file', (fieldname, file, filename) => {
     console.log('File object:', { fieldname, filename });
-    if (typeof filename === 'object') {
-      console.error('Filename is an object:', filename);
+
+    // Extract filename if it's an object
+    if (typeof filename === 'object' && filename.filename) {
+      filename = filename.filename;
+    } else if (typeof filename !== 'string') {
+      console.error('Filename is not a string or object:', filename);
       return res.status(400).send('Invalid file format.');
     }
+
     filePath = path.join(uploadDir, `${Date.now()}-${filename}`);
     const writeStream = fs.createWriteStream(filePath);
     writeStream.on('error', (err) => {
