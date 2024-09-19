@@ -87,9 +87,17 @@ router.post('/upload', (req, res) => {
   let filePath = '';
 
   busboy.on('file', (fieldname, file, filename) => {
-    console.log('Uploading file:', filename);
+    console.log('File object:', { fieldname, filename });
+    if (typeof filename === 'object') {
+      console.error('Filename is an object:', filename);
+      return res.status(400).send('Invalid file format.');
+    }
     filePath = path.join(uploadDir, `${Date.now()}-${filename}`);
-    file.pipe(fs.createWriteStream(filePath));
+    const writeStream = fs.createWriteStream(filePath);
+    writeStream.on('error', (err) => {
+      console.error('Error writing file:', err);
+    });
+    file.pipe(writeStream);
   });
 
   busboy.on('finish', () => {
