@@ -86,7 +86,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: '*',  // Temporarily allow all origins for debugging
+  origin: 'https://website.saumiccraft.com',  // Temporarily allow all origins for debugging
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
