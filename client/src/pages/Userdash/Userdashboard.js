@@ -64,7 +64,7 @@ const Userdashboard = () => {
               <Radio.Button value="stage1">Stage 1</Radio.Button>
               <Radio.Button value="stage2">Stage 2</Radio.Button>
               <Radio.Button value="stage3">Stage 3</Radio.Button>
-              <Radio.Button value="changes">Changes</Radio.Button>
+              {/* <Radio.Button value="changes">Changes</Radio.Button> */}
             </>
           )}
         </Radio.Group>
@@ -73,7 +73,7 @@ const Userdashboard = () => {
       {view === 'stage1' && (<Stage1/>)}
       {view === 'stage2' && (<Stage2/>)}
       {view === 'stage3' && (<Stage3/>)}
-      {view === 'changes' && (<Changes/>)}
+      {/* {view === 'changes' && (<Changes/>)} */}
     </div>
   );
 };

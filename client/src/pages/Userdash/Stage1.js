@@ -301,7 +301,7 @@ const Stage1 = () => {
 
  return (
    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-     <HorizontalTimeline userCreatedDate={userCreatedDate} projectStatus={projectStatus} completionDate={completionDate} />
+     {/* <HorizontalTimeline userCreatedDate={userCreatedDate} projectStatus={projectStatus} completionDate={completionDate} /> */}
 
 
      <VerticalTimeline>

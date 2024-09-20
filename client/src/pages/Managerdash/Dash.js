@@ -1,181 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { Card, Statistic, Row, Col, Table, Input, Typography } from 'antd';
-// import axios from 'axios';
-// import moment from 'moment';
-// import './Dash.css'; // Assuming you're using a CSS file named Dash.css
-
-// const { Search } = Input;
-// const { Title } = Typography;
-
-// const apiUrl = process.env.REACT_APP_BACKEND_URL;
-
-// const Dash = () => {
-//   const [userData, setUserData] = useState([]);
-//   const [filteredData, setFilteredData] = useState([]);
-//   const managerId = localStorage.getItem("managerId");
-
-//   useEffect(() => {
-//     if (managerId) {
-//       axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`)
-//         .then(response => {
-//           setUserData(response.data);
-//           setFilteredData(response.data);
-//         })
-//         .catch(error => {
-//           console.error('Error fetching user data:', error);
-//         });
-//     }
-//   }, [managerId]);
-
-//   const handleSearch = value => {
-//     const filtered = userData.filter(item => item.enrollmentId.includes(value));
-//     setFilteredData(filtered);
-//   };
-
-//   const formatCompletionData = (data) => {
-//     if (!data) return '';
-//     return data.replace(/updated on (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)/, (_, dateStr) => {
-//       return `(${moment(dateStr).format('DD-MM-YYYY')})`;
-//     });
-//   };
-
-//   const paymentColumns = [
-//     {
-//       title: 'Enrollment ID',
-//       dataIndex: 'enrollmentId',
-//       key: 'enrollmentId',
-//     },
-//     {
-//       title: 'Stage 1 Payment',
-//       children: [
-//         {
-//           title: 'Amount',
-//           dataIndex: ['payment', 'stage1', 'amount'],
-//           key: 'stage1PaymentAmount',
-//           className: 'stage1Column',
-//         },
-//         {
-//           title: 'Status',
-//           dataIndex: ['payment', 'stage1', 'status'],
-//           key: 'stage1PaymentStatus',
-//           className: 'stage1Column',
-//         },
-//       ],
-//     },
-//     {
-//       title: 'Stage 2 Payment',
-//       children: [
-//         {
-//           title: 'Amount',
-//           dataIndex: ['payment', 'stage2', 'amount'],
-//           key: 'stage2PaymentAmount',
-//           className: 'stage2Column',
-//         },
-//         {
-//           title: 'Status',
-//           dataIndex: ['payment', 'stage2', 'status'],
-//           key: 'stage2PaymentStatus',
-//           className: 'stage2Column',
-//         },
-//       ],
-//     },
-//     {
-//       title: 'Stage 3 Payment',
-//       children: [
-//         {
-//           title: 'Amount',
-//           dataIndex: ['payment', 'stage3', 'amount'],
-//           key: 'stage3PaymentAmount',
-//           className: 'stage3Column',
-//         },
-//         {
-//           title: 'Status',
-//           dataIndex: ['payment', 'stage3', 'status'],
-//           key: 'stage3PaymentStatus',
-//           className: 'stage3Column',
-//         },
-//       ],
-//     },
-//   ];
-
-//   const completionColumns = [
-//     {
-//       title: 'Enrollment ID',
-//       dataIndex: 'enrollmentId',
-//       key: 'enrollmentId',
-//     },
-//     {
-//       title: 'Stage 1 Completion',
-//       dataIndex: 'stage1Completion',
-//       key: 'stage1Completion',
-//       render: text => formatCompletionData(text),
-//     },
-//     {
-//       title: 'Stage 2 Completion',
-//       dataIndex: 'stage2Completion',
-//       key: 'stage2Completion',
-//       render: text => formatCompletionData(text),
-//     },
-//     {
-//       title: 'Stage 3 Completion',
-//       dataIndex: 'stage3Completion',
-//       key: 'stage3Completion',
-//       render: text => formatCompletionData(text),
-//     },
-//   ];
-
-//   return (
-//     <div style={{ padding: '20px' }}>
-//       <Row gutter={16}>
-//         <Col xs={24} sm={12} md={8}>
-//           <Card>
-//             <Statistic title="Total Users" value={filteredData.length} />
-//           </Card>
-//         </Col>
-//       </Row>
-//       <Row gutter={16} style={{ marginTop: '20px' }}>
-//         <Col span={24}>
-//           <Card title="User Data Overview" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-//             <Row gutter={16}>
-//               <Col span={24} style={{ marginBottom: '20px' }}>
-//                 <Title level={4} style={{ textAlign: 'center' }}>Payment Table</Title>
-//                 <Card>
-//                   <Search
-//                     placeholder="Search by Enrollment ID"
-//                     onSearch={handleSearch}
-//                     enterButton
-//                     style={{ width: "15rem" }}
-//                   />
-//                   <Table
-//                     columns={paymentColumns}
-//                     dataSource={filteredData}
-//                     rowKey="enrollmentId"
-//                     pagination={{ pageSize: 10 }}
-//                   />
-//                 </Card>
-//               </Col>
-//             </Row>
-//             <Row gutter={16}>
-//               <Col span={24}>
-//                 <Title level={4} style={{ textAlign: 'center' }}>Stage Completion Table</Title>
-//                 <Card>
-//                   <Table
-//                     columns={completionColumns}
-//                     dataSource={filteredData}
-//                     rowKey="enrollmentId"
-//                     pagination={{ pageSize: 10 }}
-//                   />
-//                 </Card>
-//               </Col>
-//             </Row>
-//           </Card>
-//         </Col>
-//       </Row>
-//     </div>
-//   );
-// };
-
-// export default Dash;
 
 
 import React, { useEffect, useState } from 'react';
@@ -193,6 +15,8 @@ const Dash = () => {
   const [userData, setUserData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedStageData, setSelectedStageData] = useState([]); // New state for selected stage data
+  const [selectedStageTitle, setSelectedStageTitle] = useState(''); // New state for selected stage title
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedStage, setSelectedStage] = useState('stage1');
   const [remarks, setRemarks] = useState([]);
@@ -214,6 +38,13 @@ const Dash = () => {
   const handleSearch = value => {
     const filtered = userData.filter(item => item.enrollmentId.includes(value));
     setFilteredData(filtered);
+  };
+
+  const handleCardClick = (stage) => {
+    const incompleteUsers = userData.filter(user => !user[`${stage}Completion`]);
+    setSelectedStageData(incompleteUsers);
+    setSelectedStageTitle(stage); // Set the stage title
+    setModalVisible(true);
   };
 
   const formatCompletionData = (data) => {
@@ -460,3 +291,132 @@ const Dash = () => {
 };
 
 export default Dash;
+
+
+// import React, { useEffect, useState } from 'react';
+// import { Card, Statistic, Row, Col, Table, Input, Typography, Modal } from 'antd';
+// import axios from 'axios';
+// import './Dash.css'; // Assuming you're using a CSS file named Dash.css
+
+// const { Search } = Input;
+// const { Title } = Typography;
+
+// const apiUrl = process.env.REACT_APP_BACKEND_URL;
+
+// const Dash = () => {
+//   const [userData, setUserData] = useState([]);
+//   const [filteredData, setFilteredData] = useState([]);
+//   const [modalVisible, setModalVisible] = useState(false);
+//   const [modalData, setModalData] = useState([]); // To store the filtered data for the modal
+//   const [selectedStage, setSelectedStage] = useState('stage1');
+//   const managerId = localStorage.getItem("managerId");
+
+//   useEffect(() => {
+//     if (managerId) {
+//       axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`)
+//         .then(response => {
+//           setUserData(response.data);
+//           setFilteredData(response.data);
+//         })
+//         .catch(error => {
+//           console.error('Error fetching user data:', error);
+//         });
+//     }
+//   }, [managerId]);
+
+//   const handleSearch = value => {
+//     const filtered = userData.filter(item => item.enrollmentId.includes(value));
+//     setFilteredData(filtered);
+//   };
+
+//   const countIncomplete = (stage) => {
+//     return userData.filter(user => user[`${stage}Completion`] !== 'Done').length;
+//   };
+
+//   const handleCardClick = (stage) => {
+//     const incompleteUsers = userData.filter(user => user[`${stage}Completion`] !== 'Done');
+//     setModalData(incompleteUsers); // Set the filtered data for the modal
+//     setSelectedStage(stage);
+//     setModalVisible(true); // Show modal with filtered users
+//   };
+
+//   const handleModalClose = () => {
+//     setModalVisible(false);
+//   };
+
+//   const columns = [
+//     {
+//       title: 'Enrollment ID',
+//       dataIndex: 'enrollmentId',
+//       key: 'enrollmentId',
+//     },
+//     {
+//       title: 'Completion Status',
+//       dataIndex: `${selectedStage}Completion`,
+//       key: 'completionStatus',
+//       render: (text) => text || 'Not Done',
+//     },
+//   ];
+
+//   return (
+//     <div style={{ padding: '20px' }}>
+//       <Row gutter={16}>
+//         <Col xs={24} sm={12} md={6}>
+//           <Card onClick={() => handleCardClick('stage1')}>
+//             <Statistic title="Stage 1 Not Done" value={countIncomplete('stage1')} />
+//           </Card>
+//         </Col>
+//         <Col xs={24} sm={12} md={6}>
+//           <Card onClick={() => handleCardClick('stage2')}>
+//             <Statistic title="Stage 2 Not Done" value={countIncomplete('stage2')} />
+//           </Card>
+//         </Col>
+//         <Col xs={24} sm={12} md={6}>
+//           <Card onClick={() => handleCardClick('stage3')}>
+//             <Statistic title="Stage 3 Not Done" value={countIncomplete('stage3')} />
+//           </Card>
+//         </Col>
+//       </Row>
+
+//       <Row gutter={16} style={{ marginTop: '20px' }}>
+//         <Col span={24}>
+//           <Card title="Payment Table">
+//             <Row gutter={16}>
+//               <Col span={24} style={{ marginBottom: '20px' }}>
+//                 <Title level={4}>Payment Table</Title>
+//                 <Search
+//                   placeholder="Search by Enrollment ID"
+//                   onSearch={handleSearch}
+//                   enterButton
+//                   style={{ width: "15rem" }}
+//                 />
+//                 <Table
+//                   columns={columns}
+//                   dataSource={filteredData}
+//                   rowKey="enrollmentId"
+//                   pagination={{ pageSize: 10 }}
+//                 />
+//               </Col>
+//             </Row>
+//           </Card>
+//         </Col>
+//       </Row>
+
+//       <Modal
+//         open={modalVisible}
+//         title={`${selectedStage.charAt(0).toUpperCase() + selectedStage.slice(1)} Not Done`}
+//         onCancel={handleModalClose}
+//         footer={null}
+//       >
+//         <Table
+//           columns={columns}
+//           dataSource={modalData}
+//           rowKey="enrollmentId"
+//           pagination={{ pageSize: 10 }}
+//         />
+//       </Modal>
+//     </div>
+//   );
+// };
+
+// export default Dash;

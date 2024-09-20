@@ -91,7 +91,7 @@ app.use(cors({
   // origin: 'http://localhost:3000',  // Temporarily allow all origins for debugging
 
 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
