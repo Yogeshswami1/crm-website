@@ -380,6 +380,60 @@ const Stagewebsite = (record) => {
     fetchData();
   }, []);
 
+  // const fetchData = async () => {
+  //   try {
+  //     const managerId = localStorage.getItem("managerId");
+  
+  //     if (!managerId) {
+  //       throw new Error("Manager ID not found in local storage");
+  //     }
+  
+  //     const response = await axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`);
+  
+  //     if (response.status !== 200) {
+  //       throw new Error(`Failed to fetch data: Status code ${response.status}`);
+  //     }
+  
+  //     // Process data
+  //     const processedData = response.data.map((item) => ({
+  //       ...item,
+  //       simpleStatus: {
+  //         legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',
+  //         ovc: item.ovc?.startsWith('Done') ? 'Done' : 'Not Done',
+  //         idCard: item.idCard?.startsWith('Done') ? 'Done' : 'Not Done',
+  //         stage1Completion: item.stage1Completion?.startsWith('Done') ? 'Done' : 'Not Done',
+  //       }
+  //     }));
+  
+  //     // Filter and sort data by enrollmentId in descending order
+  //     const filteredData = processedData
+  //       .filter(item => item.callDone?.startsWith('true') && !item.archive?.startsWith('true'))
+  //       .sort((a, b) => b.enrollmentId.localeCompare(a.enrollmentId));
+  
+  //     setData(filteredData);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  
+  //     if (axios.isAxiosError(error)) {
+  //       if (error.response) {
+  //         console.error("Response error:", error.response.data);
+  //         toast.error(`Error: ${error.response.data.message || "Failed to fetch data"}`);
+  //       } else if (error.request) {
+  //         console.error("No response received:", error.request);
+  //         toast.error("No response from server. Please check your network connection.");
+  //       } else {
+  //         console.error("Request setup error:", error.message);
+  //         toast.error(`Error setting up request: ${error.message}`);
+  //       }
+  //     } else {
+  //       console.error("General error:", error.message);
+  //       toast.error(`Error: ${error.message}`);
+  //     }
+  //   }
+  // };
+
+ 
+ 
   const fetchData = async () => {
     try {
       const managerId = localStorage.getItem("managerId");
@@ -394,15 +448,20 @@ const Stagewebsite = (record) => {
         throw new Error(`Failed to fetch data: Status code ${response.status}`);
       }
   
-      // Process data
+      // Process data and set default values for missing fields
       const processedData = response.data.map((item) => ({
         ...item,
-        simpleStatus: {
-          legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',
-          ovc: item.ovc?.startsWith('Done') ? 'Done' : 'Not Done',
-          idCard: item.idCard?.startsWith('Done') ? 'Done' : 'Not Done',
-          stage1Completion: item.stage1Completion?.startsWith('Done') ? 'Done' : 'Not Done',
-        }
+        legality: item.legality || 'Not Done',  // Default to 'Not Done' if missing
+        ovc: item.ovc || 'Not Done',            // Default to 'Not Done' if missing
+        idCard: item.idCard || 'Not Done',      // Default to 'Not Done' if missing
+        socialMedia: item.socialMedia || 'Not Done',  // Default to 'Not Done' if missing
+
+        stage1Completion: item.stage1Completion || 'Not Done', // Default to 'Not Done' if missing
+        payment: {
+          stage1: {
+            status: item.payment?.stage1?.status || 'Not Done',  // Handle nested payment status
+          },
+        },
       }));
   
       // Filter and sort data by enrollmentId in descending order
@@ -431,7 +490,8 @@ const Stagewebsite = (record) => {
       }
     }
   };
-
+  
+ 
   const handleOpenRemarksModal = (record) => {
     setCurrentRecord(record);
     setRemarks(record.remarks || []);
@@ -576,6 +636,13 @@ const Stagewebsite = (record) => {
     },
     {
       title: "Social Media Content",
+      dataIndex: "socialMediaContent",
+      filters: [
+        { text: 'Completed', value: 'Completed' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.socialMedia === value,
+    
       render: (text, record) => (
         <Button
           style={{ backgroundColor: record?.socialMedia === 'Completed' ? '#90EE90' : undefined }}
@@ -585,6 +652,7 @@ const Stagewebsite = (record) => {
         </Button>
       ),
     }
+    
 ,    
     {
       title: "Theme",

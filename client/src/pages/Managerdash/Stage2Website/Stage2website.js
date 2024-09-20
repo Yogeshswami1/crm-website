@@ -50,15 +50,20 @@ const closeModal = () => setVisibleModal(null);
       // Process data
       const processedData = response.data.map((item) => ({
         ...item,
-        simpleStatus: {
-          catFile: item.catFile?.startsWith('Done') ? 'Done' : 'Not Done',
-          productFile: item.productFile?.startsWith('Done') ? 'Done' : 'Not Done',
-          logo: item.logo?.startsWith('Done') ? 'Done' : 'Not Done',
-          banner: item.banner?.startsWith('Done') ? 'Done' : 'Not Done',
-          gallery: item.gallery?.startsWith('Done') ? 'Done' : 'Not Done',
-          stage2Completion: item.stage2Completion?.startsWith('Done') ? 'Done' : 'Not Done',
-        }
+        catFile: item.catFile?.startsWith('Done') ? 'Done' : 'Not Done',
+        productFile: item.productFile?.startsWith('Done') ? 'Done' : 'Not Done',
+        logo: item.logo?.startsWith('Done') ? 'Done' : 'Not Done',
+        banner: item.banner?.startsWith('Done') ? 'Done' : 'Not Done',
+        gallery: item.gallery?.startsWith('Done') ? 'Done' : 'Not Done',
+        stage2Completion: item.stage2Completion?.startsWith('Done') ? 'Done' : 'Not Done',
+        socialMedia1: item.socialMedia1?.startsWith('Completed') ? 'Completed' : 'Not Done',
+        payment: {
+          stage2: {
+            status: item.payment?.stage2?.status === 'Done' ? 'Done' : 'Not Done',
+          },
+        },
       }));
+      
   
       // Filter and sort data by enrollmentId in descending order
       const filteredData = processedData
@@ -125,53 +130,82 @@ const closeModal = () => setVisibleModal(null);
     },
     {
       title: "Stage 2 Payment",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => (record?.payment?.stage2?.status || 'Not Done') === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.payment?.stage2?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.payment?.stage2?.status === "Done" ? '#90EE90' : undefined }}
           onClick={() => openModal('stage2payment', record)}
         >
           Edit Payment
         </Button>
       ),
-    },    
+    },
     {
       title: "CAT File",
+      dataIndex: "catFile",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.catFile === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.catFile === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.catFile === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('catFile', record)}
         >
           CAT File
         </Button>
       ),
-    },    
+    },
     {
       title: "Product File",
+      dataIndex: "productFile",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.productFile === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.productFile === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.productFile === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('productFile', record)}
         >
           Product File
         </Button>
       ),
-    },    
+    },
     {
       title: "Logo",
+      dataIndex: "logo",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.logo === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.logo === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.logo === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('logo', record)}
         >
           Logo
         </Button>
       ),
-    },    
+    },
     {
       title: "Banner",
+      dataIndex: "banner",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.banner === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.banner === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.banner === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('banner', record)}
         >
           Banner
@@ -180,37 +214,55 @@ const closeModal = () => setVisibleModal(null);
     },
     {
       title: "Social Media Content",
+      dataIndex: "socialMedia1",
+      filters: [
+        { text: 'Completed', value: 'Completed' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.socialMedia1 === value,
       render: (text, record) => (
         <Button
           style={{ backgroundColor: record?.socialMedia1 === 'Completed' ? '#90EE90' : undefined }}
-          onClick={() => openModal('socialMediaContent', record)}  // Trigger modal
+          onClick={() => openModal('socialMediaContent', record)}
         >
           Social Media Content
         </Button>
       ),
-    },    
+    },
     {
       title: "Gallery",
+      dataIndex: "gallery",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.gallery === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.gallery === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.gallery === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('gallery', record)}
         >
           Gallery
         </Button>
       ),
-    },    
+    },
     {
       title: "Stage 2 Completion",
+      dataIndex: "stage2Completion",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.stage2Completion === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.stage2Completion === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.stage2Completion === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('stage2completion', record)}
         >
           Stage 2 Completion
         </Button>
       ),
-    },    
+    },
     {
       title: "Remarks",
       key: "remarks",
@@ -219,6 +271,7 @@ const closeModal = () => setVisibleModal(null);
       ),
     },
   ];
+  
 
   return (
     <>
