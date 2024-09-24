@@ -314,8 +314,12 @@ const Dashboard = () => {
          <Form.Item name="primaryContact" label="Primary Contact" rules={[{ required: true, message: 'Please input the primary contact!' }]}>
            <Input />
          </Form.Item>
-         <Form.Item name={['managerId', 'position']} label="Manager Position" rules={[{ required: true, message: 'Please select the manager position!' }]}>
-           <Select placeholder="Select Manager Position">
+         <Form.Item
+           name="managerPosition"
+           label="Manager's Position"
+           rules={[{ required: true, message: "Please select the manager's position!" }]}
+         >
+           <Select placeholder="Select Manager's Position">
              {managerPositions.map((position) => (
                <Option key={position} value={position}>
                  {position}
@@ -323,6 +327,8 @@ const Dashboard = () => {
              ))}
            </Select>
          </Form.Item>
+
+
        </Form>
      </Modal>
    </div>
