@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f8cb330a.css",
-    "main.js": "/static/js/main.d1bb0139.js",
+    "main.css": "/static/css/main.62ce6f2f.css",
+    "main.js": "/static/js/main.8b5baad6.js",
     "static/media/home-decor-3.jpeg": "/static/media/home-decor-3.74d13fcbd3c631fc7908.jpeg",
     "static/media/home-decor-2.jpeg": "/static/media/home-decor-2.b4e5397c9846645ba275.jpeg",
     "static/media/home-decor-1.jpeg": "/static/media/home-decor-1.05e218fd495ccc65c99d.jpeg",
@@ -21,7 +21,7 @@
     "static/media/Sample.csv": "/static/media/Sample.8e788ff89e1b52e3963b.csv"
   },
   "entrypoints": [
-    "static/css/main.f8cb330a.css",
-    "static/js/main.d1bb0139.js"
+    "static/css/main.62ce6f2f.css",
+    "static/js/main.8b5baad6.js"
   ]
 }

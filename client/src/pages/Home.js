@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Radio } from 'antd';
 import Main from './Main';
 import Template from './Template';
+import Home from "./Dashadmin"
+import Dashadmin from './Dashadmin';
+import ManagerData from "./ManagerData";
 const AdminDashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState('1');
 
@@ -12,12 +15,14 @@ const AdminDashboard = () => {
   const renderComponent = () => {
     switch (selectedComponent) {
       case '1':
-        return <Main />;
+        return <Dashadmin />;
       case '2':
-        return <Template />;
+        return <Main />;
       case '3':
-        // return <Admindashboard />;
+        return <Template />;
       case '4':
+        return <ManagerData />;
+      case '5':
         // return <Adminpayment />;
       default:
         return null;
@@ -27,8 +32,10 @@ const AdminDashboard = () => {
   return (
     <div>
       <Radio.Group onChange={handleChange} value={selectedComponent}>
-        <Radio value="1">Main</Radio>
-        <Radio value="2">Template</Radio>
+        <Radio value="1">Dashboard</Radio>
+        <Radio value="2">Main</Radio>
+        <Radio value="4">Managers</Radio>
+
         {/* <Radio value="3">Managers</Radio>
         <Radio value="4">Payments</Radio> */}
       </Radio.Group>

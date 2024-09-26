@@ -566,40 +566,63 @@ const Stagewebsite = (record) => {
         </Button>
       ),
     },
-    {
+    // {
+    //   title: "Stage 1 Payment",
+    //   dataIndex: "payment.stage1.status",
+    //   filters: [
+    //     { text: 'Done', value: 'Done' },
+    //     { text: 'Not Done', value: 'Not Done' },
+    //   ],
+    //   onFilter: (value, record) => record?.payment?.stage1?.status === value,
+    //   render: (text, record) => (
+    //     <Button
+    //       style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}
+    //       onClick={() => openModal('payment', record)}
+    //     >
+    //       Edit Payment
+    //     </Button>
+    //   ),
+    // },
+        {
       title: "Stage 1 Payment",
-      dataIndex: "payment.stage1.status",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record?.payment?.stage1?.status === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}
+          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
           onClick={() => openModal('payment', record)}
         >
           Edit Payment
         </Button>
       ),
-    },
-    {
+    },    
+    // {
+    //   title: "Legality",
+    //   dataIndex: "legality",
+    //   filters: [
+    //     { text: 'Done', value: 'Done' },
+    //     { text: 'Not Done', value: 'Not Done' },
+    //   ],
+    //   onFilter: (value, record) => record.legality === value,
+    //   render: (text, record) => (
+    //     <Button
+    //       style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
+    //       onClick={() => openModal('legality', record)}
+    //     >
+    //       Legality
+    //     </Button>
+    //   ),
+    // },
+
+        {
       title: "Legality",
-      dataIndex: "legality",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.legality === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
+          style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
           onClick={() => openModal('legality', record)}
         >
           Legality
         </Button>
       ),
-    },
+    },  
     {
       title: "OVC",
       dataIndex: "ovc",
