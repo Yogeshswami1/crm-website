@@ -35,6 +35,9 @@ const ThemeModal = ({ visible, onCancel, record, fetchData }) => {
           <Radio value="Theme 1">Theme 1</Radio>
           <Radio value="Theme 2">Theme 2</Radio>
           <Radio value="Theme 3">Theme 3</Radio>
+          <Radio value="Theme 4">Theme 4</Radio>
+          <Radio value="Theme 5">Theme 5</Radio>
+          <Radio value="Theme 6">Theme 6</Radio>
         </Radio.Group>
       </div>
       <div style={{ marginBottom: '16px' }}>
