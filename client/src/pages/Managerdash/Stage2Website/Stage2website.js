@@ -57,11 +57,11 @@ const closeModal = () => setVisibleModal(null);
         gallery: item.gallery?.startsWith('Done') ? 'Done' : 'Not Done',
         stage2Completion: item.stage2Completion?.startsWith('Done') ? 'Done' : 'Not Done',
         socialMedia1: item.socialMedia1?.startsWith('Completed') ? 'Completed' : 'Not Done',
-        payment: {
-          stage2: {
-            status: item.payment?.stage2?.status === 'Done' ? 'Done' : 'Not Done',
-          },
-        },
+        // payment: {
+        //   stage2: {
+        //     status: item.payment?.stage2?.status === 'Done' ? 'Done' : 'Not Done',
+        //   },
+        // },
       }));
       
   

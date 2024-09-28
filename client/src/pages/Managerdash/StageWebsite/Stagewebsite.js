@@ -10,7 +10,8 @@
 // import IDCardModal from './IDCardModal';
 // import ThemeModal from './ThemeModal';
 // import Stage1CompletionModal from './Stage1CompletionModal';
-
+// import './StageCss.css';
+// import SocialContentModal from './SocialContentModal';
 // const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 // const Stagewebsite = (record) => {
@@ -53,7 +54,8 @@
 //       const processedData = response.data.map((item) => ({
 //         ...item,
 //         simpleStatus: {
-//           legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',
+//           // legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',
+//           legality: item.legality || 'Not Done',  // Default to 'Not Done' if missing
 //           ovc: item.ovc?.startsWith('Done') ? 'Done' : 'Not Done',
 //           idCard: item.idCard?.startsWith('Done') ? 'Done' : 'Not Done',
 //           stage1Completion: item.stage1Completion?.startsWith('Done') ? 'Done' : 'Not Done',
@@ -136,6 +138,14 @@
 //     }
 //   };
 
+//   // Check if more than 7 days have passed and stage1Completion is not done
+//   const isOverdue = (record) => {
+//     const date = moment(record.date);
+//     const currentDate = moment();
+//     const sevenDaysPassed = currentDate.diff(date, 'days') > 7;
+//     const stage1CompletionNotDone = !record.stage1Completion || record.stage1Completion === 'Not Done';
+//     return sevenDaysPassed && stage1CompletionNotDone;
+//   };
   
 //   const stageColumns = [
 //     {
@@ -166,17 +176,34 @@
 //         </Button>
 //       ),
 //     },    
-//     {
+//     // {
+//     //   title: "Legality",
+//     //   render: (text, record) => (
+//     //     <Button
+//     //       style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+//     //       onClick={() => openModal('legality', record)}
+//     //     >
+//     //       Legality
+//     //     </Button>
+//     //   ),
+//     // },    
+//         {
 //       title: "Legality",
+//       dataIndex: "legality",
+//       filters: [
+//         { text: 'Done', value: 'Done' },
+//         { text: 'Not Done', value: 'Not Done' },
+//       ],
+//       onFilter: (value, record) => record.legality === value,
 //       render: (text, record) => (
 //         <Button
-//           style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+//           style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
 //           onClick={() => openModal('legality', record)}
 //         >
 //           Legality
 //         </Button>
 //       ),
-//     },    
+//     },
 //     {
 //       title: "OVC",
 //       render: (text, record) => (
@@ -199,6 +226,26 @@
 //         </Button>
 //       ),
 //     },  
+//     {
+//       title: "Social Media Content",
+//       dataIndex: "socialMediaContent",
+//       filters: [
+//         { text: 'Completed', value: 'Completed' },
+//         { text: 'Not Done', value: 'Not Done' },
+//       ],
+//       onFilter: (value, record) => record.socialMedia === value,
+    
+//       render: (text, record) => (
+//         <Button
+//           style={{ backgroundColor: record?.socialMedia === 'Completed' ? '#90EE90' : undefined }}
+//           onClick={() => openModal('socialMediaContent', record)}  // Trigger modal
+//         >
+//           Social Media Content
+//         </Button>
+//       ),
+//     }
+    
+// ,    
 //     {
 //       title: "Theme",
 //       render: (text, record) => (
@@ -233,7 +280,15 @@
 //   return (
 //     <div>
 //       <div style={{ maxHeight: '1000px', overflowY: 'auto' }}>
-//       <Table columns={stageColumns} dataSource={data} rowKey="_id" scroll={{ x: 'max-content', y: 601 }} sticky />
+//       {/* <Table columns={stageColumns} dataSource={data} rowKey="_id" scroll={{ x: 'max-content', y: 601 }} sticky /> */}
+//       <Table 
+//           columns={stageColumns} 
+//           dataSource={data} 
+//           rowKey="_id" 
+//           scroll={{ x: 'max-content', y: 601 }} 
+//           sticky 
+//           rowClassName={(record) => isOverdue(record) ? 'row-overdue' : ''}  // Apply class if overdue
+//         />
 //       </div>
 
 //       {/* payment stage 1 modal */}
@@ -279,6 +334,14 @@
 //           fetchData={fetchData}
 //         />
 //       )}
+//       {visibleModal === 'socialMediaContent' && (
+//   <SocialContentModal
+//     visible={true}
+//     onCancel={closeModal}
+//     record={selectedRecord}
+//     fetchData={fetchData}
+//   />
+// )}
 
 //       {/* theme modal */}
 
@@ -343,6 +406,11 @@
 
 // export default Stagewebsite;
 
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Input, Button, List } from 'antd';
 import axios from 'axios';
@@ -380,57 +448,6 @@ const Stagewebsite = (record) => {
     fetchData();
   }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const managerId = localStorage.getItem("managerId");
-  
-  //     if (!managerId) {
-  //       throw new Error("Manager ID not found in local storage");
-  //     }
-  
-  //     const response = await axios.get(`${apiUrl}/api/contact/getall?managerId=${managerId}`);
-  
-  //     if (response.status !== 200) {
-  //       throw new Error(`Failed to fetch data: Status code ${response.status}`);
-  //     }
-  
-  //     // Process data
-  //     const processedData = response.data.map((item) => ({
-  //       ...item,
-  //       simpleStatus: {
-  //         legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',
-  //         ovc: item.ovc?.startsWith('Done') ? 'Done' : 'Not Done',
-  //         idCard: item.idCard?.startsWith('Done') ? 'Done' : 'Not Done',
-  //         stage1Completion: item.stage1Completion?.startsWith('Done') ? 'Done' : 'Not Done',
-  //       }
-  //     }));
-  
-  //     // Filter and sort data by enrollmentId in descending order
-  //     const filteredData = processedData
-  //       .filter(item => item.callDone?.startsWith('true') && !item.archive?.startsWith('true'))
-  //       .sort((a, b) => b.enrollmentId.localeCompare(a.enrollmentId));
-  
-  //     setData(filteredData);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  
-  //     if (axios.isAxiosError(error)) {
-  //       if (error.response) {
-  //         console.error("Response error:", error.response.data);
-  //         toast.error(`Error: ${error.response.data.message || "Failed to fetch data"}`);
-  //       } else if (error.request) {
-  //         console.error("No response received:", error.request);
-  //         toast.error("No response from server. Please check your network connection.");
-  //       } else {
-  //         console.error("Request setup error:", error.message);
-  //         toast.error(`Error setting up request: ${error.message}`);
-  //       }
-  //     } else {
-  //       console.error("General error:", error.message);
-  //       toast.error(`Error: ${error.message}`);
-  //     }
-  //   }
-  // };
 
  
  
@@ -448,25 +465,38 @@ const Stagewebsite = (record) => {
         throw new Error(`Failed to fetch data: Status code ${response.status}`);
       }
   
-      // Process data and set default values for missing fields
+      //Process data and set default values for missing fields
       const processedData = response.data.map((item) => ({
         ...item,
-        legality: item.legality || 'Not Done',  // Default to 'Not Done' if missing
+        // legality: item.legality || 'Not Done',  // Default to 'Not Done' if missing
+        legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',  // Use startsWith for legality
+
         ovc: item.ovc || 'Not Done',            // Default to 'Not Done' if missing
         idCard: item.idCard || 'Not Done',      // Default to 'Not Done' if missing
         socialMedia: item.socialMedia || 'Not Done',  // Default to 'Not Done' if missing
 
         stage1Completion: item.stage1Completion || 'Not Done', // Default to 'Not Done' if missing
-        payment: {
-          stage1: {
-            status: item.payment?.stage1?.status || 'Not Done',  // Handle nested payment status
-          },
-        },
+        stage1Payment: item.payment?.stage1?.status === 'Done' ? 'Done' : 'Not Done',
+
       }));
+
+      // const processedData = response.data.map((item) => ({
+      //   ...item,
+      //   simpleStatus: {
+      //     legality: item.legality?.startsWith('Done') ? 'Done' : 'Not Done',  // Use startsWith for legality
+      //     ovc: item.ovc || 'Not Done',            // Default to 'Not Done' if missing
+      //     idCard: item.idCard || 'Not Done',      // Default to 'Not Done' if missing
+      //     socialMedia: item.socialMedia || 'Not Done',  // Default to 'Not Done' if missing
+      
+      //     stage1Completion: item.stage1Completion || 'Not Done', // Default to 'Not Done' if missing
+      //     stage1Payment: item.payment?.stage1?.status === 'Done' ? 'Done' : 'Not Done',
+      //   }
+      // }));
+      
   
       // Filter and sort data by enrollmentId in descending order
       const filteredData = processedData
-        .filter(item => item.callDone?.startsWith('true') && !item.archive?.startsWith('true'))
+        .filter(item => item.callDone?.startsWith('true') && !item.archive?.startsWith('Done'))
         .sort((a, b) => b.enrollmentId.localeCompare(a.enrollmentId));
   
       setData(filteredData);
@@ -566,63 +596,63 @@ const Stagewebsite = (record) => {
         </Button>
       ),
     },
-    // {
-    //   title: "Stage 1 Payment",
-    //   dataIndex: "payment.stage1.status",
-    //   filters: [
-    //     { text: 'Done', value: 'Done' },
-    //     { text: 'Not Done', value: 'Not Done' },
-    //   ],
-    //   onFilter: (value, record) => record?.payment?.stage1?.status === value,
-    //   render: (text, record) => (
-    //     <Button
-    //       style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}
-    //       onClick={() => openModal('payment', record)}
-    //     >
-    //       Edit Payment
-    //     </Button>
-    //   ),
-    // },
-        {
+    {
       title: "Stage 1 Payment",
+      dataIndex: "payment.stage1.status",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record?.payment?.stage1?.status === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}
           onClick={() => openModal('payment', record)}
         >
           Edit Payment
         </Button>
       ),
-    },    
-    // {
-    //   title: "Legality",
-    //   dataIndex: "legality",
-    //   filters: [
-    //     { text: 'Done', value: 'Done' },
-    //     { text: 'Not Done', value: 'Not Done' },
-    //   ],
-    //   onFilter: (value, record) => record.legality === value,
+    },
+    //     {
+    //   title: "Stage 1 Payment",
     //   render: (text, record) => (
     //     <Button
-    //       style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
-    //       onClick={() => openModal('legality', record)}
+    //       style={{ backgroundColor: record?.payment?.stage1?.status === "Done" ? '#90EE90' : undefined }}  // Light green hex code
+    //       onClick={() => openModal('payment', record)}
     //     >
-    //       Legality
+    //       Edit Payment
     //     </Button>
     //   ),
-    // },
-
-        {
+    // },    
+    {
       title: "Legality",
+      dataIndex: "legality",
+      filters: [
+        { text: 'Done', value: 'Done' },
+        { text: 'Not Done', value: 'Not Done' },
+      ],
+      onFilter: (value, record) => record.legality === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+          style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
           onClick={() => openModal('legality', record)}
         >
           Legality
         </Button>
       ),
-    },  
+    },
+
+    //     {
+    //   title: "Legality",
+    //   render: (text, record) => (
+    //     <Button
+    //       style={{ backgroundColor: record?.legality === 'Done' ? '#90EE90' : undefined }}  // Light green hex code
+    //       onClick={() => openModal('legality', record)}
+    //     >
+    //       Legality
+    //     </Button>
+    //   ),
+    // },  
     {
       title: "OVC",
       dataIndex: "ovc",
