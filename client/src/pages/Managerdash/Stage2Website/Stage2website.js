@@ -161,23 +161,23 @@ const closeModal = () => setVisibleModal(null);
         </Button>
       ),
     },
-    {
-      title: "Product File",
-      dataIndex: "productFile",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.productFile === value,
-      render: (text, record) => (
-        <Button
-          style={{ backgroundColor: record?.productFile === 'Done' ? '#90EE90' : undefined }}
-          onClick={() => openModal('productFile', record)}
-        >
-          Product File
-        </Button>
-      ),
-    },
+    //{
+      //title: "Product File",
+      //dataIndex: "productFile",
+      //filters: [
+        //{ text: 'Done', value: 'Done' },
+        //{ text: 'Not Done', value: 'Not Done' },
+      //],
+      //onFilter: (value, record) => record.productFile === value,
+      //render: (text, record) => (
+       // <Button
+         // style={{ backgroundColor: record?.productFile === 'Done' ? '#90EE90' : undefined }}
+          //onClick={() => openModal('productFile', record)}
+        //>
+         // Product File
+        //</Button>
+      //),
+    //},
     {
       title: "Logo",
       dataIndex: "logo",
