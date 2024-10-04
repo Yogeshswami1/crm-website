@@ -1,35 +1,5 @@
-// import React, { useState, useEffect } from 'react';
-// import { Radio } from 'antd';
-// import Dash from './Dash';
-// import Franchise from './Franchise';
-// import Amazon from './Amazon';
-
-// const Accountantdashboard = () => {
-//   const [view, setView] = useState('website'); // Set default value to 'website'
-
-//   return (
-//     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-//       <Radio.Group 
-//         onChange={(e) => setView(e.target.value)} 
-//         value={view} 
-//         style={{ marginBottom: '20px', display: 'flex' }}
-//       >      
-//         <Radio.Button value="website">Website</Radio.Button>            
-//         {/* <Radio.Button value="franchise">Franchise</Radio.Button>             */}
-//         {/* <Radio.Button value="amazon">Amazon</Radio.Button>             */}
-//       </Radio.Group>
-//       {view === 'website' && <Dash />}
-//       {view === 'franchise' && <Franchise />}
-//       {view === 'amazon' && <Amazon />}
-//     </div>
-//   );
-// };
-
-// export default Accountantdashboard;
-
-
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Input, Typography, Modal } from 'antd';
+import { Card, Table, Input, Typography, Modal, message,Switch  } from 'antd';
 import axios from 'axios';
 import './Dash.css';
 
@@ -41,6 +11,8 @@ const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const Dash = () => {
   const [userData, setUserData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [contacts, setContacts] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
 
@@ -56,18 +28,42 @@ const Dash = () => {
       });
   }, []);
 
-  // Single search function across multiple fields
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/contact/getcontact`);
+      setContacts(response.data);
+      setFilteredContacts(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("Failed to load data. Please try again.");
+    }
+  };
+
   const handleSearch = (value) => {
-    const filtered = userData.filter(item => {
+    const filteredUserData = userData.filter(item => {
       const enrollmentIdMatch = item.enrollmentId.toLowerCase().includes(value.toLowerCase());
       const nameMatch = item.name.toLowerCase().includes(value.toLowerCase());
       const emailMatch = item.email.toLowerCase().includes(value.toLowerCase());
       const primaryContactMatch = item.primaryContact.toLowerCase().includes(value.toLowerCase());
 
-      // Return true if any of the fields match the search value
       return enrollmentIdMatch || nameMatch || emailMatch || primaryContactMatch;
     });
-    setFilteredData(filtered);
+
+    const filteredContactData = contacts.filter(contact => {
+      const enrollmentIdMatch = contact.enrollmentId.toLowerCase().includes(value.toLowerCase());
+      const nameMatch = contact.name.toLowerCase().includes(value.toLowerCase());
+      const emailMatch = contact.email.toLowerCase().includes(value.toLowerCase());
+      const primaryContactMatch = contact.primaryContact.toLowerCase().includes(value.toLowerCase());
+
+      return enrollmentIdMatch || nameMatch || emailMatch || primaryContactMatch;
+    });
+
+    setFilteredData(filteredUserData); // For Payment Table
+    setFilteredContacts(filteredContactData); // For Contact Table
   };
 
   const handleEnrollmentClick = (record) => {
@@ -80,6 +76,19 @@ const Dash = () => {
     setSelectedContact(null);
   };
 
+  const handleBillsToggle = async (record, checked) => {
+    const updatedStatus = checked ? 'Sent' : 'Not Sent';
+    try {
+      await axios.put(`${apiUrl}/api/contact/updatebills/${record._id}`, {
+        billsSent: checked
+      });
+      message.success(`Bills status updated to ${updatedStatus} for ${record.name}`);
+      fetchContacts();  // Refresh the data
+    } catch (error) {
+      console.error("Error updating bills status:", error);
+      message.error("Failed to update bills status. Please try again.");
+    }
+  };
   const paymentColumns = [
     {
       title: 'Enrollment ID',
@@ -134,6 +143,71 @@ const Dash = () => {
     },
   ];
 
+  const contactColumns = [
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
+    {
+      title: 'Enrollment ID',
+      dataIndex: 'enrollmentId',
+      key: 'enrollmentId',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Mobile Number',
+      dataIndex: 'primaryContact',
+      key: 'primaryContact',
+    },
+    {
+      title: 'Email ID',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'GST',
+      dataIndex: 'gst',
+      key: 'gst',
+      render: (text) => (text ? text : 'N/A'),
+    },
+    {
+      title: 'GST Number',
+      dataIndex: 'gstNumber',
+      key: 'gstNumber',
+      render: (text) => (text ? text : 'N/A'),
+    },
+    {
+      title: 'State',
+      dataIndex: 'state',
+      key: 'state',
+      render: (text) => (text ? text : 'Not Provided'),
+    },
+    {
+      title: 'Legality',
+      dataIndex: 'legality',
+      key: 'legality',
+      render: (text) => (text && text !== 'Not Done' ? text : 'Not Done'),
+    },
+    {
+      title: 'Bills',
+      key: 'billsSent',
+      render: (text, record) => (
+        <Switch
+          checked={record.billsSent}  // Toggle based on billsSent status
+          onChange={(checked) => handleBillsToggle(record, checked)}
+          checkedChildren="Sent"
+          unCheckedChildren="Not Sent"
+        />
+      ),
+    },
+  ];
+
   return (
     <div style={{ padding: '20px' }}>
       <Card title="Welcome Accountant" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
@@ -148,23 +222,31 @@ const Dash = () => {
         </div>
         <Table
           columns={paymentColumns}
-          dataSource={filteredData}
+          dataSource={filteredData}  // Payment Table filtered data
           rowKey="enrollmentId"
           className="custom-table"
         />
-        {selectedContact && (
-          <Modal
-            title="Contact Details"
-            open={isModalVisible}
-            onCancel={handleCancel}
-            footer={null}
-          >
-            <p><strong>Name:</strong> {selectedContact.name}</p>
-            <p><strong>Email:</strong> {selectedContact.email}</p>
-            <p><strong>Primary Contact:</strong> {selectedContact.primaryContact}</p>
-            <p><strong>Secondary Contact:</strong> {selectedContact.secondaryContact}</p>
-          </Modal>
-        )}
+        <Title level={4} style={{ textAlign: 'center', marginTop: '40px' }}>Contact Details</Title>
+        <Table
+          columns={contactColumns}
+          dataSource={filteredContacts}  // Contact Table filtered data
+          rowKey="_id"
+          className="custom-table"
+        />
+        <Modal visible={isModalVisible} onCancel={handleCancel} footer={null} title="Contact Details">
+          {selectedContact && (
+            <div>
+              <p><strong>Enrollment ID:</strong> {selectedContact.enrollmentId}</p>
+              <p><strong>Name:</strong> {selectedContact.name}</p>
+              <p><strong>Primary Contact:</strong> {selectedContact.primaryContact}</p>
+              <p><strong>Email:</strong> {selectedContact.email}</p>
+              <p><strong>GST:</strong> {selectedContact.gst || 'N/A'}</p>
+              <p><strong>GST Number:</strong> {selectedContact.gstNumber || 'N/A'}</p>
+              <p><strong>State:</strong> {selectedContact.state || 'Not Provided'}</p>
+              <p><strong>Legality:</strong> {selectedContact.legality || 'Not Done'}</p>
+            </div>
+          )}
+        </Modal>
       </Card>
     </div>
   );

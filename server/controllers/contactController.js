@@ -866,3 +866,38 @@ export const deleteTask = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete task' });
   }
 };
+
+export const updateBillsStatus = async (req, res) => {
+  const { id } = req.params; // Get the contact ID from the request parameters
+  const { billsSent } = req.body; // Get the bills status from the request body
+
+  try {
+    console.log(`Contact ID: ${id}`);
+    console.log('Request Body: ', req.body);
+
+    // Find the contact by ID
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      console.log('Contact not found for ID:', id);
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    console.log('Found contact:', contact);
+
+    // Update the billsSent field if it is provided
+    if (billsSent !== undefined) {
+      contact.billsSent = billsSent;
+    }
+
+    await contact.save(); // Save the updated contact
+
+    res.status(200).json({
+      message: 'Bills status updated successfully',
+      contact
+    });
+  } catch (err) {
+    console.error('Error updating bills status:', err);
+    res.status(500).json({ error: 'Failed to update bills status' });
+  }
+};

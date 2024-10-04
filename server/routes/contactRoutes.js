@@ -22,7 +22,8 @@ import {
   updateRemarkContactById,
   getContacts,
   updateContactByEnrollmentId,
-  updateRemarkContactByEnrollmentId
+  updateRemarkContactByEnrollmentId,
+  updateBillsStatus
 } from "../controllers/contactController.js";
 
 
@@ -66,5 +67,10 @@ router.get("/enrollmentId/:enrollmentId", getContactByEnrollmentId);
 router.put("/:id", updateContactById);
 router.put("/code/:id", updateContactByEnrollmentId);
 router.delete("/:id", deleteContactById);
+
+//Bill status
+router.put('/updatebills/:id', updateBillsStatus);
+
+
 
 export default router;

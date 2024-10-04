@@ -81,6 +81,9 @@ import timesheetRoutes from './routes/timesheetRoutes.js';
 
 dotenv.config();
 
+
+
+
 const app = express();
 
 
@@ -98,6 +101,8 @@ app.use(cors({
 
 app.use(express.json());
 app.use(bodyParser.json());
+
+
 
 app.use('/api/managers', managerRoutes);
 app.use('/api/users', userRoutes);
@@ -138,3 +143,6 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('Error connecting to MongoDB:', error.message);
     process.exit(1);
   });
+
+
+

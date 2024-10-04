@@ -196,7 +196,16 @@ const contactSchema = new Schema({
   state: {
     type: String,
   },
+  stateDate: {
+    type: String,
+  },
   gst: {
+    type: String,
+  },
+  gstNumber: {
+    type: String,
+  },
+  gstDate: {
     type: String,
   },
   gstDescription: {
@@ -220,6 +229,8 @@ const contactSchema = new Schema({
   gtin: {
     type: String,
   },
+  billsSent: { type: Boolean, default: false }, // New field for bills status
+
   gtinDescription: {
     type: String,
   },

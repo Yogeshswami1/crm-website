@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Input, Button, List } from 'antd';
+import { Table, Modal, Input, Button, List ,message} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import Callmodal from "./Callmodal";
@@ -12,6 +12,8 @@ import ThemeModal from './ThemeModal';
 import Stage1CompletionModal from './Stage1CompletionModal';
 import './StageCss.css';
 import SocialContentModal from './SocialContentModal';
+import GstModal from './GstModal';
+import StateModal from './StateModal';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Stagewebsite = (record) => {
@@ -23,6 +25,7 @@ const Stagewebsite = (record) => {
   const [newRemark, setNewRemark] = useState('');
   const [visibleModal, setVisibleModal] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  
   
 const openModal = (modalType, record) => {
   setSelectedRecord(record);
@@ -127,7 +130,15 @@ const closeModal = () => setVisibleModal(null);
       toast.error("Failed to add remark");
     }
   };
-
+  const handleStateInBlur = async (value, record) => {
+    try {
+      await axios.put(`${apiUrl}/api/contact/${record._id}`, { state: value });
+      message.success("State updated successfully");
+      fetchData();  // Fetch data again if needed
+    } catch (error) {
+      message.error("Failed to update State");
+    }
+  };
   const handleDeleteRemark = async (remark) => {
     const updatedRemarks = remarks.filter(r => r._id !== remark._id);
     try {
@@ -333,6 +344,41 @@ const stageColumns = [
     ),
   },
   {
+    title: "GST",
+    dataIndex: "gst",
+    filters: [
+      { text: 'Done', value: 'Done' },
+      { text: 'Not Done', value: 'Not Done' },
+    ],
+    onFilter: (value, record) => record.gst === value,
+    render: (text, record) => (
+      <Button
+        style={{ backgroundColor: record.gst === 'Done' ? '#90EE90' : undefined }}
+        onClick={() => openModal('gst', record)}
+      >
+        GST
+      </Button>
+    ),
+  },
+
+  {
+    title: "State",
+    dataIndex: "state",
+    filters: [
+      { text: 'Done', value: 'Done' },
+      { text: 'Not Done', value: 'Not Done' },
+    ],
+    onFilter: (value, record) => record.state === value,
+    render: (text, record) => (
+      <Button
+      style={{ backgroundColor: record?.state ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+      onClick={() => openModal('state', record)}
+      >
+        State
+      </Button>
+    ),
+  },
+  {
     title: "OVC",
     dataIndex: "ovc",
     filters: [
@@ -461,6 +507,24 @@ const stageColumns = [
           fetchData={fetchData}
         />
       )}
+
+{visibleModal === 'gst' && (
+        <GstModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+         {visibleModal === 'state' && (
+        <StateModal
+          visible={true}
+          onCancel={closeModal}
+          record={selectedRecord}
+          fetchData={fetchData}
+        />
+      )}
+
 
       {/* onboarding video call modal */}
 
