@@ -8,3 +8,13 @@
     background-color: unset !important;
   }
   
+  .table-wrapper {
+    overflow-x: auto;      /* Enable horizontal scrolling */
+    white-space: nowrap;   /* Prevent content from wrapping */
+    max-width: 100%;       /* Ensure it doesn't exceed the parent container's width */
+  }
+  
+  .custom-table {
+    min-width: 800px;      /* Ensure the table has a minimum width for scrolling */
+  }
+  
