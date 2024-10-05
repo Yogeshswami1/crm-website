@@ -353,8 +353,10 @@ const stageColumns = [
     onFilter: (value, record) => record.gst === value,
     render: (text, record) => (
       <Button
-        style={{ backgroundColor: record.gst === 'Done' ? '#90EE90' : undefined }}
-        onClick={() => openModal('gst', record)}
+      style={{ 
+        backgroundColor: record.gst === 'Done' ? '#90EE90' : '#FF6347',  // Green for 'Done', Red for 'Not Done'
+        color: '#fff' // Text color
+      }}        onClick={() => openModal('gst', record)}
       >
         GST
       </Button>
