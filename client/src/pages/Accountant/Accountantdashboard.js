@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Table, Input, Typography, Modal, message,Switch  } from 'antd';
 import axios from 'axios';
 import './Dash.css';
+import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'; // Import Ant Design icons
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -142,7 +143,32 @@ const Dash = () => {
       ],
     },
   ];
-
+  const downloadFile = async (url) => {
+    try {
+      // Fetch the file as a Blob (binary data)
+      const response = await axios.get(url, {
+        responseType: 'blob', // This tells axios to expect a binary response
+      });
+  
+      // Create a temporary link element to download the Blob
+      const link = document.createElement('a');
+      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+      link.href = fileURL;
+  
+      // Extract the file name from the URL or use a default name
+      const fileName = url.substring(url.lastIndexOf('/') + 1);
+      link.setAttribute('download', fileName);
+  
+      // Trigger the download
+      document.body.appendChild(link);
+      link.click();
+  
+      // Clean up the temporary link element
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
   const contactColumns = [
     {
       title: 'Date',
@@ -193,6 +219,31 @@ const Dash = () => {
       dataIndex: 'legality',
       key: 'legality',
       render: (text) => (text && text !== 'Not Done' ? text : 'Not Done'),
+    },
+    {
+      title: 'Legality Link',  // Column for both download and view buttons
+      dataIndex: 'legalityLink',
+      key: 'legalityLink',
+      render: (text, record) => (
+        text ? (
+          <div>
+            {/* View Document button with Eye icon */}
+            <a href={text} target="_blank" rel="noopener noreferrer" style={{ marginRight: '10px' }}>
+              <EyeOutlined style={{ fontSize: '18px', color: '#1890ff' }} title="View Document" />
+            </a>
+  
+            {/* Download Document button with Download icon */}
+            <a 
+              href={text} 
+              download // The download attribute forces the browser to download the file
+              target="_blank" // Adding this ensures it opens in a new tab in case download fails
+              rel="noopener noreferrer"
+            >
+              <DownloadOutlined style={{ fontSize: '18px', color: '#52c41a' }} title="Download Document" />
+            </a>
+          </div>
+        ) : 'No Link Available'
+      ),
     },
     {
       title: 'Bills',
