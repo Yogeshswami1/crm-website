@@ -7,6 +7,7 @@ import { adminLogin,
          telesalesLogin,
          rmdLogin,
          socialLogin,
+         backendLogin
          } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.post('/supervisors/login', supervisorLogin);
 router.post('/telesales/login', telesalesLogin);
 router.post('/rmd/login', rmdLogin);
 router.post('/social/login', socialLogin);
+router.post('/backend/login', backendLogin);
 
 export default router;

@@ -98,6 +98,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Managersetpassword from "./pages/Managerdash/Managersetpassword";
 
 import Accountanttab from "./pages/Accountanttab";
+import Backendtab from "./pages/Backendtab";
 import Supervisortab from "./pages/Supervisortab";
 import Telesalestab from "./pages/Telesalestab";
 import Rmdtab from "./pages/Rmdtab";
@@ -107,7 +108,7 @@ import Accountantdashboard from "./pages/Accountant/Accountantdashboard";
 import Telesalesdashboard from "./pages/Telesales/Dashboard";
 import Waba from "./pages/Managerdash/Waba";
 import Rmddashboard from "./pages/RMD/Rmddashboard";
-
+import Backenddashboard from "./pages/Backend/Backenddashboard";
 function App() {
   return (
     <UserProvider>
@@ -132,6 +133,9 @@ function App() {
               <ProtectedRoute exact path="/waba" component={Waba} roles={['manager']} />
 
               <ProtectedRoute exact path="/accountanttab" component={Accountanttab} roles={['admin']} />
+              <ProtectedRoute exact path="/backendtab" component={Backendtab} roles={['admin']} />
+
+
               <ProtectedRoute exact path="/supervisortab" component={Supervisortab} roles={['admin']} />
               <ProtectedRoute exact path="/telesalestab" component={Telesalestab} roles={['admin']} />
               <ProtectedRoute exact path="/rmdtab" component={Rmdtab} roles={['admin']} />
@@ -141,6 +145,8 @@ function App() {
               <ProtectedRoute exact path="/telesalesdashboard" component={Telesalesdashboard} roles={['telesales']} />
               <ProtectedRoute exact path="/rmddashboard" component={Rmddashboard} roles={['rmd']} />
               
+              <ProtectedRoute exact path="/backenddashboard" component={Backenddashboard} roles={['backend']} />
+
             
             </Main>
           </Switch>

@@ -65,6 +65,8 @@ router.delete("/:enrollmentId/tasks/:taskId", deleteTask);
 router.get("/:id", getContactById);
 router.get("/enrollmentId/:enrollmentId", getContactByEnrollmentId);
 router.put("/:id", updateContactById);
+router.put("/update/:id", updateContactById); // For more specific updates
+
 router.put("/code/:id", updateContactByEnrollmentId);
 router.delete("/:id", deleteContactById);
 

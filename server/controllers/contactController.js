@@ -104,38 +104,6 @@ export const getServiceTypeByEnrollmentId = async (req, res) => {
   }
 };
 
-// // Update a contact by ID
-// export const updateContactById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const { managerPosition, ...contactData } = req.body;
-
-//     // Find the manager by position if the managerPosition is provided
-//     let managerId = null;
-//     if (managerPosition) {
-//       const manager = await Manager.findOne({ position: managerPosition });
-//       if (!manager) {
-//         return res.status(404).json({ error: "Manager with the specified position not found." });
-//       }
-//       managerId = manager._id;
-//     }
-
-//     const updatedContact = await Contact.findByIdAndUpdate(
-//       id,
-//       { ...contactData, ...(managerId && { managerId }) },
-//       { new: true }
-//     );
-
-//     if (!updatedContact) {
-//       return res.status(404).json({ error: "Contact not found." });
-//     }
-//     res.status(200).json(updatedContact);
-//   } catch (error) {
-//     console.error("Error updating contact:", error);
-//     res.status(500).json({ error: "Failed to update contact. Please try again." });
-//   }
-// };
-
 //adding the remark
 export const updateRemarkContactById = async (req, res) => {
   try {
@@ -198,126 +166,6 @@ export const updateRemarkContactByEnrollmentId = async (req, res) => {
   }
 };
 
-// Update a contact by ID
-// export const updateContactById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const { managerPosition, ...contactData } = req.body;
-
-//     // Find the manager by position if the managerPosition is provided
-//     let managerId = null;
-//     if (managerPosition) {
-//       const manager = await Manager.findOne({ position: managerPosition });
-//       if (!manager) {
-//         return res.status(404).json({ error: "Manager with the specified position not found." });
-//       }
-//       managerId = manager._id;
-//     }
-
-//     // Get the current date as an ISO string
-//     const currentDate = new Date().toISOString();
-
-//     // List of string fields to update with the current date
-//     const stringFields = [
-//       'idCard', 'training', 'ebook', 'supportPortal', 'walletPortal',
-//       'gallery', 'legality', 'category', 'state', 'gst', 'onboardingStatus',
-//       'brandName', 'accountOpenIn', 'gtin', 'listingsIn', 'launchDateIn',
-//       'addRegionIn', 'shipping', 'fbaIn', 'stateCom', 'documentStatus', 'storeName', 'accountOpenCom',
-//       'videoKyc', 'deduct', 'listingsCom', 'launchDateCom', 'nia', 'addCredit', 'fbaCom', 'ovc', 'theme', 'stage1Completion', 'callDone'
-//     ];
-
-//     // Append the current date to the string fields if they are present in the request body
-//     stringFields.forEach(field => {
-//       if (contactData[field]) {
-//         contactData[field] = `${contactData[field]} (updated on ${currentDate})`;
-//       }
-//     });
-
-//     // Update contact data including managerId if provided
-//     const updatedContact = await Contact.findByIdAndUpdate(
-//       id,
-//       { ...contactData, ...(managerId && { managerId }) },
-//       { new: true }
-//     );
-
-//     if (!updatedContact) {
-//       return res.status(404).json({ error: "Contact not found." });
-//     }
-//     res.status(200).json(updatedContact);
-//   } catch (error) {
-//     console.error("Error updating contact:", error);
-//     res.status(500).json({ error: "Failed to update contact. Please try again." });
-//   }
-// };
-
-
-
-// export const updateContactById = async (req, res) => {
-//   const { id } = req.params;
-
-//   if (!id) {
-//     console.error("Update failed: Contact ID is required.");
-//     return res.status(400).json({ error: "Contact ID is required." });
-//   }
-
-//   try {
-//     const { managerPosition, ...contactData } = req.body;
-
-//     // Find the manager by position if the managerPosition is provided
-//     let managerId = null;
-//     if (managerPosition) {
-//       const manager = await Manager.findOne({ position: managerPosition });
-//       if (!manager) {
-//         console.error(`Update failed: Manager with position ${managerPosition} not found.`);
-//         return res.status(404).json({ error: "Manager with the specified position not found." });
-//       }
-//       managerId = manager._id;
-//     }
-
-//     // Get the current date as an ISO string
-//     const currentDate = new Date().toISOString();
-
-//     // List of string fields to update with the current date
-//     const stringFields = [
-//       'idCard', 'training', 'ebook', 'supportPortal', 'walletPortal',
-//       'gallery', 'legality', 'category', 'state', 'gst', 'onboardingStatus',
-//       'brandName', 'accountOpenIn', 'gtin', 'listingsIn', 'launchDateIn',
-//       'addRegionIn', 'shipping', 'fbaIn', 'stateCom', 'documentStatus', 'storeName', 'accountOpenCom',
-//       'videoKyc', 'deduct', 'listingsCom', 'launchDateCom', 'nia', 'addCredit', 'fbaCom', 'ovc', 'theme', 'stage1Completion', 'callDone',
-//       'cvcIn', 'cvcCom', 'stage2Completion', 'stage3Completion'
-//     ];
-
-//     // Append the current date to the string fields if they are present in the request body
-//     stringFields.forEach(field => {
-//       if (contactData[field]) {
-//         contactData[field] = `${contactData[field]} (updated on ${currentDate})`;
-//       }
-//     });
-
-//     // Log the data to be updated
-//     console.info(`Attempting to update contact with ID ${id}. Update data:`, contactData);
-
-//     // Update contact data including managerId if provided
-//     const updatedContact = await Contact.findByIdAndUpdate(
-//       id,
-//       { ...contactData, ...(managerId && { managerId }) },
-//       { new: true }
-//     );
-
-//     if (!updatedContact) {
-//       console.error(`Update failed: Contact with ID ${id} not found.`);
-//       return res.status(404).json({ error: "Contact not found." });
-//     }
-
-//     // Log successful update
-//     console.info(`Contact with ID ${id} updated successfully. Updated data:`, updatedContact);
-//     res.status(200).json(updatedContact);
-
-//   } catch (error) {
-//     console.error(`Error updating contact with ID ${id}:`, error);
-//     res.status(500).json({ error: "Failed to update contact. Please try again." });
-//   }
-// };
 
 export const updateContactById = async (req, res) => {
   const { id } = req.params;
@@ -407,7 +255,9 @@ export const updateContactByEnrollmentId = async (req, res) => {
       'brandName', 'accountOpenIn', 'gtin', 'listingsIn', 'launchDateIn',
       'addRegionIn', 'shipping', 'fbaIn', 'stateCom', 'documentStatus', 'storeName', 'accountOpenCom',
       'videoKyc', 'deduct', 'listingsCom', 'launchDateCom', 'nia', 'addCredit', 'fbaCom', 'ovc', 'theme', 'stage1Completion', 'callDone',
-      'cvcIn', 'cvcCom', 'stage2Completion', 'stage3Completion'
+      'cvcIn', 'cvcCom', 'stage2Completion', 'stage3Completion',
+      'pgMedium', 'pgIntegration', 'paypalIntegration', 'update1', 'update2', 'update3' // New columns
+
     ];
 
     // Append the current date to the string fields if they are present in the request body
@@ -507,38 +357,6 @@ export const assignManager = async (req, res) => {
   }
 };
 
-// Get manager assignments
-// export const getManagerAssignments = async (req, res) => {
-//   try {
-//     const assignments = await Contact.aggregate([
-//       {
-//         $lookup: {
-//           from: "managers",
-//           localField: "managerId",
-//           foreignField: "_id",
-//           as: "manager"
-//         }
-//       },
-//       {
-//         $unwind: "$manager"
-//       },
-//       {
-//         $group: {
-//           _id: "$managerId",
-//           managerName: { $first: "$manager.name" },
-//           contacts: { $push: "$$ROOT" },
-//           contactCount: { $sum: 1 }
-//         }
-//       }
-//     ]);
-
-//     res.status(200).json(assignments);
-//   } catch (error) {
-//     console.error("Error fetching manager assignments:", error);
-//     res.status(500).json({ error: "Failed to fetch manager assignments. Please try again." });
-//   }
-// };
-
 export const getManagerAssignments = async (req, res) => {
   try {
     const assignments = await Contact.aggregate([
@@ -606,30 +424,6 @@ export const checkPrimaryContact = async (req, res) => {
   }
 };
 
-
-
-//update contact password
-// export const updateContactPassword = async (req, res) => {
-//   const { id } = req.params;
-//   const contact = req.body;
-
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(404).send('No contact with that id');
-//   }
-
-//   try {
-//     // If the password is being updated, hash it
-//     if (contact.password) {
-//       const salt = await bcrypt.genSalt(10);
-//       contact.password = await bcrypt.hash(contact.password, salt);
-//     }
-
-//     const updatedContact = await Contact.findByIdAndUpdate(id, contact, { new: true });
-//     res.json(updatedContact);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 export const updateContactPassword = async (req, res) => {
   const { id } = req.params;
   const { password, ...otherFields } = req.body;
@@ -676,80 +470,6 @@ export const getTasks = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch tasks' });
   }
 };
-
-
-// export const addTask = async (req, res) => {
-//   const { enrollmentId, tasks } = req.body; // Get enrollmentId and tasks from request body
-
-//   console.log(req.body);
-
-//   try {
-//     // Validate if `tasks` is an array and not empty
-//     if (!Array.isArray(tasks) || tasks.length === 0) {
-//       return res.status(400).json({ message: 'Tasks should be a non-empty array' });
-//     }
-
-//     // Find the contact document by enrollment ID
-//     const contact = await Contact.findOne({ enrollmentId });
-//     console.log("Contact found for enrollmentId:", enrollmentId);
-
-//     if (!contact) {
-//       return res.status(404).json({ message: 'Contact not found' });
-//     }
-
-//     // Add the tasks to the contact
-//     contact.tasks.push(...tasks);
-
-//     // Save the updated contact document
-//     await contact.save();
-
-//     res.status(201).json(contact.tasks);
-//   } catch (err) {
-//     console.error('Error adding tasks:', err);
-//     res.status(500).json({ error: 'Failed to add tasks' });
-//   }
-// };
-
-
-// export const updateTask = async (req, res) => {
-//   const { enrollmentId, taskId } = req.params;
-//   const { newStatus, newComment } = req.body;
-
-//   try {
-//     console.log(`Enrollment ID: ${enrollmentId}`);
-//     console.log(`Task ID: ${taskId}`);
-//     console.log('Request Body: ', req.body);
-
-//     const contact = await Contact.findOne({ enrollmentId });
-
-//     if (!contact) {
-//       console.log('Contact not found for Enrollment ID:', enrollmentId);
-//       return res.status(404).json({ message: 'Contact not found' });
-//     }
-
-//     console.log('Found contact:', contact);
-
-//     const task = contact.tasks.id(taskId);
-
-//     if (!task) {
-//       console.log('Task not found with Task ID:', taskId);
-//       return res.status(404).json({ message: 'Task not found' });
-//     }
-
-//     console.log('Found task:', task);
-
-//     if (newStatus !== undefined) task.status = newStatus;
-//     if (newComment !== undefined) task.comment = newComment;
-
-//     await contact.save();
-
-//     res.status(200).json(contact.tasks);
-//   } catch (err) {
-//     console.error('Error updating task:', err);
-//     res.status(500).json({ error: 'Failed to update task' });
-//   }
-// };
-
 
 export const addTask = async (req, res) => {
   const { enrollmentId, tasks } = req.body; // Get enrollmentId and tasks from request body

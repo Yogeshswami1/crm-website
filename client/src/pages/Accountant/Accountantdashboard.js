@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Input, Typography, Modal, message, Switch } from 'antd';
 import axios from 'axios';
@@ -181,26 +178,7 @@ const Dash = () => {
     },
   ];
 
-  const downloadFile = async (url) => {
-    try {
-      const response = await axios.get(url, {
-        responseType: 'blob', // This tells axios to expect a binary response
-      });
-
-      const link = document.createElement('a');
-      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-      link.href = fileURL;
-
-      const fileName = url.substring(url.lastIndexOf('/') + 1);
-      link.setAttribute('download', fileName);
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-    }
-  };
+ 
 
   const contactColumns = [
     {

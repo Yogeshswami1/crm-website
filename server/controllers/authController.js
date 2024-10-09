@@ -110,6 +110,7 @@ import Manager from '../models/managerModel.js';
 import Contact from '../models/contactModel.js';
 import Supervisor from '../models/supervisorModel.js';
 import Accountant from '../models/accountantModel.js';
+import BackendUser from '../models/backendModel.js';
 import Telesales from '../models/telesalesModel.js';
 import Rmd from '../models/rmdModel.js';
 import Social from '../models/socialModel.js';
@@ -228,6 +229,37 @@ export const accountantLogin = async (req, res) => {
     res.status(500).json({ error: "Server error. Please try again." });
   }
 };
+
+
+export const backendLogin = async (req, res) => {
+  const { id, password } = req.body;
+
+  if (!id || !password) {
+    return res.status(400).json({ message: 'ID and password are required' });
+  }
+
+  try {
+    const backend = await BackendUser.findOne({ id });
+
+    if (!backend) {
+      return res.status(401).json({ message: 'Invalid ID or password' });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, backend.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid ID or password' });
+    }
+
+    const token = generateToken(backend);
+    res.status(200).json({ token, backend });
+  } catch (error) {
+    console.error("Error during backend login:", error);
+    res.status(500).json({ error: "Server error. Please try again." });
+  }
+};
+
+
+
 
 // Supervisor login
 export const supervisorLogin = async (req, res) => {

@@ -1,10 +1,17 @@
+// routes/changeRoutes.js
 import express from 'express';
-import { createChange, getChangesByEnrollmentId, updateChange } from '../controllers/changesController.js';
+import { createChange, getChangesByEnrollmentId, updateChange ,getAllChanges} from '../controllers/changesController.js';
 
 const router = express.Router();
 
-router.post('/changes', createChange);
-router.get('/changes/:enrollmentId', getChangesByEnrollmentId);
-router.put('/changes/:enrollmentId/:changeId', updateChange);
+// POST a new change
+router.post('/', createChange);
+router.get('/', getAllChanges); // <-- New route for fetching all changes
+
+// GET changes by enrollment ID
+router.get('/:enrollmentId', getChangesByEnrollmentId);
+
+// PUT to update an existing change
+router.put('/:id', updateChange);
 
 export default router;

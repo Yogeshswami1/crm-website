@@ -76,8 +76,8 @@ import rmdRoutes from './routes/rmdRoutes.js';
 import socialRoutes from './routes/socialRoutes.js';
 import timesheetRoutes from './routes/timesheetRoutes.js';
 
-
-
+import backendRoutes from './routes/backendRoutes.js';
+import changeRoutes from "./routes/changesRoutes.js";
 
 dotenv.config();
 
@@ -116,6 +116,8 @@ app.use('/api', authRoutes);
 app.use('/api', chatRoutes);
 app.use('/api/supervisors', supervisorRoutes);
 app.use('/api/accountants', accountantRoutes);
+app.use('/api/backend', backendRoutes);
+
 app.use('/api/telesales', telesalesRoutes);
 
 app.use('/api/whatsapp', whatsappRoutes);
@@ -126,6 +128,7 @@ app.use('/api/social', socialRoutes);
 app.use('/api', changesRoutes);
 app.use('/api/timesheets', timesheetRoutes);
 
+app.use('/api/changes', changeRoutes);
 
 
 

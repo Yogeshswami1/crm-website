@@ -42,6 +42,11 @@ const Sidenav = ({ color, role }) => {
                 <span className="label">Accountant Tab</span>
               </NavLink>
             </Menu.Item>
+            <Menu.Item key="backendtab">
+              <NavLink to="/backendtab">
+                <span className="label">Backend Tab</span>
+              </NavLink>
+            </Menu.Item>
             <Menu.Item key="telesalestab">
               <NavLink to="/telesalestab">
                 <span className="label">Telesales Tab</span>
@@ -50,6 +55,11 @@ const Sidenav = ({ color, role }) => {
             <Menu.Item key="rmd">
               <NavLink to="/rmdtab">
                 <span className="label">RMD Tab</span>
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="backend">
+              <NavLink to="/backendtab">
+                <span className="label">Backend Tab</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="useridpass">
@@ -94,6 +104,10 @@ const Sidenav = ({ color, role }) => {
 
           </>
         )}
+
+
+
+
         {role === "supervisor" && (
           <>
           <Menu.Item key="supervisordashboard">

@@ -120,6 +120,15 @@ const contactSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Manager',
   },
+  
+
+  pgMedium: { type: String, enum: ['Instamojo', 'Razorpay', 'Cvenue'], default: '' },
+  pgIntegration: { type: String, enum: ['Approved', 'Applied', 'Rejected'], default: '' },
+  paypalIntegration: { type: String, enum: ['Approved', 'Applied', 'Rejected'], default: '' },
+  update1: { type: String, default: '' },
+  update2: { type: String, default: '' },
+  update3: { type: String, default: '' },
+
   password: {
     type: String,
   },
@@ -230,6 +239,9 @@ const contactSchema = new Schema({
     type: String,
   },
   billsSent: { type: Boolean, default: false }, // New field for bills status
+
+  // pgMedium: { type: String, enum: ['Instamojo', 'Razorpay', 'Cvenue'], default: '' },
+
 
   gtinDescription: {
     type: String,
