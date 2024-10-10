@@ -122,12 +122,24 @@ const contactSchema = new Schema({
   },
   
 
-  pgMedium: { type: String, enum: ['Instamojo', 'Razorpay', 'Cvenue'], default: '' },
-  pgIntegration: { type: String, enum: ['Approved', 'Applied', 'Rejected'], default: '' },
-  paypalIntegration: { type: String, enum: ['Approved', 'Applied', 'Rejected'], default: '' },
-  update1: { type: String, default: '' },
-  update2: { type: String, default: '' },
-  update3: { type: String, default: '' },
+  pgMedium: { 
+    type: String, 
+    enum: ['Instamojo', 'Razorpay', 'Cvenue'], 
+    default: 'Instamojo' // Set to a valid default option
+},
+pgIntegration: { 
+    type: String, 
+    enum: ['Approved', 'Applied', 'Rejected'], 
+    default: 'Applied' // Set to a valid default option
+},
+paypalIntegration: { 
+    type: String, 
+    enum: ['Approved', 'Applied', 'Rejected'], 
+    default: 'Approved' // Set to a valid default option
+},
+update1: { type: String, default: '' },
+update2: { type: String, default: '' },
+update3: { type: String, default: '' },
 
   password: {
     type: String,

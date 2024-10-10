@@ -73,8 +73,8 @@ const Userdashboard = () => {
       {view === 'stage1' && (<Stage1/>)}
       {view === 'stage2' && (<Stage2/>)}
       {view === 'stage3' && (<Stage3/>)}
-      {view === 'changes' && (<Changes/>)}
-    </div>
+      {view === 'changes' && (<Changes enrollmentId={enrollmentId} />)}
+      </div>
   );
 };
 

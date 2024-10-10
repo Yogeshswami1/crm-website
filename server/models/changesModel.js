@@ -6,6 +6,8 @@ const changeSchema = new mongoose.Schema({
   managerPosition: { type: String, required: true },
   changeStatus: { type: String, default: 'Pending' },
   changeDescription: { type: String, required: true },
+  enrollmentId: { type: String, required: true } // Ensure this field exists if needed
+
 });
 
 const Change = mongoose.model('Change', changeSchema);

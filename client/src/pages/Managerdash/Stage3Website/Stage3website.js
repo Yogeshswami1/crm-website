@@ -348,7 +348,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message } from 'antd';
+import { Table, Button, Modal, Input, Form, message ,Select} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import PaymentModal from './PaymentModal';
@@ -362,6 +362,7 @@ import Stage3CompletionModal from './Stage3CompletionModal';
 import './Stage3Css.css';
 import SocialContentModal from './SocialContentModal3';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
+const { Option } = Select;
 
 const Stage3website = () => {
   const [data, setData] = useState([]);
@@ -371,6 +372,7 @@ const Stage3website = () => {
 
   const [visibleModal, setVisibleModal] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [backendUsers, setBackendUsers] = useState([]); // State to store backend users
 
   const openModal = (modalType, record) => {
     setSelectedRecord(record);
@@ -381,6 +383,8 @@ const Stage3website = () => {
 
   useEffect(() => {
     fetchData();
+    fetchBackendUsers(); // Fetch the backend users when the component mounts
+
   }, []);
 
   const fetchData = async () => {
@@ -425,6 +429,15 @@ const Stage3website = () => {
     }
   };
 
+  const fetchBackendUsers = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/backend`); // Replace with your API endpoint
+      setBackendUsers(response.data); // Store the backend users in state
+    } catch (error) {
+      console.error('Error fetching backend users:', error);
+      message.error('Failed to load backend users.');
+    }
+  };
   const handleOpenIdPassModal = (record) => {
     setCurrentRecord(record);
     form.setFieldsValue({
@@ -455,6 +468,30 @@ const Stage3website = () => {
     setCurrentRecord(null);
   };
 
+  const handleBackendUserChange = async (id, selectedUser) => {
+    try {
+      // Send the updated backend user to the server for that specific record
+      const response = await axios.put(`${apiUrl}/api/record/${id}/backend`, {
+        backendUser: selectedUser, // Send the selected backend user in the request body
+      });
+  
+      if (response.status === 200) {
+        message.success('Backend user updated successfully!');
+        
+        // Optionally, refresh the data or update local state if necessary
+        // fetchData(); // You can call fetchData() to refresh the data after update
+      } else {
+        throw new Error(`Failed to update: Status code ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating backend user:', error);
+      message.error('Failed to update backend user.');
+    }
+  };
+  
+  
+
+  
   const serverColumns = [
     {
       title: "Enrollment ID",
@@ -635,7 +672,22 @@ const Stage3website = () => {
           Stage 3 Completion
         </Button>
       ),
-    }
+    },
+    // {
+    //   title: 'Backend User',
+    //   key: 'backendUser',
+    //   render: (text, record) => (
+    //     <Select
+    //       defaultValue={record.backendUser || 'Select Backend User'} // You can set the default value based on the record
+    //       style={{ width: 180 }}
+    //       onChange={(selectedValue) => handleBackendUserChange(record._id, selectedValue)} // Call a function to handle the change
+    //     >
+    //       {backendUsers.map(user => (
+    //         <Option key={user._id} value={user.name}>{user.name}</Option> // Adjust based on the structure of your API response
+    //       ))}
+    //     </Select>
+    //   ),
+    // },
   ];
   
   

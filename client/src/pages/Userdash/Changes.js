@@ -322,34 +322,45 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
   // Fetch changes by enrollment ID
   const fetchChangesByEnrollmentId = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/changes/${enrollmentId}`);
-      setChanges(response.data); // Set changes to the state
+      if (enrollmentId) {
+        const response = await axios.get(`${apiUrl}/api/changes/${enrollmentId}`);
+        setChanges(response.data);
+  
+        // If you want to get the latest serial number
+        const latestChange = response.data.reduce((max, change) => {
+          return change.serialNumber > max ? change.serialNumber : max;
+        }, 0);
+  
+        setSerialNumber(latestChange + 1); // Increment for the next change
+      } else {
+        message.error("Enrollment ID is missing.");
+      }
     } catch (error) {
       console.error("Error fetching changes:", error);
       message.error("Failed to load changes. Please try again.");
     }
   };
-
+  
   // Add a new change
   const addChange = async (description) => {
     if (changes.length < 3) {
       const newChange = {
-        serialNumber,
+        serialNumber, // Use the dynamically fetched serialNumber
         managerPosition: contacts[0]?.managerId.position || 'N/A',
         changeStatus: 'Pending',
         changeDescription: description,
         enrollmentId: enrollmentId // Include enrollmentId
       };
-
+  
       try {
         // Make API call to store the new change
         const response = await axios.post(`${apiUrl}/api/changes`, newChange);
         
         // Update state with the new change returned from the server
         setChanges([...changes, response.data]);
-        
+  
         // Increment serial number and clear the description
-        setSerialNumber(serialNumber + 1);
+        setSerialNumber(prevSerialNumber => prevSerialNumber + 1); // Use functional update
         setChangeDescription(''); // Clear input after adding
       } catch (error) {
         console.error("Error saving change:", error);
@@ -359,12 +370,14 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
       message.error("You can only add up to 3 changes.");
     }
   };
+  
 
   const handleInputChange = (event) => {
     setChangeDescription(event.target.value);
   };
 
   useEffect(() => {
+    
     fetchContacts();
     fetchChangesByEnrollmentId(); // Fetch changes on component mount
   }, [enrollmentId]); // Depend on enrollmentId
