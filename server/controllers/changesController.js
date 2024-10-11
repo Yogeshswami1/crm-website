@@ -3,15 +3,35 @@
 import Change from "../models/changesModel.js"
 
 // Fetch all changes
+// export const getChangesByEnrollmentId = async (req, res) => {
+//   const { enrollmentId } = req.params;
+//   try {
+//     const changes = await Change.find({ enrollmentId });
+//     res.json(changes);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching changes' });
+//   }
+// };
+
+
+
 export const getChangesByEnrollmentId = async (req, res) => {
-  const { enrollmentId } = req.params;
+  const { enrollmentId } = req.params; // Extracting enrollment ID from request parameters
   try {
-    const changes = await Change.find({ enrollmentId });
-    res.json(changes);
+    const changes = await Change.find({ enrollmentId }); // Fetch changes based on enrollment ID
+
+    // Check if changes are found
+    if (!changes || changes.length === 0) {
+      return res.status(404).json({ message: 'No changes found for the provided enrollment ID.' });
+    }
+
+    res.status(200).json(changes); // Return found changes with a 200 status
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching changes' });
+    console.error('Error fetching changes:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Failed to fetch changes. Please try again later.' }); // More descriptive error message
   }
 };
+
 // Fetch all changes
 export const getAllChanges = async (req, res) => {
   try {

@@ -23,7 +23,9 @@ import {
   getContacts,
   updateContactByEnrollmentId,
   updateRemarkContactByEnrollmentId,
-  updateBillsStatus
+  updateBillsStatus,
+  updateBackendUser ,
+  updateLegalityStatus
 } from "../controllers/contactController.js";
 
 
@@ -72,6 +74,10 @@ router.delete("/:id", deleteContactById);
 
 //Bill status
 router.put('/updatebills/:id', updateBillsStatus);
+router.put('/update-backend-user/:id', updateBackendUser); // <-- New route for updating backendUser
+// Route for getting contact by enrollment ID
+router.get("/contact/enrollmentId/:enrollmentId", getContactByEnrollmentId);
+router.patch('/update-legality-status', updateLegalityStatus);
 
 
 

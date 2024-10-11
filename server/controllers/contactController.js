@@ -78,17 +78,19 @@ export const getContactById = async (req, res) => {
 };
 export const getContactByEnrollmentId = async (req, res) => {
   const { enrollmentId } = req.params;
+  console.log(`Fetching contact for enrollmentId: ${enrollmentId}`); // Log the enrollment ID
   try {
     const contact = await Contact.findOne({ enrollmentId });
     if (!contact) {
-      return res.status(404).json({ error: "Contact not found." });
+      return res.status(404).json({ error: 'Contact not found.' });
     }
-    res.status(200).json(contact);
+    res.json(contact);
   } catch (error) {
-    console.error("Error fetching contact:", error);
-    res.status(500).json({ error: "Failed to fetch contact. Please try again." });
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Error fetching contact' });
   }
 };
+
 
 export const getServiceTypeByEnrollmentId = async (req, res) => {
   const { enrollmentId } = req.params;
@@ -619,5 +621,63 @@ export const updateBillsStatus = async (req, res) => {
   } catch (err) {
     console.error('Error updating bills status:', err);
     res.status(500).json({ error: 'Failed to update bills status' });
+  }
+};
+
+
+
+export const updateBackendUser = async (req, res) => {
+  const { id } = req.params; // Get the contact ID from the request parameters
+  const { backendUser } = req.body; // Get the backend user from the request body
+
+  console.log(`Received request to update backend user for ID: ${id}`);
+  console.log(`Request body:`, req.body);
+
+  try {
+      // Find the contact by ID
+      const contact = await Contact.findById(id);
+      if (!contact) {
+          console.log(`Contact not found for ID: ${id}`);
+          return res.status(404).json({ message: 'Contact not found' });
+      }
+
+      console.log(`Found contact:`, contact);
+
+      // Update the backendUser field
+      contact.backendUser = backendUser; 
+      console.log(`Updating backend user to: ${backendUser}`);
+
+      await contact.save(); // Save the updated contact
+      console.log(`Contact updated successfully:`, contact);
+
+      res.status(200).json({
+          message: 'Backend user updated successfully',
+          contact,
+      });
+  } catch (err) {
+      console.error('Error updating backend user:', err);
+      res.status(500).json({ error: 'Failed to update backend user' });
+  }
+};
+
+export const updateLegalityStatus = async (req, res) => {
+  const { enrollmentId, legalityStatus } = req.body; // Destructure the necessary data
+
+  try {
+      // Find the contact by enrollmentId and update legalityStatus
+      const updatedContact = await Contact.findOneAndUpdate(
+          { enrollmentId }, // Find by enrollmentId
+          { legalityStatus }, // Update legalityStatus
+          { new: true } // Return the updated document
+      );
+
+      if (!updatedContact) {
+          return res.status(404).json({ message: 'Contact not found' });
+      }
+
+      res.status(200).json({ message: 'Legality status updated successfully', contact: updatedContact });
+  } catch (error) {
+      console.error('Error updating legality status:', error);
+      res.status(500).json({ message: 'Server error', error });
   }
 };

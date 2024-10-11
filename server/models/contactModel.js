@@ -120,6 +120,11 @@ const contactSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Manager',
   },
+
+  backendUser: {
+    type: String,
+    default: null // You can set default to null or an empty string
+  },
   
 
   pgMedium: { 
@@ -251,6 +256,8 @@ update3: { type: String, default: '' },
     type: String,
   },
   billsSent: { type: Boolean, default: false }, // New field for bills status
+  legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
+
 
   // pgMedium: { type: String, enum: ['Instamojo', 'Razorpay', 'Cvenue'], default: '' },
 

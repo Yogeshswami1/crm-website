@@ -469,26 +469,38 @@ const Stage3website = () => {
   };
 
   const handleBackendUserChange = async (id, selectedUser) => {
+    console.log(`Attempting to update backend user for ID: ${id}`);
+    console.log(`Selected backend user: ${selectedUser}`);
+
     try {
-      // Send the updated backend user to the server for that specific record
-      const response = await axios.put(`${apiUrl}/api/record/${id}/backend`, {
-        backendUser: selectedUser, // Send the selected backend user in the request body
-      });
-  
-      if (response.status === 200) {
-        message.success('Backend user updated successfully!');
-        
-        // Optionally, refresh the data or update local state if necessary
-        // fetchData(); // You can call fetchData() to refresh the data after update
-      } else {
-        throw new Error(`Failed to update: Status code ${response.status}`);
-      }
+        // Send the updated backend user to the server for that specific record
+        const response = await axios.put(`${apiUrl}/api/contact/update-backend-user/${id}`, {
+            backendUser: selectedUser, // Send the selected backend user in the request body
+        });
+
+        console.log(`Response from server:`, response); // Log the entire response object
+
+        if (response.status === 200) {
+            message.success('Backend user updated successfully!');
+            console.log('Backend user updated successfully!');
+            
+            // Optionally, refresh the data or update local state if necessary
+            // fetchData(); // You can call fetchData() to refresh the data after update
+        } else {
+            throw new Error(`Failed to update: Status code ${response.status}`);
+        }
     } catch (error) {
-      console.error('Error updating backend user:', error);
-      message.error('Failed to update backend user.');
+        console.error('Error updating backend user:', error);
+        if (error.response) {
+            // Log specific error response data if available
+            console.error('Error response data:', error.response.data);
+            console.error('Error response status:', error.response.status);
+            console.error('Error response headers:', error.response.headers);
+        }
+        message.error('Failed to update backend user.');
     }
-  };
-  
+};
+
   
 
   
@@ -688,6 +700,21 @@ const Stage3website = () => {
     //     </Select>
     //   ),
     // },
+//     {
+//   title: 'Backend User',
+//   key: 'backendUser',
+//   render: (text, record) => (
+//     <Select
+//       defaultValue={record.backendUser || 'Select Backend User'} 
+//       style={{ width: 180 }}
+//       onChange={(selectedValue) => handleBackendUserChange(record._id, selectedValue)} // Trigger backend user selection
+//     >
+//       {backendUsers.map(user => (
+//         <Option key={user._id} value={user.name}>{user.name}</Option>
+//       ))}
+//     </Select>
+//   ),
+// }
   ];
   
   
