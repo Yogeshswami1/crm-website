@@ -844,13 +844,6 @@ const columnsOption3 = [
   },
 ];
 
-
-
-
-
-
-
-
 const getColumns = () => {
   switch (selectedOption) {
     case 'option2':

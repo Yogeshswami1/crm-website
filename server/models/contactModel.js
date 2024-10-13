@@ -258,6 +258,26 @@ update3: { type: String, default: '' },
   billsSent: { type: Boolean, default: false }, // New field for bills status
   legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
 
+  backendUser: {
+    type: String,
+  },
+  paymentGatewayMedium: {
+    type: String,
+  },
+ 
+ 
+  paymentIntegration: {
+    type: String,
+  },
+ 
+ 
+  paypalIntegration: {
+    type: String,
+  },
+ 
+ 
+ 
+ 
 
   // pgMedium: { type: String, enum: ['Instamojo', 'Razorpay', 'Cvenue'], default: '' },
 

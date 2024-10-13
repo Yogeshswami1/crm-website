@@ -128,7 +128,17 @@ const Sidenav = ({ color, role }) => {
 
           </>
         )}
-        
+        {role === "backend" && (
+         <>
+         <Menu.Item key="backenddashboard">
+           <NavLink to="/backenddashboard">
+             <span className="label">Dashboard</span>
+           </NavLink>
+         </Menu.Item>
+
+
+         </>
+       )}
         
       </Menu>
     </div>

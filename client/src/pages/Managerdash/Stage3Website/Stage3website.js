@@ -361,6 +361,7 @@ import Ready2HandoverModal from './Ready2HandoverModal';
 import Stage3CompletionModal from './Stage3CompletionModal';
 import './Stage3Css.css';
 import SocialContentModal from './SocialContentModal3';
+import BackendUserModal from './BackendUserModal';
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const { Option } = Select;
 
@@ -634,23 +635,24 @@ const Stage3website = () => {
         </Button>
       ),
     },
-    {
-      title: "Payment Gateway",
-      dataIndex: ['simpleStatus', 'paymentGateway'],
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' }
-      ],
-      onFilter: (value, record) => record.simpleStatus.paymentGateway === value,
-      render: (text, record) => (
-        <Button
-          style={{ backgroundColor: record.simpleStatus.paymentGateway === 'Done' ? '#90EE90' : undefined }}
-          onClick={() => openModal('paymentgateway', record)}
-        >
-          Payment Gateway
-        </Button>
-      ),
-    },
+    
+    // {
+    //   title: "Payment Gateway",
+    //   dataIndex: ['simpleStatus', 'paymentGateway'],
+    //   filters: [
+    //     { text: 'Done', value: 'Done' },
+    //     { text: 'Not Done', value: 'Not Done' }
+    //   ],
+    //   onFilter: (value, record) => record.simpleStatus.paymentGateway === value,
+    //   render: (text, record) => (
+    //     <Button
+    //       style={{ backgroundColor: record.simpleStatus.paymentGateway === 'Done' ? '#90EE90' : undefined }}
+    //       onClick={() => openModal('paymentgateway', record)}
+    //     >
+    //       Payment Gateway
+    //     </Button>
+    //   ),
+    // },
     {
       title: "Ready To Handover",
       dataIndex: ['simpleStatus', 'readyToHandover'],
@@ -715,6 +717,18 @@ const Stage3website = () => {
 //     </Select>
 //   ),
 // }
+
+{
+  title: "Backend User",
+  render: (text, record) => (
+    <Button
+      onClick={() => openModal('backendUser', record)}
+    >
+      Show
+    </Button>
+  ),
+},  
+
   ];
   
   
@@ -839,6 +853,17 @@ const Stage3website = () => {
           fetchData={fetchData}
         />
       )}
+      {/* backend user modal */}
+
+
+     {visibleModal === 'backendUser' && (
+       <BackendUserModal
+         visible={true}
+         onCancel={closeModal}
+         record={selectedRecord}
+         fetchData={fetchData}
+       />
+     )}
 
       {/* ID and Password Modal */}
       <Modal

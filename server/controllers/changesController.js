@@ -110,3 +110,21 @@ export const updateChangeStatus = async (req, res) => {
     res.status(500).json({ message: 'Error updating change status' });
   }
 };
+
+export const getChangesByContactIds = async (req, res) => {
+  try {
+    const contactIds = req.query.contactIds; // Extract contactIds from query parameters
+
+    // Assuming you have a Change model and can filter by contactIds
+    const changes = await Change.find({ contactId: { $in: contactIds.split(',') } }); // Find changes with matching contactIds
+
+    if (changes.length === 0) {
+      return res.status(404).json({ message: 'No changes found for the given contactIds' });
+    }
+
+    res.status(200).json(changes);
+  } catch (error) {
+    console.error('Error fetching changes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

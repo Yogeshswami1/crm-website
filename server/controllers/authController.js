@@ -114,7 +114,7 @@ import BackendUser from '../models/backendModel.js';
 import Telesales from '../models/telesalesModel.js';
 import Rmd from '../models/rmdModel.js';
 import Social from '../models/socialModel.js';
-
+import Backend from '../models/backendModel.js';
 // Function to generate JWT token
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, "Saumic", { expiresIn: '1d' });
@@ -231,34 +231,79 @@ export const accountantLogin = async (req, res) => {
 };
 
 
+// export const backendLogin = async (req, res) => {
+//   const { id, password } = req.body;
+
+//   if (!id || !password) {
+//     return res.status(400).json({ message: 'ID and password are required' });
+//   }
+
+//   try {
+//     const backend = await BackendUser.findOne({ id });
+
+//     if (!backend) {
+//       return res.status(401).json({ message: 'Invalid ID or password' });
+//     }
+
+//     const passwordMatch = await bcrypt.compare(password, backend.password);
+//     if (!passwordMatch) {
+//       return res.status(401).json({ message: 'Invalid ID or password' });
+//     }
+
+//     const token = generateToken(backend);
+//     res.status(200).json({ token, backend });
+//   } catch (error) {
+//     console.error("Error during backend login:", error);
+//     res.status(500).json({ error: "Server error. Please try again." });
+//   }
+// };
+
+
+// Backend Login
 export const backendLogin = async (req, res) => {
   const { id, password } = req.body;
-
+ 
+ 
   if (!id || !password) {
     return res.status(400).json({ message: 'ID and password are required' });
   }
-
+ 
+ 
   try {
-    const backend = await BackendUser.findOne({ id });
-
+    const backend = await Backend.findOne({ id });
+ 
+ 
     if (!backend) {
       return res.status(401).json({ message: 'Invalid ID or password' });
     }
-
+ 
+ 
     const passwordMatch = await bcrypt.compare(password, backend.password);
     if (!passwordMatch) {
       return res.status(401).json({ message: 'Invalid ID or password' });
     }
-
+ 
+ 
     const token = generateToken(backend);
-    res.status(200).json({ token, backend });
+   
+    // Send back the token, backend user object and the ID used for login
+    res.status(200).json({
+      token,
+      backend: {
+        id: backend.id,  // The id used for login, like BU1 or BU2
+        name: backend.name,  // Optionally include name
+        role: backend.role  // Role, assuming you have a role field
+      }
+    });
   } catch (error) {
     console.error("Error during backend login:", error);
     res.status(500).json({ error: "Server error. Please try again." });
   }
-};
-
-
+ };
+ 
+ 
+ 
+ 
 
 
 // Supervisor login

@@ -512,7 +512,7 @@ const paymentColumns = [
         {
           title: 'Status',
           dataIndex: ['payment', 'stage3', 'status'],
-          key: 'stage3PaymentStatus',
+          key: 'stage3PaymentStatus',  
         },
         {
           title: 'Payment Date',  // New Column for Payment Date

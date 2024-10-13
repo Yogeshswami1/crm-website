@@ -1,6 +1,6 @@
 // routes/changeRoutes.js
 import express from 'express';
-import { createChange, getChangesByEnrollmentId, updateChange ,getAllChanges,updateChangeStatus} from '../controllers/changesController.js';
+import { createChange, getChangesByEnrollmentId, updateChange ,getAllChanges,updateChangeStatus,getChangesByContactIds} from '../controllers/changesController.js';
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.get('/:enrollmentId', getChangesByEnrollmentId);
 router.put('/:id', updateChange);
 
 router.put('/:id/status', updateChangeStatus);
+router.get('/getChanges', getChangesByContactIds);
 
 
 export default router;

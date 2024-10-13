@@ -108,7 +108,10 @@ import Accountantdashboard from "./pages/Accountant/Accountantdashboard";
 import Telesalesdashboard from "./pages/Telesales/Dashboard";
 import Waba from "./pages/Managerdash/Waba";
 import Rmddashboard from "./pages/RMD/Rmddashboard";
-import Backenddashboard from "./pages/Backend/Backenddashboard";
+// import Backenddashboard from "./pages/Backend/Backenddashboard";
+import BackendDashboard from "./pages/Backend/BackendDashboard";
+// import Backendtab from "./pages/Backendtab";
+// import Backenddashboard from "./pages/Backend/BackendDashboard";
 function App() {
   return (
     <UserProvider>
@@ -145,7 +148,8 @@ function App() {
               <ProtectedRoute exact path="/telesalesdashboard" component={Telesalesdashboard} roles={['telesales']} />
               <ProtectedRoute exact path="/rmddashboard" component={Rmddashboard} roles={['rmd']} />
               
-              <ProtectedRoute exact path="/backenddashboard" component={Backenddashboard} roles={['backend']} />
+              <ProtectedRoute exact path="/backenddashboard" component={BackendDashboard} roles={['backend']} />
+              {/* <ProtectedRoute exact path="/backendtab" component={Backendtab} roles={['admin']} /> */}
 
             
             </Main>
