@@ -1,0 +1,21 @@
+.changes-modal {
+    max-width: 600px; /* Set max width for the modal */
+    padding: 20px; /* Add padding for the modal content */
+  }
+  
+  .change-item {
+    border-bottom: 1px solid #eaeaea; /* Add a bottom border to each item */
+    padding: 10px 0; /* Add padding for item */
+  }
+  
+  .change-description {
+    display: flex;
+    align-items: center; /* Center align the button and text */
+    margin-top: 8px; /* Space above the description */
+  }
+  
+  .change-description span {
+    color: #555; /* Set a lighter color for description */
+    font-size: 16px; /* Set font size for description */
+  }
+  

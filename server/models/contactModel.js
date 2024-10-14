@@ -257,6 +257,18 @@ update3: { type: String, default: '' },
   },
   billsSent: { type: Boolean, default: false }, // New field for bills status
   legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
+  
+
+ themeStatus: {
+  type: String,
+},
+
+
+logoApprovalStatus: {
+  type: String,
+},
+
+
 
   backendUser: {
     type: String,

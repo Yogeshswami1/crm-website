@@ -178,23 +178,44 @@ const closeModal = () => setVisibleModal(null);
         //</Button>
       //),
     //},
+    // {
+    //   title: "Logo",
+    //   dataIndex: "logo",
+    //   filters: [
+    //     { text: 'Done', value: 'Done' },
+    //     { text: 'Not Done', value: 'Not Done' },
+    //   ],
+    //   onFilter: (value, record) => record.logo === value,
+    //   render: (text, record) => (
+    //     <Button
+    //       style={{ backgroundColor: record?.logo === 'Done' ? '#90EE90' : undefined }}
+    //       onClick={() => openModal('logo', record)}
+    //     >
+    //       Logo
+    //     </Button>
+    //   ),
+    // },
     {
       title: "Logo",
-      dataIndex: "logo",
-      filters: [
-        { text: 'Done', value: 'Done' },
-        { text: 'Not Done', value: 'Not Done' },
-      ],
-      onFilter: (value, record) => record.logo === value,
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.logo === 'Done' ? '#90EE90' : undefined }}
+          style={{
+            backgroundColor:
+              record?.logoApprovalStatus === 'Approved'
+                ? '#90EE90' // Light green for 'Approved'
+                : record?.logoApprovalStatus === 'Sent'
+                ? '#FFD700' // Yellow for 'Sent'
+                : undefined, // No background color for other cases
+            color: '#000', // Ensure text is readable on both colors
+          }}
           onClick={() => openModal('logo', record)}
         >
           Logo
         </Button>
       ),
     },
+ 
+ 
     {
       title: "Banner",
       dataIndex: "banner",

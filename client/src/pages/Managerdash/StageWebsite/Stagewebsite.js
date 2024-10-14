@@ -326,23 +326,47 @@ const stageColumns = [
       </Button>
     ),
   },
+  // {
+  //   title: "Legality",
+  //   dataIndex: "legality",
+  //   filters: [
+  //     { text: 'Done', value: 'Done' },
+  //     { text: 'Not Done', value: 'Not Done' },
+  //   ],
+  //   onFilter: (value, record) => (record?.legality || 'Not Done') === value,
+  //   render: (text, record) => (
+  //     <Button
+  //       style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
+  //       onClick={() => openModal('legality', record)}
+  //     >
+  //       Legality
+  //     </Button>
+  //   ),
+  // },
   {
     title: "Legality",
-    dataIndex: "legality",
-    filters: [
-      { text: 'Done', value: 'Done' },
-      { text: 'Not Done', value: 'Not Done' },
-    ],
-    onFilter: (value, record) => (record?.legality || 'Not Done') === value,
-    render: (text, record) => (
-      <Button
-        style={{ backgroundColor: record.legality === 'Done' ? '#90EE90' : undefined }}
-        onClick={() => openModal('legality', record)}
-      >
-        Legality
-      </Button>
-    ),
-  },
+    render: (text, record) => {
+      let backgroundColor;
+ 
+      if (record?.legality === 'Done') {
+        backgroundColor = '#90EE90';  // Light green for 'Done'
+      } else if (record?.legalityLink && (!record?.legality || record?.legality === 'Not Done')) {
+        backgroundColor = '#FFD700';  // Yellow for 'Not Done' or blank when legalityLink has a value
+      }
+ 
+      return (
+        <Button
+          style={{ backgroundColor }}
+          onClick={() => openModal('legality', record)}
+        >
+          Legality
+        </Button>
+      );
+    },
+  }
+,   
+
+
   {
     title: "GST",
     dataIndex: "gst",
@@ -433,21 +457,25 @@ const stageColumns = [
   },
   {
     title: "Theme",
-    dataIndex: "theme",
-    filters: [
-      { text: 'Done', value: 'Done' },
-      { text: 'Not Done', value: 'Not Done' },
-    ],
-    onFilter: (value, record) => (record?.theme || 'Not Done') === value,
     render: (text, record) => (
       <Button
-        style={{ backgroundColor: record?.theme ? '#90EE90' : undefined }}  // Light green if selectedTheme has a value
+        style={{
+          backgroundColor:
+            record?.themeStatus === 'Approved'
+              ? '#90EE90' // Light green for 'Approved'
+              : record?.themeStatus === 'Sent'
+              ? '#FFD700' // Yellow for 'Sent'
+              : undefined, // No color if no themeStatus
+          color: '#000', // Set text color to black for better readability
+        }}
         onClick={() => openModal('theme', record)}
       >
         Theme
       </Button>
     ),
   },
+
+
   {
     title: "Stage 1 Completion",
     dataIndex: "stage1Completion",

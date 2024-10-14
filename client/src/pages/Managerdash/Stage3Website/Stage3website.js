@@ -635,7 +635,6 @@ const Stage3website = () => {
         </Button>
       ),
     },
-    
     // {
     //   title: "Payment Gateway",
     //   dataIndex: ['simpleStatus', 'paymentGateway'],
@@ -718,16 +717,32 @@ const Stage3website = () => {
 //   ),
 // }
 
+// {
+//   title: "Backend User",
+//   render: (text, record) => (
+//     <Button
+//       onClick={() => openModal('backendUser', record)}
+//     >
+//       Show
+//     </Button>
+//   ),
+// },  
 {
   title: "Backend User",
   render: (text, record) => (
     <Button
+      style={{
+        backgroundColor: record?.backendUser ? '#90EE90' : undefined, // Green if backendUser has a value
+        color: '#000', // Ensure text is readable if background is green
+      }}
       onClick={() => openModal('backendUser', record)}
     >
       Show
     </Button>
   ),
-},  
+},
+
+
 
   ];
   

@@ -46,7 +46,7 @@ const Stage1PaymentModal = ({ visible, onCancel, record, fetchData }) => {
           <Input />
         </Form.Item>
 
-        <Form.Item name="date" label="Date">
+        {/* <Form.Item name="date" label="Date">
         <DatePicker
   disabledDate={(current) => {
     const yesterday = moment().subtract(1, 'days').startOf('day');
@@ -54,7 +54,12 @@ const Stage1PaymentModal = ({ visible, onCancel, record, fetchData }) => {
   }}
 />
 
+        </Form.Item> */}
+
+<Form.Item name="date" label="Date">
+          <DatePicker />
         </Form.Item>
+
 
         <Form.Item name="status" label="Status" valuePropName="checked">
           <Switch checkedChildren="Done" unCheckedChildren="Not Done" />

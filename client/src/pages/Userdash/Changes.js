@@ -297,18 +297,17 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Input, Button, message, Card, Row, Col } from 'antd';
+import { Table, Input, message, Card, Row, Col ,Button} from 'antd';
 import './Changes.css'; // Import your CSS file for custom styles
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
+const Changes = ({ enrollmentId }) => {
   const [contacts, setContacts] = useState([]);
   const [changes, setChanges] = useState([]);
   const [serialNumber, setSerialNumber] = useState(1);
   const [changeDescription, setChangeDescription] = useState('');
 
-  // Fetch contacts (and manager positions)
   const fetchContacts = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/contact/getcontact`);
@@ -319,19 +318,15 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
     }
   };
 
-  // Fetch changes by enrollment ID
   const fetchChangesByEnrollmentId = async () => {
     try {
       if (enrollmentId) {
         const response = await axios.get(`${apiUrl}/api/changes/${enrollmentId}`);
         setChanges(response.data);
-  
-        // If you want to get the latest serial number
         const latestChange = response.data.reduce((max, change) => {
           return change.serialNumber > max ? change.serialNumber : max;
         }, 0);
-  
-        setSerialNumber(latestChange + 1); // Increment for the next change
+        setSerialNumber(latestChange + 1);
       } else {
         message.error("Enrollment ID is missing.");
       }
@@ -340,28 +335,22 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
       message.error("Failed to load changes. Please try again.");
     }
   };
-  
-  // Add a new change
+
   const addChange = async (description) => {
     if (changes.length < 3) {
       const newChange = {
-        serialNumber, // Use the dynamically fetched serialNumber
+        serialNumber,
         managerPosition: contacts[0]?.managerId.position || 'N/A',
         changeStatus: 'Pending',
         changeDescription: description,
-        enrollmentId: enrollmentId // Include enrollmentId
+        enrollmentId,
       };
-  
+
       try {
-        // Make API call to store the new change
         const response = await axios.post(`${apiUrl}/api/changes`, newChange);
-        
-        // Update state with the new change returned from the server
         setChanges([...changes, response.data]);
-  
-        // Increment serial number and clear the description
-        setSerialNumber(prevSerialNumber => prevSerialNumber + 1); // Use functional update
-        setChangeDescription(''); // Clear input after adding
+        setSerialNumber((prevSerialNumber) => prevSerialNumber + 1);
+        setChangeDescription('');
       } catch (error) {
         console.error("Error saving change:", error);
         message.error("Failed to add change. Please try again.");
@@ -370,17 +359,44 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
       message.error("You can only add up to 3 changes.");
     }
   };
-  
 
   const handleInputChange = (event) => {
     setChangeDescription(event.target.value);
   };
 
+  const handleStatusChange = (serialNumber) => {
+    const updatedChanges = changes.map((change) => {
+      if (change.serialNumber === serialNumber) {
+        // Toggle status
+        const newStatus =
+          change.changeStatus === 'Pending'
+            ? 'In Progress'
+            : change.changeStatus === 'In Progress'
+            ? 'Completed'
+            : 'Pending';
+        return { ...change, changeStatus: newStatus };
+      }
+      return change;
+    });
+    setChanges(updatedChanges);
+  };
+
   useEffect(() => {
-    
     fetchContacts();
-    fetchChangesByEnrollmentId(); // Fetch changes on component mount
-  }, [enrollmentId]); // Depend on enrollmentId
+    fetchChangesByEnrollmentId();
+  }, [enrollmentId]);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Done':
+        return 'green';
+      case 'In Progress':
+        return 'orange';
+      case 'Pending':
+      default:
+        return 'red';
+    }
+  };
 
   const columns = [
     {
@@ -394,12 +410,29 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
       dataIndex: 'managerPosition',
       key: 'managerPosition',
       align: 'center',
+      responsive: ['md'],
     },
     {
       title: 'Change Status',
       dataIndex: 'changeStatus',
       key: 'changeStatus',
       align: 'center',
+      render: (status) => (
+        <div
+          className="status-box"
+          style={{
+            backgroundColor: getStatusColor(status),
+            color: 'white',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            textAlign: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleStatusChange(status)}
+        >
+          {status}
+        </div>
+      ),
     },
     {
       title: 'Change Description',
@@ -410,37 +443,37 @@ const Changes = ({ enrollmentId }) => { // Add enrollmentId as a prop
   ];
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', color: '#1890ff' }}>Changes Dashboard</h2>
-      <Card style={{ margin: '20px 0', borderRadius: '8px' }} hoverable>
-        <Row gutter={16}>
-          <Col span={18}>
+    <div className="changes-container">
+      <h2 className="changes-title">Changes Dashboard</h2>
+      <Card className="changes-card" hoverable>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={18}>
             <Input
               placeholder="Change Description"
               value={changeDescription}
               onChange={handleInputChange}
-              style={{ borderRadius: '4px' }}
+              className="changes-input"
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Button
               type="primary"
               onClick={() => addChange(changeDescription)}
               block
-              style={{ borderRadius: '4px' }}
+              className="changes-button"
             >
               Add Change
             </Button>
           </Col>
         </Row>
       </Card>
-      <Card title="Changes List" bordered={false} style={{ borderRadius: '8px' }}>
+      <Card title="Changes List" bordered={false} className="changes-list-card">
         <Table
           dataSource={changes}
           columns={columns}
-          rowKey="_id" // Changed to _id as it's unique
+          rowKey="_id"
           pagination={false}
-          style={{ borderRadius: '8px' }}
+          scroll={{ x: 600 }}
         />
       </Card>
     </div>
