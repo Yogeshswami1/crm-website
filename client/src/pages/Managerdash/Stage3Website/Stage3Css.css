@@ -1,4 +1,8 @@
 .row-red {
-    background-color: #ffcccc !important;
-  }
-  
+  background-color: #ffcccc !important;
+}
+ .row-blue {
+  background-color: lightblue;
+  color: black; /* Adjust text color for better visibility */
+}
+

@@ -752,12 +752,18 @@ const Stage3website = () => {
     const paymentDate = record?.payment?.stage3?.date ? moment(record.payment.stage3.date) : null;
     const isOverdue = paymentDate && moment().diff(paymentDate, 'days') > 7;
     const stage3NotDone = !record?.stage3Completion || record.stage3Completion !== 'Done';
-
+   
+    if (record?.backendUser) {
+      return 'row-blue'; // This class will apply the blue background
+    }
+   
     if (isOverdue && stage3NotDone) {
       return 'row-red'; // This class will apply the red background
     }
-    return '';
+     return '';
   };
+ 
+ 
 
   return (
     <>

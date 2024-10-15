@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Input, Button, List ,message} from 'antd';
+import { Table, Modal, Input, Button, List ,message,Badge} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import Callmodal from "./Callmodal";
@@ -377,10 +377,13 @@ const stageColumns = [
     onFilter: (value, record) => record.gst === value,
     render: (text, record) => (
       <Button
-      style={{ 
-        backgroundColor: record.gst === 'Done' ? '#90EE90' : '#FF6347',  // Green for 'Done', Red for 'Not Done'
-        color: '#fff' // Text color
-      }}        onClick={() => openModal('gst', record)}
+      style={{
+        backgroundColor:
+          record?.gst === 'Done' ? '#90EE90' :
+          record?.gst === 'Not Done' ? '#FFB6C1' : 'transparent',  // Light green for 'Done', light red for 'Not Done', transparent for blank
+      }}
+      onClick={() => openModal('gst', record)}
+ 
       >
         GST
       </Button>
@@ -497,9 +500,13 @@ const stageColumns = [
     title: "Remarks",
     key: "remarks",
     render: (text, record) => (
-      <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
+      <Badge count={record.remarks.length} offset={[-6, 5]} /* Adjust offset as needed */>
+        <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
+      </Badge>
     ),
   }
+
+
 ];
 
   return (

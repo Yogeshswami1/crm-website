@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, message, List } from 'antd';
+import { Table, Button, Modal, Input, message, List,Badge } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import Stage2PaymentModal from './Stage2PaymentModal';
@@ -288,9 +288,13 @@ const closeModal = () => setVisibleModal(null);
       title: "Remarks",
       key: "remarks",
       render: (text, record) => (
-        <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
+        <Badge count={record.remarks.length} offset={[-6, 5]} /* Adjust offset as needed */>
+          <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
+        </Badge>
       ),
-    },
+    }
+ 
+ 
   ];
   
 
