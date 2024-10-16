@@ -77,8 +77,9 @@ router.put('/updatebills/:id', updateBillsStatus);
 router.put('/update-backend-user/:id', updateBackendUser); // <-- New route for updating backendUser
 // Route for getting contact by enrollment ID
 router.get("/contact/enrollmentId/:enrollmentId", getContactByEnrollmentId);
-router.patch('/update-legality-status', updateLegalityStatus);
+router.put('/:id/update-legality-status', updateLegalityStatus);
 
+router.put('/updatelegality/:id', updateLegalityStatus);
 
 
 export default router;

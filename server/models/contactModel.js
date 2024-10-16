@@ -256,7 +256,14 @@ update3: { type: String, default: '' },
     type: String,
   },
   billsSent: { type: Boolean, default: false }, // New field for bills status
-  legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
+  legalityStatus: { type: Boolean, default: false }, // New field for legality status
+
+  // legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
+  // legalityStatus: {
+  //   type: String,
+  //   default: 'Not Done',
+  //   enum: ['Done', 'Not Done'],
+  // },
   
 
  themeStatus: {

@@ -405,43 +405,21 @@ const Dash = () => {
       message.error("Failed to update bills status. Please try again.");
     }
   };
-//   const handleLegalityStatusToggle = async (enrollmentId, checked) => {
-//     const legalityStatus = checked; // Set legality status based on toggle
-    
-//     try {
-//         // Make a PATCH request to update legality status in the backend
-//         const response = await axios.patch(`${apiUrl}/api/contact/update-legality-status`, {
-//             enrollmentId: enrollmentId, // Pass the enrollment ID from the record
-//             legalityStatus: legalityStatus, // Send legality status as boolean
-//         });
-
-//         // Show success message
-//         message.success(response.data.message);
-//     } catch (error) {
-//         // Handle error and show message
-//         console.error('Error updating legality status:', error.response ? error.response.data : error.message);
-//         message.error('Failed to update legality status. Please try again.');
-//     }
-// };
-
-const handleLegalityStatusToggle = async (record, checked) => {
-    const updatedStatus = checked ? 'Legal' : 'Not Legal'; // Define the status message based on toggle state
-    try {
-        await axios.patch(`${apiUrl}/api/contact/update-legality-status`, {
-            enrollmentId: record.enrollmentId,
-            legalityStatus: checked,
-        });
-
-        // Show a success message
-        message.success(`Legality status updated to ${updatedStatus} for ${record.name}`);
-        
-        // Fetch contacts again to refresh the data
-        fetchContacts(); // Ensure this function fetches the updated list of contacts
-    } catch (error) {
-        console.error("Error updating legality status:", error);
-        message.error("Failed to update legality status. Please try again.");
-    }
+const handleLegalityToggle = async (record, checked) => {
+  const updatedStatus = checked ? 'Completed' : 'Pending';
+  try {
+    await axios.put(`${apiUrl}/api/contact/updatelegality/${record._id}`, {
+      legalityStatus: checked
+    });
+    message.success(`Legality status updated to ${updatedStatus} for ${record.name}`);
+    fetchContacts(); // Refresh the data
+  } catch (error) {
+    console.error("Error updating legality status:", error);
+    message.error("Failed to update legality status. Please try again.");
+  }
 };
+
+
 const paymentColumns = [
     {
       title: 'Enrollment ID',
@@ -609,19 +587,17 @@ const paymentColumns = [
         ) : 'No Link Available'
       ),
     },
-  //   {
-  //     title: 'Legality Status',
-  //     key: 'legalityStatus',
-  //     render: (text, record) => (
-  //         <Switch
-  //             checked={record.legalityStatus} // Assuming legalityStatus is a boolean
-  //             onChange={async (checked) => {
-  //                 // Call the toggle function directly here
-  //                 await handleLegalityStatusToggle(record.enrollmentId, checked);
-  //             }}
-  //         />
-  //     ),
-  // },
+    {
+      title: 'Legality Status',
+      key: 'legalityStatus',
+      render: (text, record) => (
+        <Switch
+          checked={record.legalityStatus}
+          onChange={(checked) => handleLegalityToggle(record, checked)}
+        />
+      ),
+    },
+    
   
     {
       title: 'Bills',
@@ -663,13 +639,21 @@ const paymentColumns = [
         <Search placeholder="Search Payment..." onSearch={handleSearch} enterButton style={{ marginBottom: '20px' }} />
         <Card>
           <div style={{ overflowX: 'auto' }}>
-            <Table
+            {/* <Table
               columns={paymentColumns}
               dataSource={filteredData}
               pagination={false}
               rowKey="enrollmentId"
               scroll={{ x: 'max-content' }} // Allow horizontal scrolling
-            />
+            /> */}
+            <Table
+  columns={paymentColumns}
+  dataSource={filteredData}
+  pagination={false}
+  rowKey="enrollmentId"
+  scroll={{ x: 1500 }} // Set to the total width you expect
+/>
+
           </div>
         </Card>
       </>

@@ -661,23 +661,36 @@ export const updateBackendUser = async (req, res) => {
 };
 
 export const updateLegalityStatus = async (req, res) => {
-  const { enrollmentId, legalityStatus } = req.body; // Destructure the necessary data
+  const { id } = req.params; // Get the contact ID from the request parameters
+  const { legalityStatus } = req.body; // Get the legality status from the request body
 
   try {
-      // Find the contact by enrollmentId and update legalityStatus
-      const updatedContact = await Contact.findOneAndUpdate(
-          { enrollmentId }, // Find by enrollmentId
-          { legalityStatus }, // Update legalityStatus
-          { new: true } // Return the updated document
-      );
+    console.log(`Contact ID: ${id}`);
+    console.log('Request Body: ', req.body);
 
-      if (!updatedContact) {
-          return res.status(404).json({ message: 'Contact not found' });
-      }
+    // Find the contact by ID
+    const contact = await Contact.findById(id);
 
-      res.status(200).json({ message: 'Legality status updated successfully', contact: updatedContact });
-  } catch (error) {
-      console.error('Error updating legality status:', error);
-      res.status(500).json({ message: 'Server error', error });
+    if (!contact) {
+      console.log('Contact not found for ID:', id);
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    console.log('Found contact:', contact);
+
+    // Update the legalityStatus field if it is provided
+    if (legalityStatus !== undefined) {
+      contact.legalityStatus = legalityStatus;
+    }
+
+    await contact.save(); // Save the updated contact
+
+    res.status(200).json({
+      message: 'Legality status updated successfully',
+      contact
+    });
+  } catch (err) {
+    console.error('Error updating legality status:', err);
+    res.status(500).json({ error: 'Failed to update legality status' });
   }
 };
