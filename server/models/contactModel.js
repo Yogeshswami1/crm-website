@@ -269,6 +269,10 @@ update3: { type: String, default: '' },
  themeStatus: {
   type: String,
 },
+batch:{
+  type: String,
+
+},
 
 
 logoApprovalStatus: {
