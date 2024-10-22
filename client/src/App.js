@@ -112,6 +112,29 @@ import Rmddashboard from "./pages/RMD/Rmddashboard";
 import BackendDashboard from "./pages/Backend/BackendDashboard";
 // import Backendtab from "./pages/Backendtab";
 // import Backenddashboard from "./pages/Backend/BackendDashboard";
+
+import BatchDashboard from "./pages/Batch/BatchDashboard";
+import WebsiteAnalytics from "./pages/Managerdash/WebsiteAnalytics";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function App() {
   return (
     <UserProvider>
@@ -134,6 +157,13 @@ function App() {
               <ProtectedRoute exact path="/contact" component={Contact} roles={['admin']} />
               <ProtectedRoute exact path="/managersetpassword" component={Managersetpassword} roles={['manager']} />
               <ProtectedRoute exact path="/waba" component={Waba} roles={['manager']} />
+              <ProtectedRoute exact path="/websiteanalytics" component={WebsiteAnalytics} roles={['manager']} />
+
+
+
+
+
+
 
               <ProtectedRoute exact path="/accountanttab" component={Accountanttab} roles={['admin']} />
               <ProtectedRoute exact path="/backendtab" component={Backendtab} roles={['admin']} />
@@ -143,6 +173,16 @@ function App() {
               <ProtectedRoute exact path="/telesalestab" component={Telesalestab} roles={['admin']} />
               <ProtectedRoute exact path="/rmdtab" component={Rmdtab} roles={['admin']} />
               <ProtectedRoute exact path="/socialtab" component={Socialtab} roles={['admin']} />
+              <ProtectedRoute exact path="/batchdashboard" component={BatchDashboard} roles={['admin']} />
+
+
+
+
+
+
+
+
+
 
               <ProtectedRoute exact path="/accountantdashboard" component={Accountantdashboard} roles={['accountant']} />
               <ProtectedRoute exact path="/telesalesdashboard" component={Telesalesdashboard} roles={['telesales']} />

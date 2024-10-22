@@ -78,6 +78,11 @@ import timesheetRoutes from './routes/timesheetRoutes.js';
 
 import backendRoutes from './routes/backendRoutes.js';
 import changeRoutes from "./routes/changesRoutes.js";
+
+import batchRoutes from './routes/batchRoutes.js';
+
+
+
 dotenv.config();
 
 
@@ -86,7 +91,7 @@ dotenv.config();
 const app = express();
 
 
-
+ 
 app.use(cors({
   origin: 'https://website.saumiccraft.com',  // Temporarily allow all origins for debugging
 
@@ -127,6 +132,9 @@ app.use('/api', changesRoutes);
 app.use('/api/timesheets', timesheetRoutes);
 
 app.use('/api/changes', changeRoutes);
+
+app.use('/api/batches', batchRoutes);
+
 
 
 

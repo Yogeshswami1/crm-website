@@ -22,6 +22,15 @@ const Sidenav = ({ color, role }) => {
                 <span className="label">Admin Dashboard</span>
               </NavLink>
             </Menu.Item>
+            <Menu.Item key="batchdashboard">
+             <NavLink to="/batchdashboard">
+               <span className="label">Batches </span>
+             </NavLink>
+           </Menu.Item>
+
+
+
+
             <Menu.Item key="contact" >
               <NavLink to="/contact">
                 <span className="label">Contacts</span>
@@ -77,11 +86,21 @@ const Sidenav = ({ color, role }) => {
               <span className="label">Manager Dashboard</span>
             </NavLink>
           </Menu.Item>
+          <Menu.Item key="websiteanalytics">
+           <NavLink to="/websiteanalytics">
+             <span className="label">Analytics</span>
+           </NavLink>
+         </Menu.Item>
+
+
+
+
           <Menu.Item key="managersetpassword">
             <NavLink to="/managersetpassword">
               <span className="label">User ID & PASS</span>
             </NavLink>
           </Menu.Item>
+
          </>
         )}
         {role === "user" && (

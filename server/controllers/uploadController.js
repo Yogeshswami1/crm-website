@@ -95,12 +95,15 @@ export const uploadContacts = (req, res) => {
         primaryContact: data['Primary Contact'],
         secondaryContact: data['Secondary Contact'],
         service: data['Service'],
-        managerPosition: data['Manager Position']
+        managerPosition: data['Manager Position'],
+        batch: data['Batch']
+
       };
 
       if (formattedData.enrollmentId && formattedData.date && formattedData.name &&
           formattedData.email && formattedData.primaryContact && formattedData.service &&
-          formattedData.managerPosition) {
+          formattedData.managerPosition  &&
+          formattedData.batch) {
         results.push(formattedData);
       } else {
         skippedEntriesCount++;
