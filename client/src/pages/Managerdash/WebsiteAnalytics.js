@@ -77,17 +77,25 @@ const BounceRateStatistics = () => {
  };
 
 
+
  const calculateHandoverRate = () => {
-   const filteredUsers = filterUserDataByDateAndBatch();
-   const totalUsers = filteredUsers.length;
-   const handoverDone = filteredUsers.filter(user => user.readyToHandover === 'Done').length;
+  const filteredUsers = filterUserDataByDateAndBatch();
+ 
+  // Filter users who have stage 2 payment done
+  const stage3PaymentDone = filteredUsers.filter(user => user.payment?.stage3?.status === 'Done').length;
+ 
+  // Filter users who have both stage 2 payment and handover done
+  const handoverDone = filteredUsers.filter(user =>
+    user.readyToHandover === 'Done').length;
+   if (stage3PaymentDone === 0) return 0;
+   return ((handoverDone / stage3PaymentDone) * 100).toFixed(2);
+};
 
 
-   if (totalUsers === 0) return 0;
 
 
-   return ((handoverDone / totalUsers) * 100).toFixed(2);
- };
+
+
 
 
  const handleYearChange = (year) => {

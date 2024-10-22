@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.14065b38.css",
-    "main.js": "/static/js/main.901fbd60.js",
+    "main.js": "/static/js/main.15b22df8.js",
     "static/media/home-decor-3.jpeg": "/static/media/home-decor-3.74d13fcbd3c631fc7908.jpeg",
     "static/media/home-decor-2.jpeg": "/static/media/home-decor-2.b4e5397c9846645ba275.jpeg",
     "static/media/home-decor-1.jpeg": "/static/media/home-decor-1.05e218fd495ccc65c99d.jpeg",
@@ -22,6 +22,6 @@
   },
   "entrypoints": [
     "static/css/main.14065b38.css",
-    "static/js/main.901fbd60.js"
+    "static/js/main.15b22df8.js"
   ]
 }
