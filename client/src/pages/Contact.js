@@ -68,16 +68,37 @@ useEffect(() => {
 
 
 
+// const fetchContacts = async () => {
+//   try {
+//     const response = await axios.get(`${apiUrl}/api/contact/getcontact`);
+//     setOriginalContacts(response.data);
+//     setContacts(response.data);
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     message.error("Failed to load data. Please try again.");
+//   }
+// };
+
+
 const fetchContacts = async () => {
   try {
     const response = await axios.get(`${apiUrl}/api/contact/getcontact`);
-    setOriginalContacts(response.data);
-    setContacts(response.data);
+    
+    // Sort the data by enrollmentId in descending order
+    const sortedContacts = response.data.sort((a, b) => b.enrollmentId - a.enrollmentId);
+    
+    setOriginalContacts(sortedContacts);
+    setContacts(sortedContacts);
   } catch (error) {
     console.error("Error fetching data:", error);
     message.error("Failed to load data. Please try again.");
   }
 };
+
+
+
+
+
 
 
 const fetchBatches = async () => {
