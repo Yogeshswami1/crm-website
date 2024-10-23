@@ -348,7 +348,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message ,Select} from 'antd';
+import { Table, Button, Modal, Input, Form, message ,Select,Badge,List} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import PaymentModal from './PaymentModal';
@@ -362,6 +362,9 @@ import Stage3CompletionModal from './Stage3CompletionModal';
 import './Stage3Css.css';
 import SocialContentModal from './SocialContentModal3';
 import BackendUserModal from './BackendUserModal';
+import { toast } from "react-toastify";
+
+
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const { Option } = Select;
 
@@ -374,6 +377,13 @@ const Stage3website = () => {
   const [visibleModal, setVisibleModal] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [backendUsers, setBackendUsers] = useState([]); // State to store backend users
+  const [remarks, setRemarks] = useState([]);
+ const [newRemark, setNewRemark] = useState('');
+ const [isRemarksModalVisible, setIsRemarksModalVisible] = useState(false);
+
+
+
+
 
   const openModal = (modalType, record) => {
     setSelectedRecord(record);
@@ -503,6 +513,56 @@ const Stage3website = () => {
 };
 
   
+
+ const handleOpenRemarksModal = (record) => {
+  setCurrentRecord(record);
+  setRemarks(record.remarks || []);
+  setIsRemarksModalVisible(true);
+};
+
+
+
+
+const handleCancel = () => {
+  setIsRemarksModalVisible(false);
+  setCurrentRecord(null);
+  setNewRemark('');
+};
+
+
+const handleAddRemark = async () => {
+  if (!newRemark) {
+    toast.error('Remark cannot be empty');
+    return;
+  }
+  try {
+    const updatedRemarks = [...remarks, { text: newRemark, date: new Date() }];
+    await axios.put(`${apiUrl}/api/contact/remark/${currentRecord._id}`, { remarks: updatedRemarks });
+    toast.success("Remark added successfully");
+    setRemarks(updatedRemarks);
+    setNewRemark('');
+    fetchData();
+  } catch (error) {
+    toast.error("Failed to add remark");
+  }
+};
+
+
+const handleDeleteRemark = async (remark) => {
+  const updatedRemarks = remarks.filter(r => r._id !== remark._id);
+  try {
+    await axios.put(`${apiUrl}/api/contact/remark/${currentRecord._id}`, { remarks: updatedRemarks });
+    toast.success("Remark deleted successfully");
+    setRemarks(updatedRemarks);
+    fetchData();
+  } catch (error) {
+    toast.error("Failed to delete remark");
+  }
+};
+
+
+
+
 
   
   const serverColumns = [
@@ -729,6 +789,7 @@ const Stage3website = () => {
 // },  
 {
   title: "Backend User",
+  width: 70,
   render: (text, record) => (
     <Button
       style={{
@@ -741,6 +802,20 @@ const Stage3website = () => {
     </Button>
   ),
 },
+{
+  title: "Remarks",
+  key: "remarks",
+  render: (text, record) => (
+    <Badge count={record.remarks.length} offset={[-6, 5]} /* Adjust offset as needed */>
+      <Button onClick={() => handleOpenRemarksModal(record)}>Remarks</Button>
+    </Badge>
+  ),
+}
+
+
+
+
+
 
 
 
@@ -885,6 +960,37 @@ const Stage3website = () => {
          fetchData={fetchData}
        />
      )}
+     {/* Remarks Modal */}
+     <Modal
+       title="Remarks"
+       open={isRemarksModalVisible}
+       onCancel={handleCancel}
+       footer={null}
+     >
+       <List
+         dataSource={remarks}
+         renderItem={(item) => (
+           <List.Item
+             actions={[<Button onClick={() => handleDeleteRemark(item)}>Delete</Button>]}
+           >
+             <List.Item.Meta
+               title={moment(item.date).format('DD-MM-YYYY')}
+               description={item.text}
+             />
+           </List.Item>
+         )}
+       />
+       <Input.TextArea
+         rows={4}
+         value={newRemark}
+         onChange={(e) => setNewRemark(e.target.value)}
+       />
+       <Button type="primary" onClick={handleAddRemark}>Add Remark</Button>
+     </Modal>
+
+
+
+
 
       {/* ID and Password Modal */}
       <Modal

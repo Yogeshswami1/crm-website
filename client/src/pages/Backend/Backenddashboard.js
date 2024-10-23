@@ -229,6 +229,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import GSTModal from "./GSTModal";
+
+
+
+
+
 
 import PaymentGatewayMediumModal from "./PaymentGatewayMediumModal";
 import PaymentIntegrationModal from "./PaymentIntegrationModal";
@@ -346,47 +352,84 @@ const UserDataTable = () => {
     },
     {
       title: "GST",
-      dataIndex: "gst",
-      key: "gst",
-    },
-    {
-      title: "GST Number",
-      dataIndex: "gstNumber",
-      key: "gstNumber",
-    },
-    {
-      title: "Payment Gateway Medium",
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.legality === "Done" ? "#90EE90" : undefined }}
-          onClick={() => openModal("paymentGatewayMedium", record)}
+          style={{
+            backgroundColor:
+              record?.gst === 'Done' ? '#90EE90' :
+              record?.gst === 'Not Done' ? '#FFB6C1' : 'transparent',  // Light green for 'Done', light red for 'Not Done', transparent for blank
+          }}
+          onClick={() => openModal('gst', record)}
         >
           Show
         </Button>
       ),
     },
+ 
+ 
+ 
+ 
+    {
+      title: "Payment Gateway Medium",
+      render: (text, record) => (
+        <Button
+          style={{
+            backgroundColor: record?.paymentGatewayMedium ? '#90EE90' : undefined,  // Light green if paymentGatewayMedium has a value
+          }}
+          onClick={() => openModal('paymentGatewayMedium', record)}
+        >
+          Show
+        </Button>
+      ),
+    },
+ 
+ 
+ 
+ 
     {
       title: "Payment Integration",
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.legality === "Done" ? "#90EE90" : undefined }}
-          onClick={() => openModal("paymentIntegration", record)}
-        >
-          Show
-        </Button>
+        style={{
+          backgroundColor: record?.paymentIntegration === 'Done'
+            ? '#90EE90' // Light green
+            : record?.paymentIntegration === 'Not Done'
+            ? '#FF6347' // Red (using tomato red hex code)
+            : undefined, // No color if it's neither "Done" nor "Not Done"
+        }}
+        onClick={() => openModal('paymentIntegration', record)}
+      >
+        Show
+      </Button>
+     
       ),
     },
     {
       title: "Paypal Integration",
       render: (text, record) => (
         <Button
-          style={{ backgroundColor: record?.legality === "Done" ? "#90EE90" : undefined }}
-          onClick={() => openModal("paypalIntegration", record)}
+          style={{
+            backgroundColor: record?.paypalIntegration === 'Approved'
+              ? '#90EE90' // Light green for Approved
+              : record?.paypalIntegration === 'Applied'
+              ? '#FFD700' // Yellow for Applied
+              : record?.paypalIntegration === 'Rejected'
+              ? '#FF6347' // Red for Rejected
+              : undefined, // No color for any other value
+          }}
+          onClick={() => openModal('paypalIntegration', record)}
         >
           Show
         </Button>
       ),
     },
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     {
       title: "Changes", // New Changes column
       render: (text, record) => (
@@ -425,6 +468,16 @@ const UserDataTable = () => {
           fetchData={fetchData}
         />
       )}
+      {visibleModal === 'gst' && (
+       <GSTModal
+         visible={true}
+         onCancel={closeModal}
+         record={selectedRecord}
+         fetchData={fetchData} 
+       />
+     )}
+
+
 
 {visibleModal === "changesModal" && (
   <ChangesModalBox
