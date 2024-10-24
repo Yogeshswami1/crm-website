@@ -120,11 +120,7 @@ const Sidenav = ({ color, role }) => {
               <span className="label">Accountant Dashboard</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="contactdashboard">
-            <NavLink to="/contactdashboard">
-              <span className="label">Contact Tab</span>
-            </NavLink>
-          </Menu.Item>
+       
 
           </>
         )}

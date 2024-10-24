@@ -892,70 +892,44 @@ const handleCancel = () => {
 
 
 
-
-
-
-
 const handleLegalityStatusChange = async (record, checked) => {
-  const updatedStatus = checked ? 'true' : 'false';
-   // Update local state for live UI feedback
-  setLegalityStatus(updatedStatus);
- 
- 
-  try {
-    await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-      legalityStatus: updatedStatus, // Send updated status to backend
-    });
-    message.success(`Legality status updated to ${updatedStatus} for ${record.name}`);
-    fetchContacts(); // Optionally refresh the data from the server
-  } catch (error) {
-    console.error("Error updating legality status:", error);
-    message.error("Failed to update legality status. Please try again.");
-  }
- };
- 
- 
- const handleBillSentChange = async (record, checked) => {
-  const updatedStatus = checked ? 'true' : 'false';
- 
- 
+ const updatedStatus = checked ? 'true' : 'false';
   // Update local state for live UI feedback
-  setBillSent(updatedStatus);
- 
- 
-  try {
-    await axios.put(`${apiUrl}/api/contact/${record._id}`, {
-      billsSent: updatedStatus, // Send updated status to backend
-    });
-    message.success(`Bills status updated to ${updatedStatus} for ${record.name}`);
-    fetchContacts();  // Optionally refresh the data from the server
-  } catch (error) {
-    console.error("Error updating bills status:", error);
-    message.error("Failed to update bills status. Please try again.");
-  }
- };
- 
- 
+ setLegalityStatus(updatedStatus);
 
 
+ try {
+   await axios.put(`${apiUrl}/api/contact/${record._id}`, {
+     legalityStatus: updatedStatus, // Send updated status to backend
+   });
+   message.success(`Legality status updated to ${updatedStatus} for ${record.name}`);
+   fetchContacts(); // Optionally refresh the data from the server
+ } catch (error) {
+   console.error("Error updating legality status:", error);
+   message.error("Failed to update legality status. Please try again.");
+ }
+};
 
 
+const handleBillSentChange = async (record, checked) => {
+ const updatedStatus = checked ? 'true' : 'false';
 
 
+ // Update local state for live UI feedback
+ setBillSent(updatedStatus);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+ try {
+   await axios.put(`${apiUrl}/api/contact/${record._id}`, {
+     billsSent: updatedStatus, // Send updated status to backend
+   });
+   message.success(`Bills status updated to ${updatedStatus} for ${record.name}`);
+   fetchContacts();  // Optionally refresh the data from the server
+ } catch (error) {
+   console.error("Error updating bills status:", error);
+   message.error("Failed to update bills status. Please try again.");
+ }
+};
 
 
 
@@ -968,27 +942,42 @@ const paymentColumns = [
    width: 130,
    render: (text, record) => {
      let backgroundColor = '';
-      // Check conditions for background color
-     if (record.legalityStatus === 'true') {
-       backgroundColor = 'yellow'; // Light yellow when legalityStatus is Done
+      // Check conditions for legalityStatus and billsSent
+     if (record.legalityStatus === 'true' && record.billsSent === 'true') {
+       // Both statuses true, split background (half yellow, half green)
+       backgroundColor = 'linear-gradient(90deg, yellow 70%, lightgreen 30%)';
+     } else if (record.legalityStatus === 'true') {
+       // Only legalityStatus true, full yellow background
+       backgroundColor = 'yellow';
+     } else if (record.billsSent === 'true') {
+       // Only billsSent true, full green background
+       backgroundColor = 'lightgreen';
      }
-     if (record.billsSent === 'true') {
-       backgroundColor = 'lightgreen'; // Green when billSent is Done
-     }
-      // Apply background color and render the enrollment ID
+      // Apply the background color (gradient or solid)
      return (
        <a
          onClick={() => handleEnrollmentClick(record)}
-         style={{ backgroundColor, padding: '5px', borderRadius: '4px' }} // Optional padding and border-radius for better appearance
+         style={{ background: backgroundColor, padding: '5px', borderRadius: '4px', display: 'inline-block', width: '100%' }} // Apply the gradient and other styles
        >
          {text}
        </a>
      );
    },
- },   
-  {
+ },
+   {
     title: 'Stage 1 Payment',
     children: [
+     {
+       title: 'Date',
+       dataIndex: ['payment', 'stage1', 'date'],
+       key: 'stage1PaymentDate',
+       render: (date) => date ? moment(date).format('DD-MM-YYYY') : 'N/A',
+     },     
+     {
+       title: 'Mode',
+       dataIndex: ['payment', 'stage1', 'paymentMode'],
+       key: 'stage1PaymentAmount',
+     },
       {
         title: 'Amount',
         dataIndex: ['payment', 'stage1', 'amount'],
@@ -1004,6 +993,18 @@ const paymentColumns = [
   {
     title: 'Stage 2 Payment',
     children: [
+     {
+       title: 'Date',
+       dataIndex: ['payment', 'stage2', 'date'],
+       key: 'stage2PaymentDate',
+       render: (date) => date ? moment(date).format('DD-MM-YYYY') : 'N/A',
+     },
+    
+     {
+       title: 'Mode',
+       dataIndex: ['payment', 'stage2', 'paymentMode'],
+       key: 'stage2PaymentAmount',
+     },
       {
         title: 'Amount',
         dataIndex: ['payment', 'stage2', 'amount'],
@@ -1019,6 +1020,18 @@ const paymentColumns = [
   {
     title: 'Stage 3 Payment',
     children: [
+     {
+       title: 'Date',
+       dataIndex: ['payment', 'stage3', 'date'],
+       key: 'stage3PaymentDate',
+       render: (date) => date ? moment(date).format('DD-MM-YYYY') : 'N/A',
+     },
+    
+     {
+       title: 'Mode',
+       dataIndex: ['payment', 'stage3', 'paymentMode'],
+       key: 'stage3PaymentAmount',
+     },
       {
         title: 'Amount',
         dataIndex: ['payment', 'stage3', 'amount'],
@@ -1099,31 +1112,30 @@ const dataSource = [
     ) : 'N/A',
   },
   {
-    key: '12',
-    label: 'Legality Status',
-    value: (
-      <Switch
-        checked={legalityStatus === 'true'}
-        onChange={(checked) => handleLegalityStatusChange(selectedContact, checked)}
-        checkedChildren="true"
-        unCheckedChildren="false"
-      />
-    ),
-  },
-  {
-    key: '13',
-    label: 'Bill Sent',
-    value: (
-      <Switch
-        checked={billSent === 'true'}
-        onChange={(checked) => handleBillSentChange(selectedContact, checked)}
-        checkedChildren="true"
-        unCheckedChildren="false"
-      />
-    ),
-  },
- 
- 
+   key: '12',
+   label: 'Legality Status',
+   value: (
+     <Switch
+       checked={legalityStatus === 'true'}
+       onChange={(checked) => handleLegalityStatusChange(selectedContact, checked)}
+       checkedChildren="true"
+       unCheckedChildren="false"
+     />
+   ),
+ },
+ {
+   key: '13',
+   label: 'Bill Sent',
+   value: (
+     <Switch
+       checked={billSent === 'true'}
+       onChange={(checked) => handleBillSentChange(selectedContact, checked)}
+       checkedChildren="true"
+       unCheckedChildren="false"
+     />
+   ),
+ },
+
 
 
 
@@ -1149,7 +1161,7 @@ const columns = [
   },
 ];
 return (
-  <div style={{ padding: '20px' }}>
+  <div style={{ maxHeight: '1000px', overflowY: 'auto',padding: '20px' }}>
     <Card title="Welcome Accountant" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
       <Title level={4} style={{ textAlign: 'center' }}>Payment Table</Title>
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
