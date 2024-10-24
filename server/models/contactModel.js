@@ -255,8 +255,8 @@ update3: { type: String, default: '' },
   gtin: {
     type: String,
   },
-  billsSent: { type: Boolean, default: false }, // New field for bills status
-  legalityStatus: { type: Boolean, default: false }, // New field for legality status
+  billsSent: { type: String }, // New field for bills status
+  legalityStatus: { type: String }, // New field for legality status
 
   // legalityStatus: { type: Boolean, default: false }, // Add legalityStatus field
   // legalityStatus: {
@@ -273,6 +273,7 @@ batch:{
   type: String,
 
 },
+
 
 
 logoApprovalStatus: {

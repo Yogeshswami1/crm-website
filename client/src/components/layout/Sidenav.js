@@ -66,11 +66,11 @@ const Sidenav = ({ color, role }) => {
                 <span className="label">RMD Tab</span>
               </NavLink>
             </Menu.Item>
-            <Menu.Item key="backend">
+            {/* <Menu.Item key="backend">
               <NavLink to="/backendtab">
                 <span className="label">Backend Tab</span>
               </NavLink>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="useridpass">
               <NavLink to="/useridpass">
                 <span className="label">User ID & Pass</span>
@@ -118,6 +118,11 @@ const Sidenav = ({ color, role }) => {
           <Menu.Item key="accountantdashboard">
             <NavLink to="/accountantdashboard">
               <span className="label">Accountant Dashboard</span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="contactdashboard">
+            <NavLink to="/contactdashboard">
+              <span className="label">Contact Tab</span>
             </NavLink>
           </Menu.Item>
 

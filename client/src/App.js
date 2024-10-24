@@ -116,6 +116,8 @@ import BackendDashboard from "./pages/Backend/BackendDashboard";
 import BatchDashboard from "./pages/Batch/BatchDashboard";
 import WebsiteAnalytics from "./pages/Managerdash/WebsiteAnalytics";
 
+import ContactDashboard from "./pages/Accountant/ContactDashboard";
+
 
 
 
@@ -185,6 +187,7 @@ function App() {
 
 
               <ProtectedRoute exact path="/accountantdashboard" component={Accountantdashboard} roles={['accountant']} />
+              <ProtectedRoute exact path="/contactdashboard" component={ContactDashboard} roles={['accountant']} />
               <ProtectedRoute exact path="/telesalesdashboard" component={Telesalesdashboard} roles={['telesales']} />
               <ProtectedRoute exact path="/rmddashboard" component={Rmddashboard} roles={['rmd']} />
               
