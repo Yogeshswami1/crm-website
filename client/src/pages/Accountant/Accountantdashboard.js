@@ -137,11 +137,15 @@ const handleLegalityFilterChange = (value) => {
 
 
 const downloadCSV = () => {
- const dataToExport = filteredData.map(({ date, enrollmentId, name, primaryContact }) => ({
+ const dataToExport = filteredData.map(({ date, enrollmentId, name, primaryContact ,managerId
+ }) => ({
    date: moment(date).isValid() ? moment(date).format("DD-MM-YYYY") : 'N/A', // Format date to DD-MM-YYYY or show 'N/A' if invalid
    enrollmentId,
    name,
    primaryContact,
+   managerPosition: managerId?.position || 'N/A' // Add manager position or 'N/A' if not available
+
+
  }));
 
 
