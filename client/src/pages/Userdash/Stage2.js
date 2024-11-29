@@ -356,7 +356,7 @@ const Stage2 = () => {
 
 
        {/* Product File Card */}
-       <VerticalTimelineElement
+       {/* <VerticalTimelineElement
          date={`Product File Status: ${userData?.productFile ? 'Available' : 'Not Available'}`}
          icon={getIcon(userData?.productFile ? 'Done' : 'Pending')}
          iconStyle={{ background: 'white', color: '#fff', boxShadow: '0 3px 5px rgba(0,0,0,0.2)' }}
@@ -367,7 +367,7 @@ const Stage2 = () => {
          <Title level={5} style={{ fontWeight: 'bold', color: '#333' }}>Product File</Title>
          <p><strong>File:</strong> {userData?.productFile || 'Pending'}</p>
          <p><strong>Date:</strong> {userData?.productDate ? moment(userData?.productDate).format('DD-MM-YYYY') : 'N/A'}</p>
-       </VerticalTimelineElement>
+       </VerticalTimelineElement> */}
 
 
        {/* Logo Card */}

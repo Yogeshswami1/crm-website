@@ -49,9 +49,10 @@ const PaypalIntegrationModal = ({ visible, onCancel, record, fetchData }) => {
            value={paypalIntegration}
            onChange={(value) => setPaypalIntegration(value)}
          >
-           <Select.Option value="Approved">Approved</Select.Option>
-           <Select.Option value="Applied">Applied</Select.Option>
-           <Select.Option value="Rejected">Rejected</Select.Option>
+           
+
+           <Select.Option value="Done">Done</Select.Option>
+           <Select.Option value="Not Done">Not Done</Select.Option>
          </Select>
        </Form.Item>
      </Form>
