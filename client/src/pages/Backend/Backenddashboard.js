@@ -386,44 +386,86 @@ const UserDataTable = () => {
  
  
  
+    // {
+    //   title: "Payment Integration",
+    //   render: (text, record) => {
+    //     console.log("Payment Integration Value:", record?.paymentIntegration); // Log to debug
+    //     return (
+    //       <Button
+    //         style={{
+    //           backgroundColor: record?.paymentIntegration === 'Approved'
+    //             ? '#90EE90' // Light green
+    //             : record?.paymentIntegration === 'Applied'
+    //             ? '#FFD700' // Yellow
+    //             : record?.paymentIntegration === 'Rejected'
+    //             ? '#FF6347' // Red
+    //             : undefined, // Default
+    //         }}
+    //         onClick={() => openModal('paymentIntegration', record)}
+    //       >
+    //         {record?.paymentIntegration || "No Status"}
+    //       </Button>
+    //     );
+    //   },
+    // }
     {
       title: "Payment Integration",
       render: (text, record) => (
         <Button
-        style={{
-          backgroundColor: record?.paymentIntegration === 'Done'
-            ? '#90EE90' // Light green
-            : record?.paymentIntegration === 'Not Done'
-            ? '#FF6347' // Red (using tomato red hex code)
-            : undefined, // No color if it's neither "Done" nor "Not Done"
-        }}
-        onClick={() => openModal('paymentIntegration', record)}
-      >
-        Show
-      </Button>
-     
-      ),
-    },
-    {
-      title: "Paypal Integration",
-      render: (text, record) => (
-        <Button
           style={{
-            backgroundColor: record?.paypalIntegration === 'Approved'
-              ? '#90EE90' // Light green for Approved
-              : record?.paypalIntegration === 'Applied'
-              ? '#FFD700' // Yellow for Applied
-              : record?.paypalIntegration === 'Rejected'
-              ? '#FF6347' // Red for Rejected
-              : undefined, // No color for any other value
+            backgroundColor: record?.paymentIntegration === 'Done'
+              ? '#90EE90' // Light green for Done
+              : record?.paymentIntegration === 'Not Done'
+              ? '#FF6347' // Red for Not Done
+              : undefined, // Default
           }}
-          onClick={() => openModal('paypalIntegration', record)}
+          onClick={() => openModal('paymentIntegration', record)} // Function to open modal
         >
-          Show
+          {record?.paymentIntegration || "No Status"} {/* Display current status */}
         </Button>
       ),
     },
- 
+    
+    
+,
+// {
+//   title: "Paypal Integration",
+//   render: (text, record) => (
+//     <Button
+//       style={{
+//         backgroundColor: record?.paypalIntegration === 'Done'
+//           ? '#90EE90' // Light green for Done
+//           : record?.paypalIntegration === 'Not Done'
+//           ? '#FF6347' // Red for Not Done
+//           : undefined, // Default if no matching value
+//       }}
+//       onClick={() => openModal('paypalIntegration', record)} // Function to open modal
+//     >
+//       {record?.paypalIntegration || "No Status"} {/* Display current status */}
+//     </Button>
+//   ),
+// },
+
+{
+  title: "Paypal Integration",
+  render: (text, record) => (
+    <Button
+      style={{
+        backgroundColor: record?.paypalIntegration === 'Approved'
+          ? '#90EE90' // Light green for Approved
+          : record?.paypalIntegration === 'Applied'
+          ? '#FFD700' // Yellow for Applied
+          : record?.paypalIntegration === 'Rejected'
+          ? '#FF6347' // Red for Rejected
+          : undefined, // Default
+      }}
+      onClick={() => openModal('paypalIntegration', record)} // Function to open modal
+    >
+      {record?.paypalIntegration || "No Status"} {/* Display current status */}
+    </Button>
+  ),
+},
+
  
  
  

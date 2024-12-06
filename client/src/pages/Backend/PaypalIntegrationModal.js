@@ -44,17 +44,17 @@ const PaypalIntegrationModal = ({ visible, onCancel, record, fetchData }) => {
      onOk={handleSave}
    >
      <Form layout="vertical">
-       <Form.Item label="Select Paypal Integration Status">
-         <Select
-           value={paypalIntegration}
-           onChange={(value) => setPaypalIntegration(value)}
-         >
-           
+     <Form.Item label="Select Paypal Integration Status">
+  <Select
+    value={paypalIntegration}
+    onChange={(value) => setPaypalIntegration(value)}
+  >
+    <Select.Option value="Approved">Approved</Select.Option>
+    <Select.Option value="Applied">Applied</Select.Option>
+    <Select.Option value="Rejected">Rejected</Select.Option>
+  </Select>
+</Form.Item>
 
-           <Select.Option value="Done">Done</Select.Option>
-           <Select.Option value="Not Done">Not Done</Select.Option>
-         </Select>
-       </Form.Item>
      </Form>
    </Modal>
  );
