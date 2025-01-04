@@ -109,7 +109,7 @@ import Telesalesdashboard from "./pages/Telesales/Dashboard";
 import Waba from "./pages/Managerdash/Waba";
 import Rmddashboard from "./pages/RMD/Rmddashboard";
 // import Backenddashboard from "./pages/Backend/Backenddashboard";
-import BackendDashboard from "./pages/Backend/BackendDashboard";
+import BackendDashboard from "./pages/Backend/Backenddashboard";
 // import Backendtab from "./pages/Backendtab";
 // import Backenddashboard from "./pages/Backend/BackendDashboard";
 

@@ -1,4 +1,3 @@
-
 // import React from "react";
 // import { useHistory } from "react-router-dom";
 // import {
@@ -17,7 +16,6 @@
 // import { useUser } from "../../UserContext";
 // import { EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
 // import { toast } from "react-toastify";
-
 
 // const apiUrl = process.env.REACT_APP_BACKEND_URL;
 // const { Title } = Typography;
@@ -233,7 +231,6 @@
 
 // export default SignIn;
 
-
 // import React, { useState } from "react";
 // import { useHistory } from "react-router-dom";
 // import {
@@ -380,14 +377,14 @@
 //         otp,
 //         deviceInfo: navigator.userAgent, // Example of deviceInfo
 //       });
-  
+
 //       if (response.data.token) {
 //         toast.success("OTP verified, login successful!");
 //         setUser({ adminId, role: "admin" });
-  
+
 //         localStorage.setItem("token", response.data.token);
 //         localStorage.setItem("adminId", adminId);
-  
+
 //         history.push("/home");
 //       } else {
 //         toast.error("Invalid OTP!");
@@ -400,7 +397,6 @@
 //       setLoading(false); // Stop loading after submission
 //     }
 //   };
-  
 
 //   const onFinishFailed = (errorInfo) => {
 //     console.log("Failed:", errorInfo);
@@ -516,8 +512,6 @@
 
 // export default SignIn;
 
-
-
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
@@ -544,6 +538,7 @@ const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
 
 const SignIn = () => {
+  console.log(apiUrl);
   const history = useHistory();
   const [form] = Form.useForm();
   const { user, setUser } = useUser();
@@ -556,7 +551,7 @@ const SignIn = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedAdminId = localStorage.getItem("adminId");
-    
+
     if (token && storedAdminId) {
       // Automatically log in the admin if a token and adminId exist in localStorage
       setUser({ adminId: storedAdminId, role: "admin" });
@@ -604,22 +599,13 @@ const SignIn = () => {
           id: identifier,
           password: password,
         });
-
-
-        
-      } 
-      else if (/^BU\d+$/.test(identifier)) {
+      } else if (/^BU\d+$/.test(identifier)) {
         role = "backend";
         response = await axios.post(`${apiUrl}/api/backend/login`, {
           id: identifier,
           password: password,
         });
-
-
-        
-      }
-      
-      else if (/^TS\d+$/.test(identifier)) {
+      } else if (/^TS\d+$/.test(identifier)) {
         role = "telesales";
         response = await axios.post(`${apiUrl}/api/telesales/login`, {
           id: identifier,
@@ -652,16 +638,16 @@ const SignIn = () => {
           localStorage.setItem("supervisorId", response.data.supervisor._id);
         } else if (response.data.accountant) {
           localStorage.setItem("accountantId", response.data.accountant._id);
-        }
-        else if (response.data.backend) {
+        } else if (response.data.backend) {
           localStorage.setItem("backendId", response.data.backend._id);
-        }
-        
-        else if (response.data.telesales) {
+        } else if (response.data.telesales) {
           localStorage.setItem("telesalesId", response.data.telesales._id);
         }
 
-        localStorage.setItem("user", JSON.stringify({ ...response.data.user, role }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...response.data.user, role })
+        );
 
         if (role === "manager") {
           history.push("/managerdashboard");
@@ -669,12 +655,9 @@ const SignIn = () => {
           history.push("/supervisordashboard");
         } else if (role === "accountant") {
           history.push("/accountantdashboard");
-        }
-        else if (role === "backend") {
+        } else if (role === "backend") {
           history.push("/backenddashboard");
-        }
-        
-        else if (role === "telesales") {
+        } else if (role === "telesales") {
           history.push("/telesalesdashboard");
         } else if (role === "user") {
           history.push("/userdashboard");
@@ -747,7 +730,12 @@ const SignIn = () => {
                   className="username"
                   label="Login ID"
                   name="identifier"
-                  rules={[{ required: true, message: "Please input your identifier!" }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your identifier!",
+                    },
+                  ]}
                 >
                   <Input placeholder="Email / Position / Enrollment ID" />
                 </Form.Item>
@@ -756,7 +744,9 @@ const SignIn = () => {
                   className="password"
                   label="Password"
                   name="password"
-                  rules={[{ required: true, message: "Please input your password!" }]}
+                  rules={[
+                    { required: true, message: "Please input your password!" },
+                  ]}
                 >
                   <Input.Password
                     placeholder="Password"

@@ -689,6 +689,7 @@ const { Option } = Select;
 
 const Stagewebsite = (record) => {
  const [data, setData] = useState([]);
+ console.log(data);
  const [isRemarksModalVisible, setIsRemarksModalVisible] = useState(false);
  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
  const [currentRecord, setCurrentRecord] = useState(null);

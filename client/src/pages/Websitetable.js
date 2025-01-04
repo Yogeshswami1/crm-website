@@ -527,7 +527,7 @@
 //       ),
 //     }
 //   ];
-  
+
 //   const getColumns = () => {
 //     switch (selectedOption) {
 //       case "option2":
@@ -578,351 +578,307 @@
 
 // export default WebsiteTable;
 
-
-
-import React, { useState } from 'react';
-import { Table, Radio, Input ,Button,Tag} from 'antd';
-import moment from 'moment';
-
+import React, { useState } from "react";
+import { Table, Radio, Input, Button, Tag } from "antd";
+import moment from "moment";
 
 const { Search } = Input;
 
-
 const WebsiteTable = ({ data }) => {
-const [selectedOption, setSelectedOption] = useState('option1');
-const [searchText, setSearchText] = useState('');
+  const [selectedOption, setSelectedOption] = useState("option1");
+  const [searchText, setSearchText] = useState("");
 
-
-const extractStoreNameAndFormatDate = (text) => {
- if (!text) return "Unknown";
- const parts = text.split(" (updated on ");
- const storeName = parts[0];
- const date = parts[1]?.slice(0, -1); // Remove the closing parenthesis
- if (date) {
-   const formattedDate = new Date(date).toLocaleDateString("en-GB");
-   return `${storeName} (${formattedDate})`;
- }
- return storeName;
-};
-
-const combineSocialMediaStatus = (record) => {
-  // Collect all relevant fields
-  const statuses = [record.socialMedia, record.socialMedia1, record.socialMedia2];
-  
-  // Check for status in the order of priority
-  if (statuses.includes('Not Done')) {
-    return 'Not Done';
-  }
-  if (statuses.includes('Done') || statuses.includes('Completed')) {
-    return 'Done';
-  }
-  return 'N/A'; // Default status
-};
-
-
-
-
-const columnsOption1 = [
-  { 
-    title: "Date", 
-    dataIndex: "date", 
-    key: "date", 
-    render: (text) => moment(text).format("DD-MM-YYYY") 
-  },
-  { 
-    title: "Enrollment ID", 
-    dataIndex: "enrollmentId", 
-    key: "enrollmentId" 
-  },
-  { 
-    title: "Stage 1 Payment", 
-    key: "payment.stage1.status", 
-    render: (record) => getStatusTag(record?.payment?.stage1?.status) // Apply getStatusTag here
-  },
-  { 
-    title: "Legality", 
-    dataIndex: "legality", 
-    key: "legality", 
-    render: (text) => getStatusTag(text) // Apply getStatusTag here
-  },
-  { 
-    title: "OVC", 
-    dataIndex: "ovc", 
-    key: "ovc", 
-    render: (text) => getStatusTag(text) // Apply getStatusTag here
-  },
-  { 
-    title: "ID Card", 
-    dataIndex: "idCard", 
-    key: "idCard", 
-    render: (text) => getStatusTag(text) // Apply getStatusTag here
-  },
-  { 
-    title: "Theme", 
-    dataIndex: "theme", 
-    key: "theme", 
-    render: (text) => text || "N/A" 
-  },
-  { 
-    title: "Stage 1 Completion", 
-    dataIndex: "stage1Completion", 
-    key: "stage1Completion", 
-    render: (text) => getStatusTag(text) // Apply getStatusTag here
-  }
-];
-
-
-
-const getStatusTag = (status) => {
-  if (status === 'Done' || status === 'Completed') {
-    return <Tag color="green">Done</Tag>;
-  } else {
-    return <Tag color="red">Not Done</Tag>;
-  }
-};
-
-
-
-
-
-
-
-
-
-const columnsOption2 = [
-  { title: "Enrollment ID", dataIndex: "enrollmentId", key: "enrollmentId" },
-  { 
-    title: "Stage 2 Payment", 
-    key: "payment.stage2.status", 
-    render: (text, record) => getStatusTag(record?.payment?.stage2?.status) // Apply getStatusTag here
-  }, {
-    title: "Cat File",
-    dataIndex: "catFile",
-    key: "catFile",
-    render: (text, record) => getStatusTag(record.catFile) // Show "Done" or "Not Done"
-  },
-  {
-    title: "Product File",
-    dataIndex: "productFile",
-    key: "productFile",
-    render: (text, record) => getStatusTag(record.productFile) // Show "Done" or "Not Done"
-  },
-  {
-    title: "Logo",
-    dataIndex: "logo",
-    key: "logo",
-    render: (text, record) => getStatusTag(record.logo) // Show "Done" or "Not Done"
-  },
-  {
-    title: "Banner",
-    dataIndex: "banner",
-    key: "banner",
-    render: (text, record) => getStatusTag(record.banner) // Show "Done" or "Not Done"
-  },
-  {
-    title: "Social Media Content",
-    dataIndex: "socialMedia1",
-    key: "socialMedia1",
-    render: (text, record) => getStatusTag(record.socialMedia1) // Apply getStatusTag here
-  },
-  {
-    title: "Gallery",
-    dataIndex: "gallery",
-    key: "gallery",
-    render: (text, record) => getStatusTag(record.gallery) // Show "Done" or "Not Done"
-  },
-  {
-    title: "Stage 2 Completion",
-    dataIndex: "stage2Completion",
-    key: "stage2Completion",
-    render: (text, record) => getStatusTag(record.stage2Completion) // Show "Done" or "Not Done"
-  },
-];
-
-
-
-const getStatus = (data) => {
-  // Check ID and Pass Website status
-  const idAndPassStatus = data.idAndPassWebsite?.id && data.idAndPassWebsite?.pass ? 'Done' : 'Not Done';
-  
-  // Check Payment Gateway status
-  const paymentGatewayStatus = data.paymentGateway ? 'Done' : 'Not Done';
-  
-  // Return combined status as a string or use a more complex logic if needed
-  return `ID & Pass: ${idAndPassStatus}, Payment Gateway: ${paymentGatewayStatus}`;
-};
-
-
-const columnsOption3 = [
-  { title: "Enrollment ID", dataIndex: "enrollmentId", key: "enrollmentId" },
-  { 
-    title: "Stage 3 Payment", 
-    key: "payment.stage3.status", 
-    render: (text, record) => getStatusTag(record?.payment?.stage3?.status) // Apply getStatusTag here
-  },
-  
-  // Use extractStoreNameAndFormatDate for date fields
-  { 
-    title: "Server Purchase", 
-    dataIndex: "serverPurchase", 
-    key: "serverPurchase", 
-    render: (text) => getStatusTag(text) 
-  },
-  
-  // Use getStatusTag for status fields
-  { 
-    title: "Domain Claim", 
-    dataIndex: "domainClaim", 
-    key: "domainClaim", 
-    render: (text) => getStatusTag(text) // Apply getStatusTag here
-  },
-  
-  { 
-    title: "Domain Mail Verification", 
-    dataIndex: "domainMailVerification", 
-    key: "domainMailVerification", 
-    render: (text) => getStatusTag(text) 
-  },
-  
-  { 
-    title: "Website Uploaded", 
-    dataIndex: "websiteUploaded", 
-    key: "websiteUploaded", 
-    render: (text) => getStatusTag(text) 
-  },
-  
-  {
-    title: "ID & Pass Website",
-    dataIndex: "idAndPassWebsite",
-    key: "idAndPassWebsite",
-    render: (text, record) => (
-      <div>
-        {record.idAndPassWebsite?.id ? (
-          <div>
-            <p><strong>ID:</strong> {record.idAndPassWebsite.id}</p>
-            <p><strong>Pass:</strong> {record.idAndPassWebsite.pass}</p>
-          </div>
-        ) : (
-          <span>No ID & Pass Set</span>
-        )}
-      </div>
-    ),
-  },
-
-  {
-    title: "Social Media Content",
-    key: 'socialMediaContent',
-    render: (text, record) => {
-      console.log("Record data:", record); // Debugging line
-      return getStatusTag(combineSocialMediaStatus(record)); // Apply getStatusTag here
+  const extractStoreNameAndFormatDate = (text) => {
+    if (!text) return "Unknown";
+    const parts = text.split(" (updated on ");
+    const storeName = parts[0];
+    const date = parts[1]?.slice(0, -1); // Remove the closing parenthesis
+    if (date) {
+      const formattedDate = new Date(date).toLocaleDateString("en-GB");
+      return `${storeName} (${formattedDate})`;
     }
-  },
-  
-  {
-    title: "Payment Gateway",
-    dataIndex: "paymentGateway",
-    key: "paymentGateway",
-    render: (text, record) => {
-      // Determine the status based on the presence of paymentGateway data
-      const status = record.paymentGateway ? 'Done' : 'Not Done';
-      return getStatusTag(status); // Use getStatusTag for consistent styling
+    return storeName;
+  };
+
+  const combineSocialMediaStatus = (record) => {
+    // Collect all relevant fields
+    const statuses = [
+      record.socialMedia,
+      record.socialMedia1,
+      record.socialMedia2,
+    ];
+
+    // Check for status in the order of priority
+    if (statuses.includes("Not Done")) {
+      return "Not Done";
+    }
+    if (statuses.includes("Done") || statuses.includes("Completed")) {
+      return "Done";
+    }
+    return "N/A"; // Default status
+  };
+
+  const columnsOption1 = [
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      render: (text) => moment(text).format("DD-MM-YYYY"),
     },
-  },
-  
-  { 
-    title: "Ready to Handover", 
-    dataIndex: "readyToHandover", 
-    key: "readyToHandover", 
-    render: (text) => getStatusTag(text) 
-  },
-  
-  { 
-    title: "Stage 3 Completion", 
-    dataIndex: "stage3Completion", 
-    key: "stage3Completion", 
-    render: (text) => getStatusTag(text) 
-  },
-];
+    {
+      title: "Enrollment ID",
+      dataIndex: "enrollmentId",
+      key: "enrollmentId",
+    },
+    {
+      title: "Stage 1 Payment",
+      key: "payment.stage1.status",
+      render: (record) => getStatusTag(record?.payment?.stage1?.status), // Apply getStatusTag here
+    },
+    {
+      title: "Legality",
+      dataIndex: "legality",
+      key: "legality",
+      render: (text) => getStatusTag(text), // Apply getStatusTag here
+    },
+    {
+      title: "OVC",
+      dataIndex: "ovc",
+      key: "ovc",
+      render: (text) => getStatusTag(text), // Apply getStatusTag here
+    },
+    {
+      title: "ID Card",
+      dataIndex: "idCard",
+      key: "idCard",
+      render: (text) => getStatusTag(text), // Apply getStatusTag here
+    },
+    {
+      title: "Theme",
+      dataIndex: "theme",
+      key: "theme",
+      render: (text) => text || "N/A",
+    },
+    {
+      title: "Stage 1 Completion",
+      dataIndex: "stage1Completion",
+      key: "stage1Completion",
+      render: (text) => getStatusTag(text), // Apply getStatusTag here
+    },
+  ];
 
-const getColumns = () => {
-  switch (selectedOption) {
-    case 'option2':
-      return columnsOption2;
-    case 'option3':
-      return columnsOption3;
-    default:
-      return columnsOption1;
-  }
+  const getStatusTag = (status) => {
+    if (status === "Done" || status === "Completed") {
+      return <Tag color="green">Done</Tag>;
+    } else {
+      return <Tag color="red">Not Done</Tag>;
+    }
+  };
+
+  const columnsOption2 = [
+    { title: "Enrollment ID", dataIndex: "enrollmentId", key: "enrollmentId" },
+    {
+      title: "Stage 2 Payment",
+      key: "payment.stage2.status",
+      render: (text, record) => getStatusTag(record?.payment?.stage2?.status), // Apply getStatusTag here
+    },
+    {
+      title: "Cat File",
+      dataIndex: "catFile",
+      key: "catFile",
+      render: (text, record) => getStatusTag(record.catFile), // Show "Done" or "Not Done"
+    },
+    {
+      title: "Product File",
+      dataIndex: "productFile",
+      key: "productFile",
+      render: (text, record) => getStatusTag(record.productFile), // Show "Done" or "Not Done"
+    },
+    {
+      title: "Logo",
+      dataIndex: "logo",
+      key: "logo",
+      render: (text, record) => getStatusTag(record.logo), // Show "Done" or "Not Done"
+    },
+    {
+      title: "Banner",
+      dataIndex: "banner",
+      key: "banner",
+      render: (text, record) => getStatusTag(record.banner), // Show "Done" or "Not Done"
+    },
+    {
+      title: "Social Media Content",
+      dataIndex: "socialMedia1",
+      key: "socialMedia1",
+      render: (text, record) => getStatusTag(record.socialMedia1), // Apply getStatusTag here
+    },
+    {
+      title: "Gallery",
+      dataIndex: "gallery",
+      key: "gallery",
+      render: (text, record) => getStatusTag(record.gallery), // Show "Done" or "Not Done"
+    },
+    {
+      title: "Stage 2 Completion",
+      dataIndex: "stage2Completion",
+      key: "stage2Completion",
+      render: (text, record) => getStatusTag(record.stage2Completion), // Show "Done" or "Not Done"
+    },
+  ];
+
+  const getStatus = (data) => {
+    // Check ID and Pass Website status
+    const idAndPassStatus =
+      data.idAndPassWebsite?.id && data.idAndPassWebsite?.pass
+        ? "Done"
+        : "Not Done";
+
+    // Check Payment Gateway status
+    const paymentGatewayStatus = data.paymentGateway ? "Done" : "Not Done";
+
+    // Return combined status as a string or use a more complex logic if needed
+    return `ID & Pass: ${idAndPassStatus}, Payment Gateway: ${paymentGatewayStatus}`;
+  };
+
+  const columnsOption3 = [
+    { title: "Enrollment ID", dataIndex: "enrollmentId", key: "enrollmentId" },
+    {
+      title: "Stage 3 Payment",
+      key: "payment.stage3.status",
+      render: (text, record) => getStatusTag(record?.payment?.stage3?.status), // Apply getStatusTag here
+    },
+
+    // Use extractStoreNameAndFormatDate for date fields
+    {
+      title: "Server Purchase",
+      dataIndex: "serverPurchase",
+      key: "serverPurchase",
+      render: (text) => getStatusTag(text),
+    },
+
+    // Use getStatusTag for status fields
+    {
+      title: "Domain Claim",
+      dataIndex: "domainClaim",
+      key: "domainClaim",
+      render: (text) => getStatusTag(text), // Apply getStatusTag here
+    },
+
+    {
+      title: "Domain Mail Verification",
+      dataIndex: "domainMailVerification",
+      key: "domainMailVerification",
+      render: (text) => getStatusTag(text),
+    },
+
+    {
+      title: "Website Uploaded",
+      dataIndex: "websiteUploaded",
+      key: "websiteUploaded",
+      render: (text) => getStatusTag(text),
+    },
+
+    {
+      title: "ID & Pass Website",
+      dataIndex: "idAndPassWebsite",
+      key: "idAndPassWebsite",
+      render: (text, record) => (
+        <div>
+          {record.idAndPassWebsite?.id ? (
+            <div>
+              <p>
+                <strong>ID:</strong> {record.idAndPassWebsite.id}
+              </p>
+              <p>
+                <strong>Pass:</strong> {record.idAndPassWebsite.pass}
+              </p>
+            </div>
+          ) : (
+            <span>No ID & Pass Set</span>
+          )}
+        </div>
+      ),
+    },
+
+    {
+      title: "Social Media Content",
+      key: "socialMediaContent",
+      render: (text, record) => {
+        console.log("Record data:", record); // Debugging line
+        return getStatusTag(combineSocialMediaStatus(record)); // Apply getStatusTag here
+      },
+    },
+
+    {
+      title: "Payment Gateway",
+      dataIndex: "paymentGateway",
+      key: "paymentGateway",
+      render: (text, record) => {
+        // Determine the status based on the presence of paymentGateway data
+        const status = record.paymentGateway ? "Done" : "Not Done";
+        return getStatusTag(status); // Use getStatusTag for consistent styling
+      },
+    },
+
+    {
+      title: "Ready to Handover",
+      dataIndex: "readyToHandover",
+      key: "readyToHandover",
+      render: (text) => getStatusTag(text),
+    },
+
+    {
+      title: "Stage 3 Completion",
+      dataIndex: "stage3Completion",
+      key: "stage3Completion",
+      render: (text) => getStatusTag(text),
+    },
+  ];
+
+  const getColumns = () => {
+    switch (selectedOption) {
+      case "option2":
+        return columnsOption2;
+      case "option3":
+        return columnsOption3;
+      default:
+        return columnsOption1;
+    }
+  };
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+  };
+
+  const filteredData = data.filter((item) =>
+    item.enrollmentId.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <div>
+      <Radio.Group
+        onChange={(e) => setSelectedOption(e.target.value)}
+        value={selectedOption}
+        style={{ marginBottom: 16 }}
+      >
+        <Radio.Button value="option1">Stage 1</Radio.Button>
+        <Radio.Button value="option2">Stage 2</Radio.Button>
+        <Radio.Button value="option3">Stage 3</Radio.Button>
+      </Radio.Group>
+      <Search
+        placeholder="Search by Enrollment ID"
+        onSearch={handleSearch}
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{ marginBottom: 16, width: 300 }}
+      />
+      <Table
+        columns={getColumns()}
+        dataSource={filteredData}
+        rowKey="_id"
+        // pagination={{ pageSize: 10 }}
+      />
+    </div>
+  );
 };
-
-
-
-
-
-
-
-
-const handleSearch = (value) => {
-  setSearchText(value);
-};
-
-
-
-
-
-
-
-
-const filteredData = data.filter(item =>
-  item.enrollmentId.toLowerCase().includes(searchText.toLowerCase())
-);
-
-
-
-
-
-
-
-
-return (
-  <div>
-    <Radio.Group
-      onChange={(e) => setSelectedOption(e.target.value)}
-      value={selectedOption}
-      style={{ marginBottom: 16 }}
-    >
-      <Radio.Button value="option1">Stage 1</Radio.Button>
-      <Radio.Button value="option2">Stage 2</Radio.Button>
-      <Radio.Button value="option3">Stage 3</Radio.Button>
-    </Radio.Group>
-    <Search
-      placeholder="Search by Enrollment ID"
-      onSearch={handleSearch}
-      onChange={e => handleSearch(e.target.value)}
-      style={{ marginBottom: 16, width: 300 }}
-    />
-    <Table
-      columns={getColumns()}
-      dataSource={filteredData}
-      rowKey="_id"
-      // pagination={{ pageSize: 10 }}
-    />
-  </div>
-);
-};
-
-
-
-
-
-
-
 
 export default WebsiteTable;
-
-
-
-
-
-
-
